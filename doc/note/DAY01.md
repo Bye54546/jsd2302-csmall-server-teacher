@@ -279,13 +279,19 @@ CREATE DATABASE mall_pms;
 
 ![image-20230508164651772](assets/image-20230508164651772.png)
 
+# 配置连接数据库的参数
 
+当添加了数据库编程的依赖项后，在启动项目时，Spring Boot会自动获取连接数据库的配置参数值，如果没有配置，则会启动失败，例如：
 
+![image-20230508165331680](assets/image-20230508165331680.png)
 
+则应该在项目中的`src/main/resources/application.properties`文件中添加配置：
 
-
-
-
+```properties
+spring.datasource.url=jdbc:mysql://localhost:3306/mall_pms?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+spring.datasource.username=root
+spring.datasource.password=root
+```
 
 
 
