@@ -202,9 +202,21 @@
 
 - `test`：此依赖项仅用于测试，仅作用于`src/test`下的代码，并且，当项目编译打包时，不会被打包
 
+# 数据库与数据表
 
+先在终端中创建名为`mall_pms`的数据库：
 
+```mysql
+CREATE DATABASE mall_pms;
+```
 
+然后，在IntelliJ IDEA中配置Database面板：
 
+![image-20230508153115209](assets/image-20230508153115209.png)
 
+然后，从完整版项目（csmall-server-repo）的`/doc/sql/mall_pms.sql`中找到创建数据表的SQL脚本，全部选择并粘贴到以上Database面板对应的Console中，然后执行，即可创建出各数据表：
+
+![image-20230508153417885](assets/image-20230508153417885.png)
+
+![image-20230508153435700](assets/image-20230508153435700.png)
 
