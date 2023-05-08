@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <!-- 模块版本，是相对固定的取值 -->
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>pom</packaging>
+    <modules>
+        <module>untitled</module>
+    </modules>
+
+    <!-- 父级项目，其实，每个基于Spring Boot的项目，都应该是spring-boot-starter-parent的子项目 -->
+    <!-- 本次建议使用 2.5.x 系列的版本 -->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.5.0</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
+    <!-- 当前项目的信息 -->
+    <groupId>cn.tedu</groupId>
+    <artifactId>csmall-server</artifactId>
+    <version>0.0.1</version>
+
+    <!-- 属性配置 -->
+    <!-- 可以自定义所需的配置 -->
+    <properties>
+        <java.version>1.8</java.version>
+        <spring-boot.version>2.5.0</spring-boot.version>
+    </properties>
+
+    <!-- 依赖管理 -->
+    <!-- 配置在此标签下的各依赖，不会被各子项目继承 -->
+    <!-- 依赖管理主要是管理各依赖项的版本，各项目添加此处配置的依赖项时不必指定版本号 -->
+    <dependencyManagement>
+        <dependencies>
+            <!-- Spring Boot的基础依赖项 -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter</artifactId>
+                <version>${spring-boot.version}</version>
+            </dependency>
+            <!-- Spring Boot测试的依赖项 -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <version>${spring-boot.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <!-- 当前项目使用的依赖项 -->
+    <!-- 在父项目中配置的依赖项，各子项目均可以直接继承得到，即：子项目不需要添加这些依赖 -->
+    <dependencies>
+    </dependencies>
+
+</project>
