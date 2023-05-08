@@ -108,9 +108,99 @@
 
 ![image-20230508151001975](assets/image-20230508151001975.png)
 
+关于这个子项目，主要配置：
 
+- 使用`csmall-server`作为父项目
+- 添加依赖项
 
+具体配置为：
 
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <!-- 模块版本，是相对固定的取值 -->
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- 父级项目 -->
+    <parent>
+        <groupId>cn.tedu</groupId>
+        <artifactId>csmall-server</artifactId>
+        <version>0.0.1</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
+    <!-- 当前项目的信息 -->
+    <groupId>cn.tedu</groupId>
+    <artifactId>csmall-product</artifactId>
+    <version>0.0.1</version>
+
+    <!-- 当前项目使用的依赖项 -->
+    <dependencies>
+        <!-- Spring Boot的基础依赖项 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+        <!-- Spring Boot测试的依赖项 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <!-- 构建项目的配置 -->
+    <!-- 如果此处的配置报错，可以： -->
+    <!-- 1. 删除报错的标签，因为，除非你需要将项目打包，否则，可以不需要此处的配置 -->
+    <!-- 2. 显式的指定版本号可能可以解决报错的问题 -->
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
+```
+
+# 关于聚合项目
+
+在聚合项目中，父级项目通常需要显式的配置：
+
+```xml
+<packaging>pom</packaging>
+```
+
+此标签的配置默认值是`jar`，各子项目保持默认即可，即子项目可以不配置此标签。
+
+并且，在父项目中配置子级模块项目清单：
+
+```xml
+<modules>
+    <module>csmall-product</module>
+</modules>
+```
+
+# 关于依赖项的作用域
+
+在配置依赖项时，可以通过`<scope>`指定此依赖项的作用域，例如：
+
+```xml
+<!-- Spring Boot测试的依赖项 -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-test</artifactId>
+    <scope>test</scope>
+</dependency>
+```
+
+关于`<scope>`的配置值：
+
+- `test`：此依赖项仅用于测试，仅作用于`src/test`下的代码，并且，当项目编译打包时，不会被打包
 
 
 

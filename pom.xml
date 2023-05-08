@@ -19,6 +19,15 @@
     <artifactId>csmall-server</artifactId>
     <version>0.0.1</version>
 
+    <!-- 父项目配置packaging为pom -->
+    <!-- 此标签的默认值是jar，各子级项目可以不必配置此标签 -->
+    <packaging>pom</packaging>
+
+    <!-- 子级模块项目清单 -->
+    <modules>
+        <module>csmall-product</module>
+    </modules>
+
     <!-- 属性配置 -->
     <!-- 可以自定义所需的配置 -->
     <properties>
