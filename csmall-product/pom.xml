@@ -20,6 +20,16 @@
 
     <!-- 当前项目使用的依赖项 -->
     <dependencies>
+        <!-- MySQL的依赖项 -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+        <!-- MyBatis整合Spring Boot的依赖项 -->
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+        </dependency>
         <!-- Spring Boot的基础依赖项 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
