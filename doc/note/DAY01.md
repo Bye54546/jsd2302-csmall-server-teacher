@@ -293,5 +293,65 @@ spring.datasource.username=root
 spring.datasource.password=root
 ```
 
+由于Spring Boot在启动项目时，只会读取以上配置信息，并不会真正的连接数据库，所以，无法检验以上配置值是否正确！
+
+可以在`src/test/java`的找到默认已经创建出来的测试类，在其中添加测试方法：
+
+![image-20230508172759579](assets/image-20230508172759579.png)
+
+如果配置值错误，则测试不会通过！
+
+例如，密码错误时，会出现异常：
+
+```
+java.sql.SQLException: Access denied for user 'root'@'localhost' (using password: YES)
+```
+
+用户名错误时，会出现异常：
+
+```
+java.sql.SQLException: Access denied for user 'rootcxvfcdvdsavdsa'@'localhost' (using password: YES)
+```
+
+另外，如果没有配置密码，但MySQL需要密码，会出现异常：
+
+```
+java.sql.SQLException: Access denied for user 'root'@'localhost' (using password: NO)
+```
+
+# YAML语法的配置
+
+在Spring Boot中，支持使用YAML语法格式的配置文件，这类配置文件的扩展名是`.yaml`或`.yml`。
+
+通常，在同一个项目中，不会同时使用`.properties`和`.yml`配置文件，只会在这2者中选择其中1种。
+
+关于YAML语法：
+
+- 属性名中如果使用了小数点分隔为多个部分，则不再使用小数点，而是改为1个冒号和换行，并且，换行之后的下一行需要缩进2个空格，并且，每换行1次就增加2个空格的缩进
+- 如果多个属性名存在相同的部分，不必反复写相同的部分，而是保持相同的缩进即可
+- 属性名与属性值之间使用1个冒号和1个空格进行分隔
+
+例如，原本的`.properties`配置是：
+
+```properties
+spring.datasource.url=jdbc:mysql://localhost:3306/mall_pms
+spring.datasource.username=root
+spring.datasource.password=root
+```
+
+改为`.yml`配置则是：
+
+```yaml
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/mall_pms
+    username: root
+    password: root
+```
+
+提示：在YAML语法中，属性名中的小数点不换成冒号加换行也是允许的！
+
+
+
 
 
