@@ -4,9 +4,6 @@
 
 <mapper namespace="cn.tedu.csmall.product.mapper.AlbumMapper">
 
-    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
-        insert into pms_album (name, description, sort, gmt_create, gmt_modified)
-        values (#{name}, #{description}, #{sort}, #{gmtCreate}, #{gmtModified})
-    </insert>
+
 
 </mapper>

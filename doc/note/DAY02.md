@@ -113,6 +113,37 @@ public class Album implements Serializable {
 
 ![image-20230509105108761](assets/image-20230509105108761.png)
 
+# MyBatis Plus
+
+MyBatis Plus是一款基于MyBatis的框架，它内置已经实现了许多数据访问方法，在开发时，可以不必再编写常规的数据访问方法，能够简化一部分开发。
+
+MyBatis Plus整合Spring Boot的依赖项为：
+
+```xml
+<mybatis-plus-spring-boot.version>3.3.0</mybatis-plus-spring-boot.version>
+```
+
+```xml
+<!-- Mybatis Plus整合Spring Boot的依赖项 -->
+<dependency>
+    <groupId>com.baomidou</groupId>
+    <artifactId>mybatis-plus-boot-starter</artifactId>
+    <version>${mybatis-plus-spring-boot.version}</version>
+</dependency>
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
