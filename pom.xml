@@ -36,6 +36,7 @@
         <mysql.version>8.0.15</mysql.version>
         <mybatis-spring-boot-starter.version>2.2.2</mybatis-spring-boot-starter.version>
         <druid-spring-boot.version>1.2.16</druid-spring-boot.version>
+        <lombok.version>1.18.20</lombok.version>
     </properties>
 
     <!-- 依赖管理 -->
@@ -43,6 +44,12 @@
     <!-- 依赖管理主要是管理各依赖项的版本，各项目添加此处配置的依赖项时不必指定版本号 -->
     <dependencyManagement>
         <dependencies>
+            <!-- Lombok的依赖项，主要用于简化POJO类的编写 -->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+            </dependency>
             <!-- Druid数据库连接池 -->
             <dependency>
                 <groupId>com.alibaba</groupId>

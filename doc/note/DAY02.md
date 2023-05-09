@@ -39,3 +39,57 @@ spring.datasource.type.druid.max-active=最大激活数
 以`.yml`文件配置为例：
 
 ![image-20230509094708191](assets/image-20230509094708191.png)
+
+# 数据库中的数据类型与Java数据类型的对应
+
+| 数据库中的类型                  | Java中的类型    |
+| ------------------------------- | --------------- |
+| `tinyint` / `smallint` / `int`  | `Integer`       |
+| `bigint`                        | `Long`          |
+| `char` / `varchar` / `text`系列 | `String`        |
+| `datetime`                      | `LocalDateTime` |
+| `decimal`                       | `BigDecimal`    |
+
+# POJO的设计规范
+
+所有用于声明属性的类，都应该遵循以下规范：
+
+- 存在无参数构造方法
+- 所有属性都是私有权限（`private`）的
+- 添加每个属性对应的Setters & Getters
+- 添加基于所有属性的`hashCode()`与`equals()`
+  - 必须保证：如果2个对象的所有属性值完全相同，则`equals()`对比结果为`true`，否则，返回`false`，如果2个对象的`equals()`为`true`，则这2个对应的`hashCode()`返回相同的值，否则，返回不同的值
+  - 通常，所有专门的开发软件生成的这2个方法都符合以上特征
+- 实现`Serializable`接口
+
+另外，为了便于观察各属性的值，建议添加`toString()`方法。
+
+# 关于Lombok框架
+
+此框架的依赖项代码：
+
+```xml
+<lombok.version>1.18.20</lombok.version>
+```
+
+```xml
+<!-- Lombok的依赖项，主要用于简化POJO类的编写 -->
+<dependency>
+    <groupId>org.projectlombok</groupId>
+    <artifactId>lombok</artifactId>
+    <version>${lombok.version}</version>
+</dependency>
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
