@@ -1,5 +1,6 @@
 package cn.tedu.csmall.product.service.impl;
 
+import cn.tedu.csmall.product.ex.ServiceException;
 import cn.tedu.csmall.product.mapper.AlbumMapper;
 import cn.tedu.csmall.product.pojo.entity.Album;
 import cn.tedu.csmall.product.pojo.param.AlbumAddNewParam;
@@ -24,9 +25,9 @@ public class AlbumServiceImpl implements IAlbumService {
         queryWrapper.eq("name", albumAddNewParam.getName()); // name='参数中的相册名称'
         int countByName = albumMapper.selectCount(queryWrapper);
         if (countByName > 0) {
-            String message = "添加相册失败，相册名称已经被占用！";
-            System.out.println(message);
-            throw new RuntimeException();
+            String message = "添加相册失败，相册名称已经被占用，哈哈哈哈！";
+            // System.out.println(message);
+            throw new ServiceException(message);
         }
 
         // 将相册数据写入到数据库中

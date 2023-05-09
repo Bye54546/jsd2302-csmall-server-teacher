@@ -194,6 +194,95 @@ public class AlbumServiceImpl implements IAlbumService {}
 - 参数列表：如果参数数量较多，且具有相关性，可以封装，如果参数数量较少，或不具备相关性，则逐一声明
 - 抛出异常：抛出所有遇到的异常，如果只会出现`RuntimeException`，并不需要使用`throws`关键字显式的声明
 
+在具体实现之前，为了明确的表示出错的原因是因为所设计的规则，应该先自定义异常类型，并且，在规则验证不通过时，抛出自定义异常类型，后续，在调用此方法时，根据是否抛出了自定义异常类型来判断是否符合所设计的规则。
+
+在项目的根包下创建`ex.ServiceException`类，继承自`RuntimeException`类，并添加基于父级异常的、带`String message`参数的构造方法：
+
+```java
+public class ServiceException extends RuntimeException {
+
+    public ServiceException(String message) {
+        super(message);
+    }
+    
+}
+```
+
+关于自定义异常需要继承自`RuntimeException`，原因主要有2点：
+
+- 再议
+- 再议
+
+然后，在`AdminServiceImpl`类上添加`@Service`注解，在类中自动装配`AlbumMapper`类型的属性，并实现接口中定义的抽象方法，在实现过程中，如果判断违背了所设计的规则，应该抛出自定义的`ServiceException`类型的异常对象：
+
+```java
+@Service
+public class AlbumServiceImpl implements IAlbumService {
+
+    @Autowired
+    private AlbumMapper albumMapper;
+
+    @Override
+    public void addNew(AlbumAddNewParam albumAddNewParam) {
+        // 检查相册名称是否被占用，如果被占用，则抛出异常
+        QueryWrapper<Album> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("name", albumAddNewParam.getName()); // name='参数中的相册名称'
+        int countByName = albumMapper.selectCount(queryWrapper);
+        if (countByName > 0) {
+            String message = "添加相册失败，相册名称已经被占用，哈哈哈哈！";
+            // System.out.println(message);
+            throw new ServiceException(message);
+        }
+
+        // 将相册数据写入到数据库中
+        Album album = new Album();
+        BeanUtils.copyProperties(albumAddNewParam, album);
+        album.setGmtCreate(LocalDateTime.now());
+        album.setGmtModified(LocalDateTime.now());
+        albumMapper.insert(album);
+    }
+
+}
+```
+
+完成后，应该在`src/test/java`下的根包下创建`service.AlbumServiceTests`测试类，测试以上方法：
+
+```java
+@SpringBootTest
+public class AlbumServiceTests {
+
+    @Autowired
+    IAlbumService service;
+
+    @Test
+    void addNew() {
+        AlbumAddNewParam albumAddNewParam = new AlbumAddNewParam();
+        albumAddNewParam.setName("测试数据-00003");
+        albumAddNewParam.setDescription("测试数据简介-00003");
+        albumAddNewParam.setSort(99);
+
+        try {
+            service.addNew(albumAddNewParam);
+            System.out.println("添加成功！");
+        } catch (ServiceException e) {
+            System.out.println(e.getMessage());
+        } catch (Throwable e) {
+            System.out.println("添加失败！出现了某种异常！");
+            e.printStackTrace();
+        }
+    }
+
+}
+```
+
+
+
+
+
+
+
+
+
 
 
 
