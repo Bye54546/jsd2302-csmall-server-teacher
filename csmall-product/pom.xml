@@ -20,6 +20,11 @@
 
     <!-- 当前项目使用的依赖项 -->
     <dependencies>
+        <!-- Druid数据库连接池 -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+        </dependency>
         <!-- MySQL的依赖项 -->
         <dependency>
             <groupId>mysql</groupId>
