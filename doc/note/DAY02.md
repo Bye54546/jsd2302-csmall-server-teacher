@@ -132,11 +132,28 @@ MyBatis Plus整合Spring Boot的依赖项为：
 </dependency>
 ```
 
+以“新增相册”为例，首先，你需要自定义实体类，并且：
 
+- 在类上使用`@TableName`注解指定数据表的名称
+  - 例如配置为`@TableName("pms_album")`
+  - 如果没有通过以上注解指定名称，则MyBatis Plus会自动根据你的实现类的名称转换得到表名称，例如`Album`类对应的默认的表名称就是`album`
+- 在类中与主键对应的属性上使用`@TableId`注解指定主键的值如何处理
+  - 例如配置为`@TableId(type = IdType.AUTO)`
+  - 如果没有通过以上注解进行配置，则MyBatis Plus默认会自动处理主键字段对应的值
 
+例如：
 
+![image-20230509142820415](assets/image-20230509142820415.png)
 
+然后，与使用普通的MyBatis相同，需要自定义数据访问接口，不同的是，此接口应该继承自`BaseMapper`，且继承的泛型应该是尝试处理的数据表所对应的实体类的类型，例如：
 
+![image-20230509142945287](assets/image-20230509142945287.png)
+
+另外，原本应该做的配置不变，例如在配置类中使用`@MapperScan`指定Mapper接口所在的包。
+
+至此，就已经可以使用MyBatis Plus提供的各种数据访问功能，包括：
+
+![image-20230509143109624](assets/image-20230509143109624.png)
 
 
 

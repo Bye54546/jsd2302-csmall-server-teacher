@@ -20,6 +20,11 @@
 
     <!-- 当前项目使用的依赖项 -->
     <dependencies>
+        <!-- Mybatis Plus整合Spring Boot的依赖项 -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+        </dependency>
         <!-- Lombok的依赖项，主要用于简化POJO类的编写 -->
         <dependency>
             <groupId>org.projectlombok</groupId>
