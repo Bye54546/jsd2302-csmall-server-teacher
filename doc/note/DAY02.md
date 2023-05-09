@@ -155,11 +155,81 @@ MyBatis Plus整合Spring Boot的依赖项为：
 
 ![image-20230509143109624](assets/image-20230509143109624.png)
 
+# 关于Service
+
+Service的核心价值在于：组织业务流程，处理业务逻辑，以保证数据的完整性、有效性、安全性。
+
+在编写代码时，强烈建议先定义Service的接口，然后，自定义编写其实现类。
+
+关于“新增相册”，先自定义POJO类，用于封装相关参数！在项目的根包下创建`pojo.param.AlbumAddNewParam`类：
+
+```java
+@Data
+public class AlbumAddNewParam implements Serializable {
+    private String name;
+    private String description;
+    private Integer sort;
+}
+```
+
+然后，在项目的根包下创建`service.IAlbumService`，并在接口中添加“新增相册”的抽象方法：
+
+```java
+public interface IAlbumService {
+    void addNew(AlbumAddNewParam albumAddNewParam);
+}
+```
+
+然后，在项目的根包下创建`service.impl.AlbumServiceImpl`类，实现以上接口：
+
+```java
+public class AlbumServiceImpl implements IAlbumService {}
+```
+
+关于Service方法的声明：
+
+- 返回值类型：仅以操作成功为前提来设计返回值
+  - 操作失败全部通过抛出异常来表示
+- 方法名称：自定义
+- 参数列表：如果参数数量较多，且具有相关性，可以封装，如果参数数量较少，或不具备相关性，则逐一声明
+- 抛出异常：抛出所有遇到的异常，如果只会出现`RuntimeException`，并不需要使用`throws`关键字显式的声明
 
 
 
 
 
+```
+User login(String username, String password, String verifyCode) throws 用户名错误异常, 密码错误异常, 账号禁用异常, 验证码错误异常;
+
+try {
+	User user = service.login("root", "1234", "9xk2");
+	// 登录成功
+} catch (用户名错误异常 e) {
+	// 
+} catch (密码错误异常 e) {
+	// 
+} catch (账号禁用异常 e) {
+	// 
+} catch (验证码错误异常 e) {
+	// 
+}
+```
+
+```
+xx reg(User user);
+
+User user = new User();
+user.setUsername("root");
+user.setPassword("1234");
+user.setVerifyCode("xx3f");
+service.login(user);
+
+public class User{
+    // username
+    // password
+    // verifyCode
+}
+```
 
 
 
