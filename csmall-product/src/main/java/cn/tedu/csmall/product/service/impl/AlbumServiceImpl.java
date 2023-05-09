@@ -25,7 +25,7 @@ public class AlbumServiceImpl implements IAlbumService {
         queryWrapper.eq("name", albumAddNewParam.getName()); // name='参数中的相册名称'
         int countByName = albumMapper.selectCount(queryWrapper);
         if (countByName > 0) {
-            String message = "添加相册失败，相册名称已经被占用，哈哈哈哈！";
+            String message = "添加相册失败，相册名称已经被占用！";
             // System.out.println(message);
             throw new ServiceException(message);
         }

@@ -213,7 +213,7 @@ public class ServiceException extends RuntimeException {
 - 再议
 - 再议
 
-然后，在`AdminServiceImpl`类上添加`@Service`注解，在类中自动装配`AlbumMapper`类型的属性，并实现接口中定义的抽象方法，在实现过程中，如果判断违背了所设计的规则，应该抛出自定义的`ServiceException`类型的异常对象：
+然后，在`AlbumServiceImpl`类上添加`@Service`注解，在类中自动装配`AlbumMapper`类型的属性，并实现接口中定义的抽象方法，在实现过程中，如果判断违背了所设计的规则，应该抛出自定义的`ServiceException`类型的异常对象：
 
 ```java
 @Service
@@ -229,7 +229,7 @@ public class AlbumServiceImpl implements IAlbumService {
         queryWrapper.eq("name", albumAddNewParam.getName()); // name='参数中的相册名称'
         int countByName = albumMapper.selectCount(queryWrapper);
         if (countByName > 0) {
-            String message = "添加相册失败，相册名称已经被占用，哈哈哈哈！";
+            String message = "添加相册失败，相册名称已经被占用！";
             // System.out.println(message);
             throw new ServiceException(message);
         }
@@ -275,9 +275,58 @@ public class AlbumServiceTests {
 }
 ```
 
+# 通过控制器接收并处理请求
 
+在通过控制器处理请求之前，需要添加对应的依赖项：`spring-boot-starter-web`。
 
+提示：所有Spring提供的以`spring-boot-starter`作为名称前缀的依赖项（例如`spring-boot-starter-web`），都包含了Spring Boot的基础依赖项（`spring-boot-starter`）。
 
+则将项目中原本依赖的`spring-boot-starter`改为`spring-boot-starter-web`。
+
+在项目的根包下创建`controller.AlbumController`，在类中添加方法处理“添加相册”的请求：
+
+```java
+@RestController
+@RequestMapping("/album")
+public class AlbumController {
+
+    @Autowired
+    private IAlbumService albumService;
+
+    // http://localhost:8080/album/add-new?name=TestName001&description=TestDescription001&sort=99
+    @RequestMapping("/add-new")
+    public String addNew(AlbumAddNewParam albumAddNewParam) {
+        try {
+            albumService.addNew(albumAddNewParam);
+            return "添加成功！";
+        } catch (ServiceException e) {
+            return e.getMessage();
+        } catch (Throwable e) {
+           return "添加失败！出现了某种异常！";
+        }
+    }
+
+}
+```
+
+完成后，启动项目，在浏览器的地址栏中使用 http://localhost:8080/album/add-new?name=TestName001&description=TestDescription001&sort=99 即可测试访问。
+
+# 关于各组件的处理流程
+
+```mermaid
+sequenceDiagram
+    participant Controller
+    participant Service接口
+    participant Mapper
+    participant 数据库
+
+    Controller ->> Service接口: 调用方法
+    Service接口 ->>  Mapper: 调用方法
+    Mapper ->> 数据库: 访问数据
+    数据库 -->> Mapper: 返回数据
+    Mapper -->> Service接口: 返回结果
+    Service接口 -->> Controller: 返回结果
+```
 
 
 
