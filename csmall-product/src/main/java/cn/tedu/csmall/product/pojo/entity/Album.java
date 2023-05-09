@@ -5,6 +5,9 @@ import lombok.Data;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/**
+ * 相册的实体类
+ */
 @Data
 public class Album implements Serializable {
 

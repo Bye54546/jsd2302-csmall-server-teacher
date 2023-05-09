@@ -81,11 +81,37 @@ spring.datasource.type.druid.max-active=最大激活数
 </dependency>
 ```
 
+Lombok的主要作用是：通过特定的注解，在**编译期**生成对应的代码。
 
+例如，在类上添加`@Data`注解，则会生成此类中所有属性对应的Setters & Getters、`hashCode()`、`equals()`、`toString()`方法：
 
+```java
+@Data
+public class Album implements Serializable {
 
+    private Long id;
+    private String name;
+    private String description;
+    private Integer sort;
+    private LocalDateTime gmtCreate;
+    private LocalDateTime gmtModified;
 
+}
+```
 
+**注意：**使用`@Data`注解时，需要保证当前类的父类存在无参数构造方法。
+
+**注意：**你需要在开发工具中安装Lombok插件：
+
+![image-20230509104242227](assets/image-20230509104242227.png)
+
+如果没有安装插件，在编写代码时，开发工具无法给出快捷提示，并且，直接写出相关的代码也会报红，但是，并不影响运行！
+
+由于使用Lombok框架，需要在开发工具中安装对应的插件，所以，并不是所有人都喜欢使用这个框架，甚至有些开发团队会禁止使用这个框架。
+
+关于Lombok的常用注解，可参考安装插件的界面：
+
+![image-20230509105108761](assets/image-20230509105108761.png)
 
 
 
