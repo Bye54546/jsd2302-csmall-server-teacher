@@ -16,14 +16,16 @@ public class AlbumMapperTests {
     @Test
     void insert() {
         Album album = new Album();
-        album.setName("测试数据0014");
-        album.setDescription("测试数据简介0014");
-        album.setSort(255);
+        album.setName("测试数据0100");
+        album.setDescription("测试数据简介0100");
+        album.setSort(100);
         album.setGmtCreate(LocalDateTime.now());
         album.setGmtModified(LocalDateTime.now());
 
-        mapper.insert(album);
-        System.out.println("插入数据完成");
+        System.out.println("插入数据之前，参数：" + album);
+        int rows = mapper.insert(album);
+        System.out.println("插入数据完成，受影响的行数：" + rows);
+        System.out.println("插入数据之后，参数：" + album);
     }
 
 }

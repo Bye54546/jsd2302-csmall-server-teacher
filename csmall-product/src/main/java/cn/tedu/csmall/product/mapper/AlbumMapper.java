@@ -4,6 +4,7 @@ import cn.tedu.csmall.product.pojo.entity.Album;
 
 public interface AlbumMapper {
 
-    void insert(Album album);
+    // 设计大于需求
+    int insert(Album album);
 
 }
