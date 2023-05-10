@@ -135,6 +135,71 @@ public class Knife4jConfiguration {
 
 完成后，可以通过 `/doc.html` 来访问API文档，即在浏览器的地址栏中输入网址：http://localhost:8080/doc.html
 
+# 关于Profile配置文件
+
+在Spring系列框架中，关于配置文件，允许同时存在多个配置文件（例如同时存在`a.yml`、`b.yml`等），并且，你可以按需切换某个配置文件，这些默认不生效、需要被激活才生效的配置，称之为Profile配置。
+
+在Spring Boot项目中，Profile配置的文件名必须是`application-自定义名称.properties`（或使用YAML的扩展名），例如：`application-a.yml`、`application-b.yml`，并且，这类配置文件默认就是没有激活的。
+
+通常，关于“自定义名称”部分的惯用名称有：
+
+- `dev`：表示开发环境
+- `test`：表示测试环境
+- `prod`：表示生产环境（项目上线）
+
+当然，你也可以根据你所需要的环境或其它特征来处理“自定义名称”部分。
+
+在Spring Boot项目中，`application.properties`（或使用YAML的扩展名）是始终加载的配置文件，当需要激活某个Profiel配置文件时，可以在`application.properties`中配置：
+
+```properties
+spring.profiles.active=自定义名称
+```
+
+例如：
+
+![image-20230510103823707](assets/image-20230510103823707.png)
+
+在开发实践中，需要学会区分哪些配置属性是固定的，哪些是可能调整的，然后，把不会因为环境等因素而发生变化的配置写在`application.properties`中去，把可能调整的配置写在Profile文件中。
+
+例如，在`application.yml`中配置（以下配置中不包含连接数据库的URL、用户名、密码）：
+
+```yaml
+spring:
+  profiles:
+    active: test
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      initial-size: 5
+      max-active: 10
+    
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  
+knife4j:
+  enable: true
+```
+
+并且，在其它Profile配置中补充可能调整的配置，例如在`application-dev.yml`中配置：
+
+```yaml
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/mall_pms?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: root
+```
+
+
+
+
+
+
+
+
+
+
+
 
 
 
