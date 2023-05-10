@@ -20,6 +20,8 @@ public class Slf4jTests {
         log.info("这是一条【INFO】级别的日志");
         log.warn("这是一条【WARN】级别的日志");
         log.error("这是一条【ERROR】级别的日志");
+
+        log.info("x = {}, y = {}, x + y = {}", x, y, x + y);
     }
 
 }
