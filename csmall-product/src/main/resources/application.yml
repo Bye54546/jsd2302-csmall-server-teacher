@@ -10,3 +10,6 @@ spring:
 
 mybatis:
   mapper-locations: classpath:aaa/*.xml
+
+knife4j:
+  enable: true
