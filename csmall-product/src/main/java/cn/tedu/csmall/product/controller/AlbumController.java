@@ -28,7 +28,7 @@ public class AlbumController {
     @PostMapping("/add-new")
     @ApiOperation("添加相册")
     @ApiOperationSupport(order = 100)
-    public String addNew(AlbumAddNewParam albumAddNewParam, @ApiIgnore HttpSession session) {
+    public String addNew(AlbumAddNewParam albumAddNewParam) {
         try {
             albumService.addNew(albumAddNewParam);
             return "添加成功！";

@@ -376,7 +376,45 @@ log.info("x = {}, y = {}, x + y = {}", x, y, x + y);
   }
   ```
 
-  
+# 添加属性模板
+
+开发步骤大致是：
+
+- Mapper层：
+
+  - 创建属性模板的实体类，在类中声明与数据表对应的所有属性，此类需要实现`Seriliazable`接口，添加`@Data`注解，在类上添加`@TableName`注解以配置数据表名称，在主键对应的`id`属性上添加`@TableId`注解以配置主键值是自动编号的
+  - 创建处理属性模板数据的Mapper接口，继承自`BaseMapper`，泛型为属性模板的实体类，在接口上添加`@Repository`注解
+    - 暂时不需要对应的XML文件
+  - 在`src/test/java`的根包下创建对应的测试类，在测试类中编写测试方法，以检验是否可以成功的插入数据
+
+- Service层：
+
+  - 创建`pojo.param.AttributeTemplateAddNewParam`类，在类中声明相关属性（4个），此类需要实现`Serializable`接口，并在类上添加`@Data`注解
+
+  - 创建`service.IAttributeTemplateService`接口，并在接口声明抽象方法：
+
+    ```java
+    void addNew(AttributeTemplateAddNewParam attributeTemplateAddNewParam);
+    ```
+
+  - 创建`service.impl.AttributeTemplateServiceImpl`类，实现以上接口，在类上添加`@Service`注解和`@Slf4j`注解，在类中自动装配对应的Mapper对象，然后重写方法：
+
+    ```java
+    // 先检查名称是否被占用，如果被占用，则抛出异常
+    
+    // 向数据库中插入属性模板数据
+    ```
+
+  - 在`src/test/java`的根包下创建对应的测试类，在测试类中编写测试方法，以检验是否可以成功的插入数据
+
+- Controller层：
+
+  - 创建`controller.AttributeTemplateController`类，在类上添加`@RestController`注解、`@RequestMapping("/attribute-template")`注解在类中自动装配对应的Service接口类型的对象，在类中声明处理请求的方法，方法上需要添加`@PostMapping("/add-new")`注解，在方法体中调用Service实现功能，并且，在调用时使用`try...catch`捕获并处理异常
+  - 完成后，重启项目，通过API文档测试访问
+  - 在控制器类上添加`@Slf4j`注解、`@Api`注解并配置，在处理请求的方法上添加`@ApiOperation`注解、`@ApiOperationSupport`注解并配置
+  - 在`AttributeTemplateAddNewParam`的各属性上添加`@ApiModelProperty`注解并配置
+
+
 
 
 
