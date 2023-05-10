@@ -12,7 +12,3 @@ mybatis:
 
 knife4j:
   enable: true
-
-logging:
-  level:
-    cn.tedu.csmall.product: trace

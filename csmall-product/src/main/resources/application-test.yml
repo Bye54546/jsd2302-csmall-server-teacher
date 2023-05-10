@@ -3,3 +3,7 @@ spring:
     url: jdbc:mysql://192.168.197.238:3306/mall_pms?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
     username: test
     password: TestDB2023
+
+logging:
+  level:
+    cn.tedu.csmall.product: debug

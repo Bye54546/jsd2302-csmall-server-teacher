@@ -39,7 +39,8 @@ public class AlbumServiceImpl implements IAlbumService {
         BeanUtils.copyProperties(albumAddNewParam, album);
         album.setGmtCreate(LocalDateTime.now());
         album.setGmtModified(LocalDateTime.now());
-        log.debug("准备将新的相册数据写入到数据库，数据：{}", album);
+
+
         albumMapper.insert(album);
         log.debug("将新的相册数据写入到数据库，完成！");
     }
