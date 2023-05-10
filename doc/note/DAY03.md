@@ -318,6 +318,66 @@ log.info("x = {}, y = {}, x + y = {}", x, y, x + y);
 
 - `@ApiOperation`：添加在处理请求的方法上，通过此注解的`value`属性，可以配置业务功能名称
 
+- `@ApiOperationSupport`：添加在处理请求的方法上，通过此注解的`order`属性（`int`类型），可以配置业务功能的排序序号，将升序排列，例如：
+
+  ```java
+  @PostMapping("/delete")
+  @ApiOperation("根据ID删除相册")
+  @ApiOperationSupport(order = 200)
+  public String delete() {
+      // ...
+  }
+  ```
+
+- `@ApiModelProperty`：添加在封装的请求参数的属性上，通过此注解的`value`属性，可以配置请求参数的描述信息，通过此注解的`required`属性，可以配置是否必须提交此参数（此配置只是一种显示效果，并不具备真正的检查功能），通过此注解的`example`属性，可以配置示例值，例如：
+
+  ```java
+  @Data
+  public class AlbumAddNewParam implements Serializable {
+  
+      @ApiModelProperty(value = "相册名称", required = true, example = "可乐的相册")
+      private String name;
+  
+      @ApiModelProperty(value = "相册简介", required = true, example = "可乐的相册的简介")
+      private String description;
+  
+      @ApiModelProperty(value = "排序序号，必须是1~255之间的数字", required = true, example = "97")
+      private Integer sort;
+  
+  }
+  ```
+
+- `@ApiIgnore`：添加在请求参数上，表示API文档将忽略此请求参数
+
+  ```java
+  @PostMapping("/add-new")
+  @ApiOperation("添加相册")
+  @ApiOperationSupport(order = 100)
+  public String addNew(AlbumAddNewParam albumAddNewParam, 
+                       @ApiIgnore HttpSession session) {
+      // ...
+  }
+  ```
+
+- `@ApiImplicitParam`：添加在处理请求的方法上，用于对未封装的请求参数进行描述，注意，此注解必须配置`name`属性，取值为方法的参数名，然后，结合此注解的`value`属性对参数进行描述，此注解还有与`@ApiModelProperty`相同的一些属性，例如`required`、`example`等，还可以通过`dataType`指定数据类型
+
+- `@ApiImplicitParams`：添加在处理请求的方法上，当有多个`@ApiImplictParam`需要被配置时，应该将它们作为当前`@ApiImplicitParams`的属性值，例如：
+
+  ```java
+  @PostMapping("/delete")
+  @ApiOperation("根据ID删除相册")
+  @ApiOperationSupport(order = 200)
+  @ApiImplicitParams({
+          @ApiImplicitParam(name = "albumId", value = "相册ID", required = true, dataType = "long"),
+          @ApiImplicitParam(name = "userId", value = "用户ID", required = true, dataType = "long")
+  })
+  public String delete(Long albumId, Long userId) {
+      // ...
+  }
+  ```
+
+  
+
 
 
 
