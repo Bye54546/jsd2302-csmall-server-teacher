@@ -304,9 +304,19 @@ log.info("x = {}, y = {}, x + y = {}", x, y, x + y);
 
 与之类似的注解还有：`@GetMapping`、`@PutMapping`、`@DeleteMapping`、`@PatchMapping`。
 
+# 关于Knife4j的显示内容的配置
 
+- `@Api`：添加在控制器类上，通过此注解的`tags`属性，可以配置模块名称（显示在API文档左侧目录中的名称），提示：当存在多个控制器时，显示的顺序是根据配置的模块名称来决定的，如果需要自行指定顺序，建议在各模块名称前添加数字编号，例如：
 
+  ```java
+  @RestController
+  @RequestMapping("/album")
+  @Api(tags = "04. 相册管理模块")
+  public class AlbumController {
+  }
+  ```
 
+- `@ApiOperation`：添加在处理请求的方法上，通过此注解的`value`属性，可以配置业务功能名称
 
 
 
