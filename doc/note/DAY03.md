@@ -166,7 +166,7 @@ spring.profiles.active=自定义名称
 ```yaml
 spring:
   profiles:
-    active: test
+    active: dev
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
@@ -190,19 +190,83 @@ spring:
     password: root
 ```
 
+另外，通过`spring.profiles.active`激活配置时，此属性的值可以使用逗号分隔来激活多个配置，例如：
 
+```properties
+spring.profiles.active=dev,test
+```
 
+如果同时激活的配置中，有相同的属性，但属性值并不同，以偏后的Profile配置文件中的配置值为准，按照以上代码，则以`test`中的配置为准！
 
+另外，所有Profile配置的优先级都高于`application.properties`。
 
+# 关于日志
 
+在开发实践中，应该将数据的关键变化、关联的处理流程记录下来，以便于出现问题时可以辅助排查问题！
 
+注意：在开发实践中，禁止使用`System.out.println()`的做法输出内容（测试代码除外），主要原因有：
 
+- 不易于编写代码
+- 执行效率非常低下
+- 无论什么情况下都会显示
+  - 也许某些输出的数据是敏感的，在开发过程中输出这些数据是为了便于调试，但是，在生产过程中不应该被看到
 
+应该使用日志框架，通过输出日志的方式，来记录相关信息！
 
+在Spring Boot框架的基础依赖项（`spring-boot-starter`）中已经包含日志框架的依赖项， 所以，并不需要专门的去添加日志框架的依赖项，是可以直接使用的！
 
+在添加了Lombok依赖项后，可以在任何类上添加`@Slf4j`注解，则Lombok会在编译期自动在此类中声明名为`log`的变量，通过此变量调用方法即可输出日志。
 
+日志是有**显示级别**的，根据日志内容的重要程度，从可以不关注，到必须关注，依次为：
 
+- `trace`：跟踪信息，例如记录程序执行到了哪个环节，或哪个类、哪个方法等
+- `debug`：调试信息，通常输出了一些数据值，用于观察数据的走向、变化过程
+- `info`：一般信息，通常不涉及隐私或机密，即使被他人看到也不要紧的
+- `warn`：警告信息
+- `error`：错误信息
 
+在使用`log`变量输出日志时，可以调用以上5个级别对应的方法，即可输出对应级别的日志！例如调用`log.info()`方法输出的就是`info`级别的日志，调用`log.error()`方法输出的就是`error`级别的日志。
+
+在日志框架中，输出每个级别的方法的参数列表都有相同的版本，例如存在：
+
+```java
+void info(String message);
+void info(String message, Object... args);
+```
+
+就还有：
+
+```java
+void trace(String message);
+void trace(String message, Object... args);
+
+void debug(String message);
+void debug(String message, Object... args);
+
+void warn(String message);
+void warn(String message, Object... args);
+
+void error(String message);
+void error(String message, Object... args);
+```
+
+在普通项目中，默认显示`debug`级别的日志，则`debug`级别及更加重要级别的日志都会显示出来，即`trace`级别不会被显示！
+
+在Spring Boot项目中，默认显示`info`级别的日志！
+
+在Spring Boot项目中，可以通过配置文件中的`logging.level.根包名[.类名]`属性来调整日志的显示级别！
+
+> 提示：以上`logging.level.根包名[.类名]`中的中括号部分是可选的！
+
+例如配置为：
+
+```yaml
+logging:
+  level:
+    cn.tedu.csmall.product: trace
+```
+
+则`cn.tedu.csmall.product`包及其子孙包下所有的类中输出的日志的显示级别都将是`trace`！
 
 
 
