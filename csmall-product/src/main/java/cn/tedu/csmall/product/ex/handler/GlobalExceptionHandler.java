@@ -3,13 +3,8 @@ package cn.tedu.csmall.product.ex.handler;
 import cn.tedu.csmall.product.ex.ServiceException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindException;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringJoiner;
 
 @Slf4j
 @RestControllerAdvice
@@ -23,12 +18,14 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler
-    public List<String> handleBindException(BindException e) {
+    public String handleBindException(BindException e) {
         log.warn("程序运行过程中出现了BindException，将统一处理！");
         log.warn("异常信息：{}", e.getMessage());
-        // String message = e.getFieldError().getDefaultMessage();
-        // return message;
+        // 【解决方案-1】使用1个字符串表示1个错误信息
+        String message = e.getFieldError().getDefaultMessage();
+        return message;
 
+        // 【解决方案-2】使用1个字符串表示错误信息
         // StringJoiner stringJoiner = new StringJoiner("，", "请求参数错误，", "！");
         // List<FieldError> fieldErrors = e.getFieldErrors();
         // for (FieldError fieldError : fieldErrors) {
@@ -37,13 +34,14 @@ public class GlobalExceptionHandler {
         // }
         // return stringJoiner.toString();
 
-        List<String> messageList = new ArrayList<>();
-        List<FieldError> fieldErrors = e.getFieldErrors();
-        for (FieldError fieldError : fieldErrors) {
-            String defaultMessage = fieldError.getDefaultMessage();
-            messageList.add(defaultMessage);
-        }
-        return messageList;
+        // 【解决方案-3】使用集合表示多个错误信息，需要将当前方法的返回值类型声明为对应的集合类型
+        // List<String> messageList = new ArrayList<>();
+        // List<FieldError> fieldErrors = e.getFieldErrors();
+        // for (FieldError fieldError : fieldErrors) {
+        //    String defaultMessage = fieldError.getDefaultMessage();
+        //    messageList.add(defaultMessage);
+        // }
+        // return messageList;
     }
 
     @ExceptionHandler

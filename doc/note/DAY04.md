@@ -132,8 +132,50 @@ Field error in object 'albumAddNewParam' on field 'name': rejected value [null];
 public String handleBindException(BindException e) {
     log.warn("程序运行过程中出现了BindException，将统一处理！");
     log.warn("异常信息：{}", e.getMessage());
+    // 【解决方案-1】使用1个字符串表示1个错误信息
     String message = e.getFieldError().getDefaultMessage();
     return message;
+
+    // 【解决方案-2】使用1个字符串表示错误信息
+    // StringJoiner stringJoiner = new StringJoiner("，", "请求参数错误，", "！");
+    // List<FieldError> fieldErrors = e.getFieldErrors();
+    // for (FieldError fieldError : fieldErrors) {
+    //    String defaultMessage = fieldError.getDefaultMessage();
+    //    stringJoiner.add(defaultMessage);
+    // }
+    // return stringJoiner.toString();
+
+    // 【解决方案-3】使用集合表示多个错误信息，需要将当前方法的返回值类型声明为对应的集合类型
+    // List<String> messageList = new ArrayList<>();
+    // List<FieldError> fieldErrors = e.getFieldErrors();
+    // for (FieldError fieldError : fieldErrors) {
+    //    String defaultMessage = fieldError.getDefaultMessage();
+    //    messageList.add(defaultMessage);
+    // }
+    // return messageList;
+}
+```
+
+需要注意：Spring Validation在检查请求参数的格式时，会检查所有属性配置的规则，找出所有的错误，如果希望实现“只要发现错误，就不再向后检查”，需要将其配置为“快速失败”，配置做法是使用配置类：
+
+```java
+@Slf4j
+@Configuration
+public class ValidationConfiguration {
+
+    public ValidationConfiguration() {
+        log.debug("创建配置类对象：ValidationConfiguration");
+    }
+
+    @Bean
+    public javax.validation.Validator validator() {
+        return Validation.byProvider(HibernateValidator.class)
+                .configure() // 开始配置
+                .failFast(true) // 配置快速失败
+                .buildValidatorFactory() // 构建Validator工厂
+                .getValidator(); // 从Validator工厂中获取Validator对象
+    }
+
 }
 ```
 
