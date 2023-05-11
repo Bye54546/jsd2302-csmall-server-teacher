@@ -1,6 +1,5 @@
 package cn.tedu.csmall.product.controller;
 
-import cn.tedu.csmall.product.ex.ServiceException;
 import cn.tedu.csmall.product.pojo.param.AttributeTemplateAddNewParam;
 import cn.tedu.csmall.product.service.IAttributeTemplateService;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
@@ -24,14 +23,8 @@ public class AttributeTemplateController {
     @ApiOperation("添加属性模板")
     @ApiOperationSupport(order = 100)
     public String addNew(AttributeTemplateAddNewParam attributeTemplateAddNewParam) {
-        try {
-            albumService.addNew(attributeTemplateAddNewParam);
-            return "添加成功！";
-        } catch (ServiceException e) {
-            return e.getMessage();
-        } catch (Throwable e) {
-            return "添加失败！出现了某种异常！";
-        }
+        albumService.addNew(attributeTemplateAddNewParam);
+        return "添加成功！";
     }
 
 }
