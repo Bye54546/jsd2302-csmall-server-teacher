@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/album")
 @Api(tags = "04. 相册管理模块")
@@ -24,12 +26,14 @@ public class AlbumController {
     @Autowired
     private IAlbumService albumService;
 
-    // http://localhost:8080/album/add-new?name=TestName001&description=TestDescription001&sort=99
+    // http://localhost:8080/album/add-new
     @PostMapping("/add-new")
     @ApiOperation("添加相册")
     @ApiOperationSupport(order = 100)
-    public String addNew(AlbumAddNewParam albumAddNewParam) throws Exception {
+    public String addNew(@Valid AlbumAddNewParam albumAddNewParam) {
+        log.debug("开始处理【添加相册】的请求，参数：{}", albumAddNewParam);
         albumService.addNew(albumAddNewParam);
+        log.debug("处理【添加相册】的请求，完成！");
         return "添加成功！";
     }
 

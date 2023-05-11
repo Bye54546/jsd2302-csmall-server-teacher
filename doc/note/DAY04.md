@@ -57,7 +57,50 @@ public String handleThrowable(Throwable e) {
 }
 ```
 
+# Spring Validation框架
 
+## 关于Spring Validation
+
+Spring Validation框架的主要作用是检查方法的参数的基本有效性。
+
+## 添加依赖
+
+此框架的依赖项的`artifactId`为：`spring-boot-starter-validation`。
+
+```xml
+<!-- Spring Boot支持Spring Validation用于检查方法参数的基本有效性的依赖项 -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-validation</artifactId>
+    <version>${spring-boot.version}</version>
+</dependency>
+```
+
+## 检查封装的请求参数
+
+需要先在方法的参数（封装的类型）前添加`@Valid`或`@Validated`注解，以表示“将检查此参数的基本有效性”，例如：
+
+```java
+@PostMapping("/add-new")
+public String addNew(@Valid AlbumAddNewParam albumAddNewParam) {
+    albumService.addNew(albumAddNewParam);
+    return "添加成功！";
+}
+```
+
+然后，需要在封装的类型的属性上添加检查注解，以配置对应的检查规则，例如：
+
+```java
+@Data
+public class AlbumAddNewParam implements Serializable {
+
+    @NotNull
+    private String name;
+    
+}
+```
+
+经过以上配置，参数`name`将不允许为`null`值，如果客户端提交的请求中没有`name`的值，将直接响应`400`错误！
 
 
 
