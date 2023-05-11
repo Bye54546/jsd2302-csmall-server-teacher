@@ -102,6 +102,51 @@ public class AlbumAddNewParam implements Serializable {
 
 经过以上配置，参数`name`将不允许为`null`值，如果客户端提交的请求中没有`name`的值，将直接响应`400`错误！
 
+## 处理BindException
+
+当检查参数的基本有效性不通过时，在服务器端的控制台会提示错误详情，例如：
+
+```
+2023-05-11 14:25:21.058  WARN 45924 --- [nio-8080-exec-1] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.validation.BindException: org.springframework.validation.BeanPropertyBindingResult: 1 errors
+
+Field error in object 'albumAddNewParam' on field 'name': rejected value [null]; codes [NotNull.albumAddNewParam.name,NotNull.name,NotNull.java.lang.String,NotNull]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [albumAddNewParam.name,name]; arguments []; default message [name]]; default message [不能为null]]
+```
+
+检查注解还可以配置`message`属性，用于指定检查不通过时的文本信息，例如：
+
+```java
+@NotNull(message = "添加相册失败，必须提交相册名称！")
+private String name;
+```
+
+经过以上配置后，如果检查失败，错误信息大致如下：
+
+```
+Field error in object 'albumAddNewParam' on field 'name': rejected value [null]; codes [NotNull.albumAddNewParam.name,NotNull.name,NotNull.java.lang.String,NotNull]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [albumAddNewParam.name,name]; arguments []; default message [name]]; default message [添加相册失败，必须提交相册名称！]
+```
+
+然后，需要在全局异常处理器中添加处理`BindException`请求的方法：
+
+```java
+@ExceptionHandler
+public String handleBindException(BindException e) {
+    log.warn("程序运行过程中出现了BindException，将统一处理！");
+    log.warn("异常信息：{}", e.getMessage());
+    String message = e.getFieldError().getDefaultMessage();
+    return message;
+}
+```
+
+
+
+
+
+
+
+## 检查注解
+
+
+
 
 
 

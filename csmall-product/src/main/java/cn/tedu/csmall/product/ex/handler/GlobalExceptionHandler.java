@@ -2,11 +2,12 @@ package cn.tedu.csmall.product.ex.handler;
 
 import cn.tedu.csmall.product.ex.ServiceException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @Slf4j
-// @RestControllerAdvice
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler
@@ -14,6 +15,14 @@ public class GlobalExceptionHandler {
         log.warn("程序运行过程中出现了ServiceException，将统一处理！");
         log.warn("异常信息：{}", e.getMessage());
         return e.getMessage();
+    }
+
+    @ExceptionHandler
+    public String handleBindException(BindException e) {
+        log.warn("程序运行过程中出现了BindException，将统一处理！");
+        log.warn("异常信息：{}", e.getMessage());
+        String message = e.getFieldError().getDefaultMessage();
+        return message;
     }
 
     @ExceptionHandler
