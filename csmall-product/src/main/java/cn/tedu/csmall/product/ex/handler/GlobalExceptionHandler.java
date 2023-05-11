@@ -6,8 +6,12 @@ import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import java.util.Set;
+
 @Slf4j
-// @RestControllerAdvice
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler
@@ -42,6 +46,18 @@ public class GlobalExceptionHandler {
         //    messageList.add(defaultMessage);
         // }
         // return messageList;
+    }
+
+    @ExceptionHandler
+    public String handleConstraintViolationException(ConstraintViolationException e) {
+        log.warn("程序运行过程中出现了ConstraintViolationException，将统一处理！");
+        log.warn("异常信息：{}", e.getMessage());
+        String message = null;
+        Set<ConstraintViolation<?>> constraintViolations = e.getConstraintViolations();
+        for (ConstraintViolation<?> constraintViolation : constraintViolations) {
+            message = constraintViolation.getMessage();
+        }
+        return message;
     }
 
     @ExceptionHandler

@@ -207,6 +207,22 @@ public String delete(@Range(min = 1, message = "根据ID删除相册失败，请
 javax.validation.ConstraintViolationException: delete.albumId: 根据ID删除相册失败，请提交合法的ID值！
 ```
 
+则需要在全局异常处理器中添加处理以上异常：
+
+```java
+@ExceptionHandler
+public String handleConstraintViolationException(ConstraintViolationException e) {
+    log.warn("程序运行过程中出现了ConstraintViolationException，将统一处理！");
+    log.warn("异常信息：{}", e.getMessage());
+    String message = null;
+    Set<ConstraintViolation<?>> constraintViolations = e.getConstraintViolations();
+    for (ConstraintViolation<?> constraintViolation : constraintViolations) {
+        message = constraintViolation.getMessage();
+    }
+    return message;
+}
+```
+
 
 
 
