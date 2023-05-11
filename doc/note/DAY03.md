@@ -200,7 +200,7 @@ spring.profiles.active=dev,test
 
 另外，所有Profile配置的优先级都高于`application.properties`。
 
-# 关于日志
+# 关于Slf4j日志
 
 在开发实践中，应该将数据的关键变化、关联的处理流程记录下来，以便于出现问题时可以辅助排查问题！
 
@@ -279,6 +279,8 @@ int x = 1;
 int y = 2;
 log.info("x = {}, y = {}, x + y = {}", x, y, x + y);
 ```
+
+需要注意：SLF4j日志框架只是一个日志标准，并没有具体的实现日志功能，而具体的功能是由`logback`、`log4j`等日志框架实现的。
 
 # 关于GET与POST类型的请求
 
