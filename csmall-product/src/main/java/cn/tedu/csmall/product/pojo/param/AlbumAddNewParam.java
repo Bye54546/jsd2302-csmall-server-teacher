@@ -9,11 +9,11 @@ import java.io.Serializable;
 @Data
 public class AlbumAddNewParam implements Serializable {
 
-    @NotNull(message = "添加相册失败，必须提交相册名称！")
+    @NotNull(message = "必须提交相册名称")
     @ApiModelProperty(value = "相册名称", required = true, example = "可乐的相册")
     private String name;
 
-    @NotNull(message = "添加相册失败，必须提交相册简介！")
+    @NotNull(message = "必须提交相册简介")
     @ApiModelProperty(value = "相册简介", required = true, example = "可乐的相册的简介")
     private String description;
 

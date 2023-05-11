@@ -3,8 +3,13 @@ package cn.tedu.csmall.product.ex.handler;
 import cn.tedu.csmall.product.ex.ServiceException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringJoiner;
 
 @Slf4j
 @RestControllerAdvice
@@ -18,11 +23,27 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler
-    public String handleBindException(BindException e) {
+    public List<String> handleBindException(BindException e) {
         log.warn("程序运行过程中出现了BindException，将统一处理！");
         log.warn("异常信息：{}", e.getMessage());
-        String message = e.getFieldError().getDefaultMessage();
-        return message;
+        // String message = e.getFieldError().getDefaultMessage();
+        // return message;
+
+        // StringJoiner stringJoiner = new StringJoiner("，", "请求参数错误，", "！");
+        // List<FieldError> fieldErrors = e.getFieldErrors();
+        // for (FieldError fieldError : fieldErrors) {
+        //    String defaultMessage = fieldError.getDefaultMessage();
+        //    stringJoiner.add(defaultMessage);
+        // }
+        // return stringJoiner.toString();
+
+        List<String> messageList = new ArrayList<>();
+        List<FieldError> fieldErrors = e.getFieldErrors();
+        for (FieldError fieldError : fieldErrors) {
+            String defaultMessage = fieldError.getDefaultMessage();
+            messageList.add(defaultMessage);
+        }
+        return messageList;
     }
 
     @ExceptionHandler
