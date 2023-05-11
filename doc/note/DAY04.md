@@ -21,7 +21,28 @@ public String handleServiceException(ServiceException e) {
 }
 ```
 
+如果将以上方法定义在某个Controller中，它将只能作用于那个Controller中处理请求的方法抛出的异常，不能处理别的Controller中的异常！可以将以上方法定义在专门的类中，并在类上添加`@RestControllerAdvice`注解，添加此注解后，此类中所有特定的方法（例如添加`@ExceptionHandler`的方法）可以作用于当前项目中每次处理请求的过程中！
 
+例如，创建`GlobalExceptionHandler`类，在类上添加`@RestControllerAdvice`注解，并将以上处理异常的方法添加在此类中：
+
+```java
+@Slf4j
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler
+    public String handleServiceException(ServiceException e) {
+        log.warn("程序运行过程中出现了ServiceException，将统一处理！");
+        log.warn("异常信息：{}", e.getMessage());
+        return e.getMessage();
+    }
+
+}
+```
+
+在以上类中，可以存在多个处理异常的方法，用于处理不同种类的异常！
+
+允许同时存在处理了父子级异常的方法，例如某个方法处理`NullPointerException`，另一个方法处理`RuntimeException`，后续，当出现`NullPointerException`时，虽然匹配此异常的处理方法有2个，但是，会执行类型最接近此异常的方法，也就是由处理`NullPointerException`异常的方法进行处理，而不会由处理`RuntimeException`异常的方法进行处理！
 
 
 

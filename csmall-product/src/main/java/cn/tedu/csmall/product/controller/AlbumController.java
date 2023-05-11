@@ -44,4 +44,18 @@ public class AlbumController {
         throw new ServiceException("别急，还没做！");
     }
 
+    @PostMapping("/update")
+    @ApiOperation("修改相册")
+    @ApiOperationSupport(order =300)
+    public String update() {
+        throw new NullPointerException("修改出错了，导致了空指针异常！");
+    }
+
+    @PostMapping("/list")
+    @ApiOperation("查询相册列表")
+    @ApiOperationSupport(order =300)
+    public String list() {
+        throw new RuntimeException("查询出错了，导致了RuntimeException！");
+    }
+
 }
