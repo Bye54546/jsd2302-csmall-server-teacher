@@ -179,7 +179,33 @@ public class ValidationConfiguration {
 }
 ```
 
+## 检查未封装的请求参数
 
+对于未封装的请求参数（例如参数列表中的`Long id`）的检查，需要先在当前方法所在的类上添加`@Validated`注解，例如：
+
+```java
+@RestController
+@RequestMapping("/album")
+@Validated
+public class AlbumController {
+}
+```
+
+然后，在参数上添加对应的检查注解，例如：
+
+```java
+@PostMapping("/delete")
+public String delete(@Range(min = 1, message = "根据ID删除相册失败，请提交合法的ID值！") 
+                     @RequestParam Long albumId) throws Exception {
+    // ...
+}
+```
+
+暂时不使用全局异常处理器，当提交的请求参数不符合以上配置的规则时，在服务器的控制台可以看到错误信息：
+
+```
+javax.validation.ConstraintViolationException: delete.albumId: 根据ID删除相册失败，请提交合法的ID值！
+```
 
 
 

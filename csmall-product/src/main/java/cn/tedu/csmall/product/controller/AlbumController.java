@@ -9,11 +9,10 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.validator.constraints.Range;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -21,6 +20,7 @@ import javax.validation.Valid;
 @RequestMapping("/album")
 @Api(tags = "04. 相册管理模块")
 @Slf4j
+@Validated
 public class AlbumController {
 
     @Autowired
@@ -42,10 +42,10 @@ public class AlbumController {
     @ApiOperation("根据ID删除相册")
     @ApiOperationSupport(order = 200)
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "albumId", value = "相册ID", required = true, dataType = "long"),
-            @ApiImplicitParam(name = "userId", value = "用户ID", required = true, dataType = "long")
+            @ApiImplicitParam(name = "albumId", value = "相册ID", required = true, dataType = "long")
     })
-    public String delete(Long albumId, Long userId) throws Exception {
+    public String delete(@Range(min = 1, message = "根据ID删除相册失败，请提交合法的ID值！")
+                         @RequestParam Long albumId) throws Exception {
         "".substring(1000000);
         return null;
     }
