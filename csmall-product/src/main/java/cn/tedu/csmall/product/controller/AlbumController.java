@@ -1,6 +1,5 @@
 package cn.tedu.csmall.product.controller;
 
-import cn.tedu.csmall.product.ex.ServiceException;
 import cn.tedu.csmall.product.pojo.param.AlbumAddNewParam;
 import cn.tedu.csmall.product.service.IAlbumService;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;

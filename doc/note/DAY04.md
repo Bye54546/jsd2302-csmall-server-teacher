@@ -223,15 +223,26 @@ public String handleConstraintViolationException(ConstraintViolationException e)
 }
 ```
 
-
-
-
-
 ## 检查注解
 
+在`org.hibernate.validator.constraints`和`javax.validation.constraints`这2个包中的都是检查注解！
 
+![image-20230511162533037](assets/image-20230511162533037.png)
 
+![image-20230511162550197](assets/image-20230511162550197.png)
 
+常用的检查注解有：
+
+- `@NotNull`：不允许为`null`值
+  - 可以用于任何类型
+- `@NotEmpty`：不允许为空字符串（长度为0的字符串），并且会检查是否为`null`值（为`null`时报错）
+  - 仅能用于字符串类型的参数
+- `@NotBlank`：不允许为空白，即不允许是“仅由空格、TAB等空白值组成的字符串”
+  - 仅能用于字符串类型的参数
+- `@Range`：通过配置`min`和`max`属性来限制数值类型参数的值区间，它不会检查是否为`null`（为`null`并不执行任何检查，且不会报错）
+  - 仅能用于整型参数
+- `@Pattern`：通过配置`regexp`属性来配置正则表达式
+  - 仅能用于字符串类型的参数
 
 
 
