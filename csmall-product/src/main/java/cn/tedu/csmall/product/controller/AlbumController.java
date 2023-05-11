@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,7 +28,7 @@ public class AlbumController {
     @PostMapping("/add-new")
     @ApiOperation("添加相册")
     @ApiOperationSupport(order = 100)
-    public String addNew(AlbumAddNewParam albumAddNewParam) {
+    public String addNew(AlbumAddNewParam albumAddNewParam) throws Exception {
         albumService.addNew(albumAddNewParam);
         return "添加成功！";
     }
@@ -40,20 +41,21 @@ public class AlbumController {
             @ApiImplicitParam(name = "albumId", value = "相册ID", required = true, dataType = "long"),
             @ApiImplicitParam(name = "userId", value = "用户ID", required = true, dataType = "long")
     })
-    public String delete(Long albumId, Long userId) {
-        throw new ServiceException("别急，还没做！");
+    public String delete(Long albumId, Long userId) throws Exception {
+        "".substring(1000000);
+        return null;
     }
 
     @PostMapping("/update")
     @ApiOperation("修改相册")
-    @ApiOperationSupport(order =300)
+    @ApiOperationSupport(order = 300)
     public String update() {
         throw new NullPointerException("修改出错了，导致了空指针异常！");
     }
 
-    @PostMapping("/list")
+    @GetMapping("/list")
     @ApiOperation("查询相册列表")
-    @ApiOperationSupport(order =300)
+    @ApiOperationSupport(order = 300)
     public String list() {
         throw new RuntimeException("查询出错了，导致了RuntimeException！");
     }
