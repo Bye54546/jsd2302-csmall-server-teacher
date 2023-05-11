@@ -1,5 +1,6 @@
 package cn.tedu.csmall.product.controller;
 
+import cn.tedu.csmall.product.web.JsonResult;
 import cn.tedu.csmall.product.pojo.param.AlbumAddNewParam;
 import cn.tedu.csmall.product.service.IAlbumService;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
@@ -29,11 +30,15 @@ public class AlbumController {
     @PostMapping("/add-new")
     @ApiOperation("添加相册")
     @ApiOperationSupport(order = 100)
-    public String addNew(@Valid AlbumAddNewParam albumAddNewParam) {
+    public JsonResult addNew(@Valid AlbumAddNewParam albumAddNewParam) {
         log.debug("开始处理【添加相册】的请求，参数：{}", albumAddNewParam);
         albumService.addNew(albumAddNewParam);
         log.debug("处理【添加相册】的请求，完成！");
-        return "添加成功！";
+
+        JsonResult jsonResult = new JsonResult();
+        jsonResult.setState(1);
+        jsonResult.setMessage("添加成功！");
+        return jsonResult;
     }
 
     // http://localhost:8080/album/delete?id=1

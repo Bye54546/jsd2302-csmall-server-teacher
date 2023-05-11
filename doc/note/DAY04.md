@@ -244,6 +244,125 @@ public String handleConstraintViolationException(ConstraintViolationException e)
 - `@Pattern`：通过配置`regexp`属性来配置正则表达式
   - 仅能用于字符串类型的参数
 
+# 响应结果的类型
+
+当成功的添加相册时，服务器将响应：
+
+```
+添加成功！
+```
+
+如果相册的名称已经被占用，服务器将响应：
+
+```
+添加相册失败，相册名称已经被占用！
+```
+
+如果提交的请求参数不符合服务器端的检查规则，例如没有提交相册名称时，服务器将响应：
+
+```
+添加相册失败，必须提交相册名称！
+```
+
+以上响应的结果其实是无法正常使用的！当客户端向服务器发请求后，如果得到的是以上结果，则需要：
+
+```javascript
+axios.post("/album/add-new", v.album).then(function (response) {
+  if (response.data == '添加成功！'){
+    // ...
+  } else if (response.data == '添加相册失败，相册名称已经被占用！'){
+    // ...
+  } else if (response.data == '添加相册失败，必须提交相册名称！') {
+    // ...
+  } else if (... 其它错误) {
+    // ...
+  }
+})
+```
+
+以上代码中，使用字符串来判断操作结果是错误的做法！因为字符串是可能调整的，并且，不适用于国际化！
+
+通常，应该使用特定的代码（或代号）来表示不同的状态！例如，使用`1`表示成功，使用`2`表示某种失败，使用`3`表示另一种失败等等！
+
+另外，服务器端仍应该提供出错时的描述文本，而客户端只需要获取到这些文本并直接显示在软件的界面中即可（客户端不会自行组织语言来设计错误时的描述文本）。
+
+所以，服务器端需要向客户端响应操作结果对应的代码（或代码），同时还要响应错误的描述文本！
+
+则可以创建`JsonResult`类，在类中声明需要响应的数据属性，例如：
+
+```java
+@Data
+public class JsonResult implements Serializable {
+    private Integer state;
+    private String message;
+}
+```
+
+然后，处理请求的方法、处理异常的方法，都应该使用以上类型作为方法的返回值类型，例如：
+
+```java
+@PostMapping("/add-new")
+public JsonResult addNew(@Valid AlbumAddNewParam albumAddNewParam) {
+    log.debug("开始处理【添加相册】的请求，参数：{}", albumAddNewParam);
+    albumService.addNew(albumAddNewParam);
+
+    JsonResult jsonResult = new JsonResult();
+    jsonResult.setState(1);
+    jsonResult.setMessage("添加成功！");
+    return jsonResult;
+}
+```
+
+```java
+@ExceptionHandler
+public JsonResult handleServiceException(ServiceException e) {
+    log.warn("程序运行过程中出现了ServiceException，将统一处理！");
+    log.warn("异常信息：{}", e.getMessage());
+
+    JsonResult jsonResult = new JsonResult();
+    jsonResult.setState(2);
+    jsonResult.setMessage(e.getMessage());
+    return jsonResult;
+}
+```
+
+经过以上调整以后，在执行过程中，服务器端的Spring MVC会将返回的对象转换为JSON格式再进行响应，例如：
+
+```json
+{
+  "state": 1,
+  "message": "添加成功！"
+}
+```
+
+```json
+{
+  "state": 2,
+  "message": "添加相册失败，相册名称已经被占用！"
+}
+```
+
+```json
+{
+  "state": 3,
+  "message": "添加相册失败，必须提交相册名称！"
+}
+```
+
+后续，客户端的代码就可以调整为：
+
+```javascript
+axios.post("/album/add-new", v.album).then(function (response) {
+  if (response.data.state == 1){
+    // 成功
+  } else if (response.data.state == 2){
+    // 显示response.data.message
+  } else if (response.data.state == 3) {
+    // 显示response.data.message
+  }
+})
+```
+
 
 
 
