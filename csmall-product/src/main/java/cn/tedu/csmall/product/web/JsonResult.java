@@ -12,6 +12,12 @@ public class JsonResult implements Serializable {
     private Integer state;
     private String message;
 
+    public static JsonResult ok() {
+        JsonResult jsonResult = new JsonResult();
+        jsonResult.setState(1);
+        return jsonResult;
+    }
+
 //    public JsonResult setState(Integer state) {
 //        this.state = state;
 //        return this;

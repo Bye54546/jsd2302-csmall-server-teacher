@@ -2,6 +2,7 @@ package cn.tedu.csmall.product.controller;
 
 import cn.tedu.csmall.product.pojo.param.AttributeTemplateAddNewParam;
 import cn.tedu.csmall.product.service.IAttributeTemplateService;
+import cn.tedu.csmall.product.web.JsonResult;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -22,9 +23,9 @@ public class AttributeTemplateController {
     @PostMapping("/add-new")
     @ApiOperation("添加属性模板")
     @ApiOperationSupport(order = 100)
-    public String addNew(AttributeTemplateAddNewParam attributeTemplateAddNewParam) {
+    public JsonResult addNew(AttributeTemplateAddNewParam attributeTemplateAddNewParam) {
         albumService.addNew(attributeTemplateAddNewParam);
-        return "添加成功！";
+        return JsonResult.ok();
     }
 
 }

@@ -62,7 +62,8 @@ public JsonResult addNew(@Valid AlbumAddNewParam albumAddNewParam) {
 
 以上做法可以成功的精简构建`JsonResult`对象的代码，但是，存在问题：
 
-- 传入的参数的可读性可能较差，当构造方法有多个参数时，可能不便于了解传入的各值用于哪些属性
+- 传入的参数的可读性可能较差，当构造方法有多个参数时，可能不便于了解传入的各值是哪些属性的值
+- 构造方法的名称必须与类名完全相同，则不便于表达某些含义
 
 **解决方案-2：链式方法**
 
@@ -115,6 +116,36 @@ public class JsonResult implements Serializable {
     
 }
 ```
+
+以上做法可以成功的解决构造方法多参数时各参数值意义不明确的问题，但是，这种做法也存在问题：
+
+- 当属性较多时，需要调用多个Setter方法，则代码篇幅可能较长
+  - 无解
+  - 不一定真的的算是“问题”
+
+**解决方法-3：静态方法**
+
+在`JsonResult`类中添加新的方法：
+
+```java
+public static JsonResult ok() {
+    JsonResult jsonResult = new JsonResult();
+    jsonResult.setState(1);
+    return jsonResult;
+}
+```
+
+则处理请求的方法可以调整为：
+
+```java
+@PostMapping("/add-new")
+public JsonResult addNew(@Valid AlbumAddNewParam albumAddNewParam) {
+    // ...
+    return JsonResult.ok();
+}
+```
+
+这种做法的优点在于：方法名称是自定义的，可以使用更加贴切的方法名，以表示设计意图！
 
 
 
