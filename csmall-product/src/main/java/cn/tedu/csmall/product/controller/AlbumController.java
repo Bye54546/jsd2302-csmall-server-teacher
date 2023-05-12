@@ -33,12 +33,11 @@ public class AlbumController {
     public JsonResult addNew(@Valid AlbumAddNewParam albumAddNewParam) {
         log.debug("开始处理【添加相册】的请求，参数：{}", albumAddNewParam);
         albumService.addNew(albumAddNewParam);
-        log.debug("处理【添加相册】的请求，完成！");
 
-        JsonResult jsonResult = new JsonResult();
-        jsonResult.setState(1);
-        jsonResult.setMessage("添加成功！");
-        return jsonResult;
+        // return new JsonResult(1, "添加成功");
+        return new JsonResult()
+                .setState(1)
+                .setMessage("添加成功");
     }
 
     // http://localhost:8080/album/delete?id=1
