@@ -25,21 +25,4 @@ public class JsonResult implements Serializable {
         return jsonResult;
     }
 
-//    public JsonResult setState(Integer state) {
-//        this.state = state;
-//        return this;
-//    }
-//
-//    public JsonResult setMessage(String message) {
-//        this.message = message;
-//        return this;
-//    }
-//
-//    public Integer getState() {
-//        return state;
-//    }
-//
-//    public String getMessage() {
-//        return message;
-//    }
 }

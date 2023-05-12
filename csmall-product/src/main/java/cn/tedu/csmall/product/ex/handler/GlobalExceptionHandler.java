@@ -20,11 +20,8 @@ public class GlobalExceptionHandler {
     public JsonResult handleServiceException(ServiceException e) {
         log.warn("程序运行过程中出现了ServiceException，将统一处理！");
         log.warn("异常信息：{}", e.getMessage());
-
-        //JsonResult jsonResult = new JsonResult();
-        //jsonResult.setState(2);
-        //jsonResult.setMessage(e.getMessage());
-        return JsonResult.fail(ServiceCode.ERR_BAD_REQUEST, e.getMessage());
+        // 未完成，待调整
+        return JsonResult.fail(ServiceCode.ERR_CONFLICT, e.getMessage());
     }
 
     @ExceptionHandler
@@ -33,9 +30,6 @@ public class GlobalExceptionHandler {
         log.warn("异常信息：{}", e.getMessage());
         // 【解决方案-1】使用1个字符串表示1个错误信息
         String message = e.getFieldError().getDefaultMessage();
-        //JsonResult jsonResult = new JsonResult();
-        //jsonResult.setState(3);
-        //jsonResult.setMessage(message);
         return JsonResult.fail(ServiceCode.ERR_BAD_REQUEST, message);
 
         // 【解决方案-2】使用1个字符串表示错误信息
@@ -83,7 +77,7 @@ public class GlobalExceptionHandler {
         //JsonResult jsonResult = new JsonResult();
         //jsonResult.setState(99999);
         //jsonResult.setMessage(message);
-        return JsonResult.fail(ServiceCode.ERR_BAD_REQUEST, message);
+        return JsonResult.fail(ServiceCode.ERR_UNKNOWN, message);
     }
 
 }
