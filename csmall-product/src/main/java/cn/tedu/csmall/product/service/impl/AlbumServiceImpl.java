@@ -4,6 +4,7 @@ import cn.tedu.csmall.product.ex.ServiceException;
 import cn.tedu.csmall.product.mapper.AlbumMapper;
 import cn.tedu.csmall.product.pojo.entity.Album;
 import cn.tedu.csmall.product.pojo.param.AlbumAddNewParam;
+import cn.tedu.csmall.product.pojo.param.AlbumUpdateInfoParam;
 import cn.tedu.csmall.product.service.IAlbumService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +41,17 @@ public class AlbumServiceImpl implements IAlbumService {
         album.setGmtCreate(LocalDateTime.now());
         album.setGmtModified(LocalDateTime.now());
         albumMapper.insert(album);
-        log.debug("将新的相册数据写入到数据库，完成！");
+        log.debug("将新的相册数据插入到数据库，完成！");
+    }
+
+    @Override
+    public void updateInfoById(Long id, AlbumUpdateInfoParam albumUpdateInfoParam) {
+        log.debug("开始处理【修改相册详情】的业务，参数：{}", albumUpdateInfoParam);
+        Album album = new Album();
+        BeanUtils.copyProperties(albumUpdateInfoParam, album);
+        album.setId(id);
+        albumMapper.updateById(album);
+        log.debug("将新的相册数据更新入到数据库，完成！");
     }
 
 }

@@ -1,5 +1,6 @@
 package cn.tedu.csmall.product.controller;
 
+import cn.tedu.csmall.product.pojo.param.AlbumUpdateInfoParam;
 import cn.tedu.csmall.product.web.JsonResult;
 import cn.tedu.csmall.product.pojo.param.AlbumAddNewParam;
 import cn.tedu.csmall.product.service.IAlbumService;
@@ -36,7 +37,7 @@ public class AlbumController {
         return JsonResult.ok();
     }
 
-    // http://localhost:8080/album/delete?id=1
+    // http://localhost:8080/album/delete
     @PostMapping("/delete")
     @ApiOperation("根据ID删除相册")
     @ApiOperationSupport(order = 200)
@@ -49,16 +50,23 @@ public class AlbumController {
         return null;
     }
 
+    // http://localhost:8080/album/update
     @PostMapping("/update")
-    @ApiOperation("修改相册")
+    @ApiOperation("修改相册详情")
     @ApiOperationSupport(order = 300)
-    public String update() {
-        throw new NullPointerException("修改出错了，导致了空指针异常！");
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "相册ID", required = true, dataType = "long")
+    })
+    public JsonResult updateInfoById(@RequestParam @Range(min = 1, message = "请提交有效的相册ID值！") Long id,
+                                     @Valid AlbumUpdateInfoParam albumUpdateInfoParam) {
+        log.debug("开始处理【修改相册详情】的业务，参数：{}", albumUpdateInfoParam);
+        albumService.updateInfoById(id, albumUpdateInfoParam);
+        return JsonResult.ok();
     }
 
     @GetMapping("/list")
     @ApiOperation("查询相册列表")
-    @ApiOperationSupport(order = 300)
+    @ApiOperationSupport(order = 420)
     public String list() {
         throw new RuntimeException("查询出错了，导致了RuntimeException！");
     }
