@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
         //JsonResult jsonResult = new JsonResult();
         //jsonResult.setState(2);
         //jsonResult.setMessage(e.getMessage());
-        return JsonResult.fail(2, e.getMessage());
+        return JsonResult.fail(ServiceCode.ERR, e.getMessage());
     }
 
     @ExceptionHandler
@@ -70,7 +70,7 @@ public class GlobalExceptionHandler {
         //JsonResult jsonResult = new JsonResult();
         //jsonResult.setState(3);
         //jsonResult.setMessage(message);
-        return JsonResult.fail(3, message);
+        return JsonResult.fail(ServiceCode.ERR, message);
     }
 
     @ExceptionHandler
@@ -83,7 +83,7 @@ public class GlobalExceptionHandler {
         //JsonResult jsonResult = new JsonResult();
         //jsonResult.setState(99999);
         //jsonResult.setMessage(message);
-        return JsonResult.fail(99999, message);
+        return JsonResult.fail(ServiceCode.ERR, message);
     }
 
 }

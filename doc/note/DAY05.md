@@ -172,13 +172,17 @@ new Category()
 
 
 
+```javascript
+if (response.data.state == 1) {
+    // 成功
+}
+```
 
 
 
 
 
-
-
+枚举
 
 
 

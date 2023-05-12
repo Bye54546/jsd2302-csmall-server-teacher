@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Accessors(chain = true)
 public class JsonResult implements Serializable {
 
-    private Integer state;
+    private ServiceCode state;
     private String message;
 
     public static JsonResult ok() {
@@ -18,7 +18,7 @@ public class JsonResult implements Serializable {
         return jsonResult;
     }
 
-    public static JsonResult fail(Integer state, String message) {
+    public static JsonResult fail(ServiceCode state, String message) {
         JsonResult jsonResult = new JsonResult();
         jsonResult.setState(state);
         jsonResult.setMessage(message);

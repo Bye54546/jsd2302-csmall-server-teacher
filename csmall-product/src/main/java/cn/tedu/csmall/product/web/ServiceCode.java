@@ -1,8 +1,10 @@
 package cn.tedu.csmall.product.web;
 
-public class ServiceCode {
+public enum ServiceCode {
 
-    public static final Integer OK = 1;
-    public static final Integer ERR = 3;
+    OK,
+    ERR;
+
+    ServiceCode() {}
 
 }
