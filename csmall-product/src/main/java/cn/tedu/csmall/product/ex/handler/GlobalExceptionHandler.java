@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
         //JsonResult jsonResult = new JsonResult();
         //jsonResult.setState(2);
         //jsonResult.setMessage(e.getMessage());
-        return JsonResult.fail(ServiceCode.ERR, e.getMessage());
+        return JsonResult.fail(ServiceCode.ERR_BAD_REQUEST, e.getMessage());
     }
 
     @ExceptionHandler
@@ -36,7 +36,7 @@ public class GlobalExceptionHandler {
         //JsonResult jsonResult = new JsonResult();
         //jsonResult.setState(3);
         //jsonResult.setMessage(message);
-        return JsonResult.fail(ServiceCode.ERR, message);
+        return JsonResult.fail(ServiceCode.ERR_BAD_REQUEST, message);
 
         // 【解决方案-2】使用1个字符串表示错误信息
         // StringJoiner stringJoiner = new StringJoiner("，", "请求参数错误，", "！");
@@ -70,7 +70,7 @@ public class GlobalExceptionHandler {
         //JsonResult jsonResult = new JsonResult();
         //jsonResult.setState(3);
         //jsonResult.setMessage(message);
-        return JsonResult.fail(ServiceCode.ERR, message);
+        return JsonResult.fail(ServiceCode.ERR_BAD_REQUEST, message);
     }
 
     @ExceptionHandler
@@ -83,7 +83,7 @@ public class GlobalExceptionHandler {
         //JsonResult jsonResult = new JsonResult();
         //jsonResult.setState(99999);
         //jsonResult.setMessage(message);
-        return JsonResult.fail(ServiceCode.ERR, message);
+        return JsonResult.fail(ServiceCode.ERR_BAD_REQUEST, message);
     }
 
 }
