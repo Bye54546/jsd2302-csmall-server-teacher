@@ -147,6 +147,74 @@ public JsonResult addNew(@Valid AlbumAddNewParam albumAddNewParam) {
 
 这种做法的优点在于：方法名称是自定义的，可以使用更加贴切的方法名，以表示设计意图！
 
+**使用枚举**
+
+由于“操作失败”的原因可能有多种（例如相册名称已经被占用、提交的请求参数基本格式有误等），所以，表示失败的方法需要参数，使得“操作失败”时可以传入不同的值，最终可以向客户端响应不同的结果，例如：
+
+```java
+public static JsonResult fail(Integer state, String message) {
+    JsonResult jsonResult = new JsonResult();
+    jsonResult.setState(state);
+    jsonResult.setMessage(message);
+    return jsonResult;
+}
+```
+
+则处理异常时可以是：
+
+```java
+@ExceptionHandler
+public JsonResult handleServiceException(ServiceException e) {
+    return JsonResult.fail(2, e.getMessage());
+}
+```
+
+为了保证传入的参数是有效的，避免随意传值（毕竟以上`fail`方法的第1个参数是`Integer`类型的，有40多亿种可能的值），可以使用枚举进行限制！
+
+首先，定义枚举类型：
+
+```java
+public enum ServiceCode {
+
+    OK(20000),
+    ERR_BAD_REQUEST(40000),
+    ERR_CONFLICT(40900),
+    ERR_UNKNOWN(99999)
+    ;
+
+    private Integer value;
+
+    public Integer getValue() {
+        return value;
+    }
+
+    ServiceCode(Integer value) {
+        this.value = value;
+    }
+
+}
+```
+
+然后，将`fail()`方法的第1个参数类型改为枚举，并在方法体中获取枚举参数值对应的数值：
+
+```java
+public static JsonResult fail(ServiceCode serviceCode, String message) {
+    JsonResult jsonResult = new JsonResult();
+    jsonResult.setState(serviceCode.getValue());
+    jsonResult.setMessage(message);
+    return jsonResult;
+}
+```
+
+则在处理异常时需要调整为：
+
+```java
+@ExceptionHandler
+public JsonResult handleServiceException(ServiceException e) {
+    return JsonResult.fail(ServiceCode.ERR_CONFLICT, e.getMessage());
+}
+```
+
 
 
 
@@ -183,6 +251,20 @@ if (response.data.state == 1) {
 
 
 枚举
+
+
+
+#000000
+
+#FF0000
+
+#0000FF
+
+#00FF00
+
+#FFFFFF
+
+16 x 16 x 16 x 16 x 16 x 16
 
 
 
