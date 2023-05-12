@@ -2,6 +2,7 @@ package cn.tedu.csmall.product.ex.handler;
 
 import cn.tedu.csmall.product.web.JsonResult;
 import cn.tedu.csmall.product.ex.ServiceException;
+import cn.tedu.csmall.product.web.ServiceCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -20,10 +21,10 @@ public class GlobalExceptionHandler {
         log.warn("程序运行过程中出现了ServiceException，将统一处理！");
         log.warn("异常信息：{}", e.getMessage());
 
-        JsonResult jsonResult = new JsonResult();
-        jsonResult.setState(2);
-        jsonResult.setMessage(e.getMessage());
-        return jsonResult;
+        //JsonResult jsonResult = new JsonResult();
+        //jsonResult.setState(2);
+        //jsonResult.setMessage(e.getMessage());
+        return JsonResult.fail(2, e.getMessage());
     }
 
     @ExceptionHandler
@@ -32,10 +33,10 @@ public class GlobalExceptionHandler {
         log.warn("异常信息：{}", e.getMessage());
         // 【解决方案-1】使用1个字符串表示1个错误信息
         String message = e.getFieldError().getDefaultMessage();
-        JsonResult jsonResult = new JsonResult();
-        jsonResult.setState(3);
-        jsonResult.setMessage(message);
-        return jsonResult;
+        //JsonResult jsonResult = new JsonResult();
+        //jsonResult.setState(3);
+        //jsonResult.setMessage(message);
+        return JsonResult.fail(ServiceCode.ERR, message);
 
         // 【解决方案-2】使用1个字符串表示错误信息
         // StringJoiner stringJoiner = new StringJoiner("，", "请求参数错误，", "！");
@@ -66,10 +67,10 @@ public class GlobalExceptionHandler {
             message = constraintViolation.getMessage();
         }
 
-        JsonResult jsonResult = new JsonResult();
-        jsonResult.setState(3);
-        jsonResult.setMessage(message);
-        return jsonResult;
+        //JsonResult jsonResult = new JsonResult();
+        //jsonResult.setState(3);
+        //jsonResult.setMessage(message);
+        return JsonResult.fail(3, message);
     }
 
     @ExceptionHandler
@@ -79,10 +80,10 @@ public class GlobalExceptionHandler {
         log.warn("异常：", e); // 取代 e.printStackTrace();，效果相同，注意，第1个参数中不要使用 {} 进行占位
         String message = "服务器忙，请稍后再试！【在开发过程中，如果看到此提示，应该检查服务器端的控制台，分析异常，并在全局异常处理器中补充处理对应异常的方法】";
 
-        JsonResult jsonResult = new JsonResult();
-        jsonResult.setState(99999);
-        jsonResult.setMessage(message);
-        return jsonResult;
+        //JsonResult jsonResult = new JsonResult();
+        //jsonResult.setState(99999);
+        //jsonResult.setMessage(message);
+        return JsonResult.fail(99999, message);
     }
 
 }
