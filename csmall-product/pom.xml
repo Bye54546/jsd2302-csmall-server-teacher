@@ -30,6 +30,11 @@
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
         </dependency>
+        <!-- 基于MyBatis或MyBatis Plus的分页查询框架 -->
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper-spring-boot-starter</artifactId>
+        </dependency>
         <!-- Lombok的依赖项，主要用于简化POJO类的编写 -->
         <dependency>
             <groupId>org.projectlombok</groupId>
