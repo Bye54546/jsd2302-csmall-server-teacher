@@ -13,7 +13,7 @@ import javax.validation.ConstraintViolationException;
 import java.util.Set;
 
 @Slf4j
-// @RestControllerAdvice
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler
