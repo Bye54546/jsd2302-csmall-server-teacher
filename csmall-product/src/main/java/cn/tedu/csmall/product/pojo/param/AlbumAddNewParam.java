@@ -2,12 +2,14 @@ package cn.tedu.csmall.product.pojo.param;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.experimental.Accessors;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Data
+@Accessors(chain = true)
 public class AlbumAddNewParam implements Serializable {
 
     @NotNull(message = "添加相册失败，必须提交相册名称！")

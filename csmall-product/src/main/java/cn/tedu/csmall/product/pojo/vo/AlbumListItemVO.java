@@ -1,4 +1,4 @@
-package cn.tedu.csmall.product.pojo.param;
+package cn.tedu.csmall.product.pojo.vo;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -7,11 +7,9 @@ import java.io.Serializable;
 
 @Data
 @Accessors(chain = true)
-public class AttributeTemplateAddNewParam implements Serializable {
-
+public class AlbumListItemVO implements Serializable {
+    private Long id;
     private String name;
-    private String pinyin;
-    private String keywords;
+    private String description;
     private Integer sort;
-
 }

@@ -4,4 +4,9 @@
 
 <mapper namespace="cn.tedu.csmall.product.mapper.AlbumMapper">
 
+    <!-- List<AlbumListItemVO> list(); -->
+    <select id="list">
+        SELECT id, name, description, sort FROM pms_album
+    </select>
+
 </mapper>
