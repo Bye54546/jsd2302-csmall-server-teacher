@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @SpringBootTest
 public class AlbumMapperTests {
@@ -26,6 +27,15 @@ public class AlbumMapperTests {
         int rows = mapper.insert(album);
         System.out.println("插入数据完成，受影响的行数：" + rows);
         System.out.println("插入数据之后，参数：" + album);
+    }
+
+    @Test
+    void list() {
+        List<?> list = mapper.list();
+        System.out.println("查询列表完成，结果集中的数据量：" + list.size());
+        for (Object item : list) {
+            System.out.println(item);
+        }
     }
 
 }
