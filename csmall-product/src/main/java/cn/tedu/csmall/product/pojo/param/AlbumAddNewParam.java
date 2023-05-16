@@ -20,7 +20,7 @@ public class AlbumAddNewParam implements Serializable {
 
     @NotNull(message = "添加相册失败，必须提交排序序号！")
     @Range(max = 99, message = "添加相册失败，排序序号值必须0~99之间！")
-    @ApiModelProperty(value = "排序序号，必须是0~255之间的数字", required = true, example = "97")
+    @ApiModelProperty(value = "排序序号，必须是0~99之间的数字", required = true, example = "97")
     private Integer sort;
 
 }
