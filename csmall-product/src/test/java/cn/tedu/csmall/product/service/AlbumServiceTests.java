@@ -34,11 +34,23 @@ public class AlbumServiceTests {
     }
 
     @Test
+    void delete() {
+        Long id = 12L;
+        try {
+            service.delete(id);
+            System.out.println("删除数据完成！");
+        } catch (ServiceException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    @Test
     void list() {
         Integer pageNum = 1;
         Integer pageSize = 10;
         PageData<?> pageData = service.list(pageNum, pageSize);
         List<?> list = pageData.getList();
+        System.out.println("集合类型：" + list.getClass().getName());
         System.out.println("查询列表完成，结果集中的数据量：" + list.size());
         System.out.println("总记录数：" + pageData.getTotal());
         System.out.println("当前页码：" + pageData.getCurrentPage());

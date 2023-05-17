@@ -71,14 +71,14 @@ public class AlbumController {
     @ApiOperation("查询相册列表")
     @ApiOperationSupport(order = 420)
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "pageNum", value = "页码", paramType = "query")
+            @ApiImplicitParam(name = "page", value = "页码", paramType = "query")
     })
-    public JsonResult list(@Range(min = 1, message = "查询相册列表失败，请提供正确的页码值！") Integer pageNum) {
-        log.debug("开始处理【查询相册列表】的请求，页码：{}", pageNum);
-        if (pageNum == null || pageNum < 1) {
-            pageNum = 1;
+    public JsonResult list(@Range(min = 1, message = "查询相册列表失败，请提供正确的页码值！") Integer page) {
+        log.debug("开始处理【查询相册列表】的请求，页码：{}", page);
+        if (page == null || page < 1) {
+            page = 1;
         }
-        PageData<AlbumListItemVO> pageData = albumService.list(pageNum);
+        PageData<AlbumListItemVO> pageData = albumService.list(page);
         return JsonResult.ok(pageData);
     }
 

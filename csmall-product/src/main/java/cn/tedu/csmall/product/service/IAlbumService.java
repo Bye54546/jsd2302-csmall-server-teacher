@@ -9,6 +9,8 @@ public interface IAlbumService {
 
     void addNew(AlbumAddNewParam albumAddNewParam);
 
+    void delete(Long id);
+
     void updateInfoById(Long id, AlbumUpdateInfoParam albumUpdateInfoParam);
 
     PageData<AlbumListItemVO> list(Integer pageNum);
