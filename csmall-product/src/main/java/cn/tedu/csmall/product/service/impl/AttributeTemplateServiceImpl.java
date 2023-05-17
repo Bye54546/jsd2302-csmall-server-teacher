@@ -5,6 +5,7 @@ import cn.tedu.csmall.product.mapper.AttributeTemplateMapper;
 import cn.tedu.csmall.product.pojo.entity.AttributeTemplate;
 import cn.tedu.csmall.product.pojo.param.AttributeTemplateAddNewParam;
 import cn.tedu.csmall.product.service.IAttributeTemplateService;
+import cn.tedu.csmall.product.web.ServiceCode;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -31,7 +32,7 @@ public class AttributeTemplateServiceImpl implements IAttributeTemplateService {
         if (countByName > 0) {
             String message = "添加属性模板失败，属性模板名称已经被占用！";
             log.warn(message);
-            throw new ServiceException(message);
+            throw new ServiceException(ServiceCode.ERR_CONFLICT, message);
         }
 
         // 将属性模板数据写入到数据库中

@@ -11,6 +11,7 @@ import cn.tedu.csmall.product.pojo.vo.AlbumListItemVO;
 import cn.tedu.csmall.product.pojo.vo.PageData;
 import cn.tedu.csmall.product.service.IAlbumService;
 import cn.tedu.csmall.product.util.PageInfoToPageDataConverter;
+import cn.tedu.csmall.product.web.ServiceCode;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -42,7 +43,7 @@ public class AlbumServiceImpl implements IAlbumService {
         if (countByName > 0) {
             String message = "添加相册失败，相册名称已经被占用！";
             log.warn(message);
-            throw new ServiceException(message);
+            throw new ServiceException(ServiceCode.ERR_CONFLICT, message);
         }
 
         // 将相册数据写入到数据库中
@@ -65,7 +66,7 @@ public class AlbumServiceImpl implements IAlbumService {
         if (countById == 0) {
             String message = "删除相册失败，相册数据不存在！";
             log.warn(message);
-            throw new ServiceException(message);
+            throw new ServiceException(ServiceCode.ERR_NOT_FOUND, message);
         }
 
         // 检查是否有图片关联到了此相册，如果存在，则抛出异常
@@ -76,9 +77,12 @@ public class AlbumServiceImpl implements IAlbumService {
         if (countByAlbumId > 0) {
             String message = "删除相册失败，仍有图片关联到此相册！";
             log.warn(message);
-            throw new ServiceException(message);
+            throw new ServiceException(ServiceCode.ERR_CONFLICT, message);
         }
 
+        // 检查是否有SPU关联到了此相册，如果存在，则抛出异常
+
+        // 检查是否有SKU关联到了此相册，如果存在，则抛出异常
 
         albumMapper.deleteById(id);
     }

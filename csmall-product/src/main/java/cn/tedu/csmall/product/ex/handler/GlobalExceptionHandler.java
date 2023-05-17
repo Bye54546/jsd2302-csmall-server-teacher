@@ -20,8 +20,7 @@ public class GlobalExceptionHandler {
     public JsonResult handleServiceException(ServiceException e) {
         log.warn("程序运行过程中出现了ServiceException，将统一处理！");
         log.warn("异常信息：{}", e.getMessage());
-        // 未完成，待调整
-        return JsonResult.fail(ServiceCode.ERR_CONFLICT, e.getMessage());
+        return JsonResult.fail(e.getServiceCode(), e.getMessage());
     }
 
     @ExceptionHandler
