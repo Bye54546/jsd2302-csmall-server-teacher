@@ -79,7 +79,7 @@ public class AlbumController {
             pageNum = 1;
         }
         PageData<AlbumListItemVO> pageData = albumService.list(pageNum);
-        return JsonResult.ok().setData(pageData);
+        return JsonResult.ok(pageData);
     }
 
 }

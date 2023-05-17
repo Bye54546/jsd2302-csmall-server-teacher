@@ -14,8 +14,13 @@ public class JsonResult implements Serializable {
     private Object data;
 
     public static JsonResult ok() {
+        return ok(null);
+    }
+
+    public static JsonResult ok(Object data) {
         JsonResult jsonResult = new JsonResult();
         jsonResult.setState(ServiceCode.OK.getValue());
+        jsonResult.setData(data);
         return jsonResult;
     }
 
