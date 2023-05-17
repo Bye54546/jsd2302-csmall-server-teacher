@@ -3,6 +3,7 @@ package cn.tedu.csmall.product;
 import cn.tedu.csmall.product.mapper.AlbumMapper;
 import cn.tedu.csmall.product.pojo.vo.AlbumListItemVO;
 import cn.tedu.csmall.product.pojo.vo.PageData;
+import cn.tedu.csmall.product.util.PageInfoToPageDataConverter;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.junit.jupiter.api.Test;
@@ -33,12 +34,8 @@ public class PageHelperTests {
         System.out.println("-----------------------");
 
         // 自行将PageInfo转换为自定义的PageData
-        PageData<AlbumListItemVO> pageData = new PageData<>();
-        pageData.setPageSize(pageInfo.getPageSize());
-        pageData.setMaxPage(pageInfo.getPages());
-        pageData.setCurrentPage(pageInfo.getPageNum());
-        pageData.setTotal(pageInfo.getTotal());
-        pageData.setList(pageInfo.getList());
+        PageData<AlbumListItemVO> pageData
+                = PageInfoToPageDataConverter.convert(pageInfo);
         System.out.println(pageData);
     }
 }
