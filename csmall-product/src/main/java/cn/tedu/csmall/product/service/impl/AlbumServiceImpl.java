@@ -5,14 +5,20 @@ import cn.tedu.csmall.product.mapper.AlbumMapper;
 import cn.tedu.csmall.product.pojo.entity.Album;
 import cn.tedu.csmall.product.pojo.param.AlbumAddNewParam;
 import cn.tedu.csmall.product.pojo.param.AlbumUpdateInfoParam;
+import cn.tedu.csmall.product.pojo.vo.AlbumListItemVO;
+import cn.tedu.csmall.product.pojo.vo.PageData;
 import cn.tedu.csmall.product.service.IAlbumService;
+import cn.tedu.csmall.product.util.PageInfoToPageDataConverter;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -52,6 +58,23 @@ public class AlbumServiceImpl implements IAlbumService {
         album.setId(id);
         albumMapper.updateById(album);
         log.debug("将新的相册数据更新入到数据库，完成！");
+    }
+
+    @Override
+    public PageData<AlbumListItemVO> list(Integer pageNum) {
+        Integer pageSize = 5;
+        return list(pageNum, pageSize);
+    }
+
+    @Override
+    public PageData<AlbumListItemVO> list(Integer pageNum, Integer pageSize) {
+        log.debug("开始处理【查询相册列表】的业务，页码：{}，每页记录数：{}", pageNum, pageSize);
+        PageHelper.startPage(pageNum, pageSize);
+        List<AlbumListItemVO> list = albumMapper.list();
+        PageInfo<AlbumListItemVO> pageInfo = new PageInfo<>(list);
+        PageData<AlbumListItemVO> pageData = PageInfoToPageDataConverter.convert(pageInfo);
+        log.debug("查询完成，即将返回：{}", pageData);
+        return pageData;
     }
 
 }
