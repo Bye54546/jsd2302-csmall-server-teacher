@@ -11,6 +11,7 @@ public class JsonResult implements Serializable {
 
     private Integer state;
     private String message;
+    private Object data;
 
     public static JsonResult ok() {
         JsonResult jsonResult = new JsonResult();

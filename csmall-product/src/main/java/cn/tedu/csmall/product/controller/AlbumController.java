@@ -2,6 +2,8 @@ package cn.tedu.csmall.product.controller;
 
 import cn.tedu.csmall.product.pojo.param.AlbumAddNewParam;
 import cn.tedu.csmall.product.pojo.param.AlbumUpdateInfoParam;
+import cn.tedu.csmall.product.pojo.vo.AlbumListItemVO;
+import cn.tedu.csmall.product.pojo.vo.PageData;
 import cn.tedu.csmall.product.service.IAlbumService;
 import cn.tedu.csmall.product.web.JsonResult;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
@@ -64,11 +66,20 @@ public class AlbumController {
         return JsonResult.ok();
     }
 
+    // http://localhost:8080/album/list
     @GetMapping("/list")
     @ApiOperation("查询相册列表")
     @ApiOperationSupport(order = 420)
-    public String list() {
-        throw new RuntimeException("查询出错了，导致了RuntimeException！");
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageNum", value = "页码", paramType = "query")
+    })
+    public JsonResult list(@Range(min = 1, message = "查询相册列表失败，请提供正确的页码值！") Integer pageNum) {
+        log.debug("开始处理【查询相册列表】的请求，页码：{}", pageNum);
+        if (pageNum == null || pageNum < 1) {
+            pageNum = 1;
+        }
+        PageData<AlbumListItemVO> pageData = albumService.list(pageNum);
+        return JsonResult.ok().setData(pageData);
     }
 
 }
