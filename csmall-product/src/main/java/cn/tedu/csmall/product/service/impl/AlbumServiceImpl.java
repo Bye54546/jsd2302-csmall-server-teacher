@@ -90,7 +90,34 @@ public class AlbumServiceImpl implements IAlbumService {
 
     @Override
     public void updateInfoById(Long id, AlbumUpdateInfoParam albumUpdateInfoParam) {
-        log.debug("开始处理【修改相册详情】的业务，参数：{}", albumUpdateInfoParam);
+        log.debug("开始处理【修改相册详情】的业务，ID：{}, 新数据：{}", id, albumUpdateInfoParam);
+        // 检查相册是否存在，如果不存在，则抛出异常
+        QueryWrapper<Album> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", id);
+        int countById = albumMapper.selectCount(queryWrapper);
+        log.debug("根据相册ID统计匹配的相册数量，结果：{}", countById);
+        if (countById == 0) {
+            String message = "修改相册详情失败，相册数据不存在！";
+            log.warn(message);
+            throw new ServiceException(ServiceCode.ERR_NOT_FOUND, message);
+        }
+
+        // 检查相册名称是否被其它相册占用，如果被占用，则抛出异常
+        QueryWrapper<Album> queryWrapper2 = new QueryWrapper<>();
+        queryWrapper2.eq("name", albumUpdateInfoParam.getName())
+                .ne("id", id);
+        // where name=? and id<>?
+        // where name='Redmi Note 15 5G的相册' and id<>1   >>> 0
+        // where name='华为P50的相册' and id<>1   >>> 1
+        int countByName = albumMapper.selectCount(queryWrapper2);
+        log.debug("根据相册名称统计匹配的相册数量，结果：{}", countByName);
+        if (countByName > 0) {
+            String message = "修改相册详情失败，相册名称已经被占用！";
+            log.warn(message);
+            throw new ServiceException(ServiceCode.ERR_CONFLICT, message);
+        }
+
+        // 执行修改
         Album album = new Album();
         BeanUtils.copyProperties(albumUpdateInfoParam, album);
         album.setId(id);

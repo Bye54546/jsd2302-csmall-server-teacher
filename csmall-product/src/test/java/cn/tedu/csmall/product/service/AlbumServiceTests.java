@@ -2,6 +2,7 @@ package cn.tedu.csmall.product.service;
 
 import cn.tedu.csmall.product.ex.ServiceException;
 import cn.tedu.csmall.product.pojo.param.AlbumAddNewParam;
+import cn.tedu.csmall.product.pojo.param.AlbumUpdateInfoParam;
 import cn.tedu.csmall.product.pojo.vo.AlbumStandardVO;
 import cn.tedu.csmall.product.pojo.vo.PageData;
 import org.junit.jupiter.api.Test;
@@ -43,6 +44,26 @@ public class AlbumServiceTests {
         } catch (ServiceException e) {
             System.out.println(e.getServiceCode().getValue());
             System.out.println(e.getMessage());
+        }
+    }
+
+    @Test
+    void updateInfoById() {
+        Long id = 1L;
+        AlbumUpdateInfoParam albumUpdateInfoParam = new AlbumUpdateInfoParam();
+        albumUpdateInfoParam.setName("华为Mate10的相册");
+        albumUpdateInfoParam.setDescription("测试数据简介-33333");
+        albumUpdateInfoParam.setSort(93);
+
+        try {
+            service.updateInfoById(id, albumUpdateInfoParam);
+            System.out.println("修改成功！");
+        } catch (ServiceException e) {
+            System.out.println(e.getServiceCode().getValue());
+            System.out.println(e.getMessage());
+        } catch (Throwable e) {
+            System.out.println("修改失败！出现了某种异常！");
+            e.printStackTrace();
         }
     }
 
