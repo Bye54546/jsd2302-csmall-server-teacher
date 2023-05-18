@@ -4,6 +4,13 @@
 
 <mapper namespace="cn.tedu.csmall.product.mapper.AlbumMapper">
 
+    <!-- AlbumStandardVO getStandardById(Long id); -->
+    <select id="getStandardById" resultType="cn.tedu.csmall.product.pojo.vo.AlbumStandardVO">
+        SELECT id, name, description, sort
+        FROM pms_album
+        WHERE id=#{id}
+    </select>
+
     <!-- List<AlbumListItemVO> list(); -->
     <select id="list" resultType="cn.tedu.csmall.product.pojo.vo.AlbumListItemVO">
         SELECT id, name, description, sort
