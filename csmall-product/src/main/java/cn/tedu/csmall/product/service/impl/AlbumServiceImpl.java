@@ -8,6 +8,7 @@ import cn.tedu.csmall.product.pojo.entity.Picture;
 import cn.tedu.csmall.product.pojo.param.AlbumAddNewParam;
 import cn.tedu.csmall.product.pojo.param.AlbumUpdateInfoParam;
 import cn.tedu.csmall.product.pojo.vo.AlbumListItemVO;
+import cn.tedu.csmall.product.pojo.vo.AlbumStandardVO;
 import cn.tedu.csmall.product.pojo.vo.PageData;
 import cn.tedu.csmall.product.service.IAlbumService;
 import cn.tedu.csmall.product.util.PageInfoToPageDataConverter;
@@ -95,6 +96,18 @@ public class AlbumServiceImpl implements IAlbumService {
         album.setId(id);
         albumMapper.updateById(album);
         log.debug("将新的相册数据更新入到数据库，完成！");
+    }
+
+    @Override
+    public AlbumStandardVO getStandardById(Long id) {
+        log.debug("开始处理【根据ID查询相册详情】的业务，参数：{}", id);
+        AlbumStandardVO queryResult = albumMapper.getStandardById(id);
+        if (queryResult == null) {
+            String message = "查询相册详情失败，相册数据不存在！";
+            log.warn(message);
+            throw new ServiceException(ServiceCode.ERR_NOT_FOUND, message);
+        }
+        return queryResult;
     }
 
     @Override

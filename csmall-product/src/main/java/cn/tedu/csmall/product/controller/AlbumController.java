@@ -3,6 +3,7 @@ package cn.tedu.csmall.product.controller;
 import cn.tedu.csmall.product.pojo.param.AlbumAddNewParam;
 import cn.tedu.csmall.product.pojo.param.AlbumUpdateInfoParam;
 import cn.tedu.csmall.product.pojo.vo.AlbumListItemVO;
+import cn.tedu.csmall.product.pojo.vo.AlbumStandardVO;
 import cn.tedu.csmall.product.pojo.vo.PageData;
 import cn.tedu.csmall.product.service.IAlbumService;
 import cn.tedu.csmall.product.web.JsonResult;
@@ -65,6 +66,20 @@ public class AlbumController {
         log.debug("开始处理【修改相册详情】的业务，参数：{}", albumUpdateInfoParam);
         albumService.updateInfoById(id, albumUpdateInfoParam);
         return JsonResult.ok();
+    }
+
+    // http://localhost:8080/album/standard
+    @GetMapping("/standard")
+    @ApiOperation("根据ID查询相册详情")
+    @ApiOperationSupport(order = 410)
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "相册ID", required = true, dataType = "long")
+    })
+    public JsonResult getStandardById(@Range(min = 1, message = "根据ID查询相册详情失败，请提交合法的ID值！")
+                             @RequestParam Long id) {
+        log.debug("开始处理【根据ID查询相册详情】的请求，参数：{}", id);
+        AlbumStandardVO result = albumService.getStandardById(id);
+        return JsonResult.ok(result);
     }
 
     // http://localhost:8080/album/list

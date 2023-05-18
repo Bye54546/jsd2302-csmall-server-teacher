@@ -2,6 +2,7 @@ package cn.tedu.csmall.product.service;
 
 import cn.tedu.csmall.product.ex.ServiceException;
 import cn.tedu.csmall.product.pojo.param.AlbumAddNewParam;
+import cn.tedu.csmall.product.pojo.vo.AlbumStandardVO;
 import cn.tedu.csmall.product.pojo.vo.PageData;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,18 @@ public class AlbumServiceTests {
         try {
             service.delete(id);
             System.out.println("删除数据完成！");
+        } catch (ServiceException e) {
+            System.out.println(e.getServiceCode().getValue());
+            System.out.println(e.getMessage());
+        }
+    }
+
+    @Test
+    void getStandardById() {
+        Long id = 1L;
+        try {
+            Object queryResult = service.getStandardById(id);
+            System.out.println("根据【ID=" + id + "】查询数据完成，结果：" + queryResult);
         } catch (ServiceException e) {
             System.out.println(e.getServiceCode().getValue());
             System.out.println(e.getMessage());
