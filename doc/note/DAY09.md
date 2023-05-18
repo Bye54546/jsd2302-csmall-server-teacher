@@ -75,6 +75,49 @@ RBAC：Role-Based Access Control
 
 
 
+```
+ServiceCode
+
+ServiceException
+
+AdminAddNewParam
+	username / password / nickname / avatar / phone / email / description / enable 
+
+IAdminService
+	void addNew(AdminAddNewParam adminAddNewParam);
+
+AdminServiceImpl
+
+AdminServiceTests
+```
+
+
+
+```
+JsonResult
+
+Knife4jConfiguration
+	修改包名和其它显示字样
+	
+AdminController
+
+GlobalExceptionHandler
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

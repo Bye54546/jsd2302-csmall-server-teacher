@@ -20,6 +20,21 @@
 
     <!-- 当前项目使用的依赖项 -->
     <dependencies>
+        <!-- Knife4j Spring Boot：在线API文档 -->
+        <dependency>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>knife4j-spring-boot-starter</artifactId>
+        </dependency>
+        <!-- Spring Boot支持Spring MVC的WEB开发依赖项 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <!-- Spring Boot支持Spring Validation用于检查方法参数的基本有效性的依赖项 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
         <!-- Mybatis Plus整合Spring Boot的依赖项 -->
         <dependency>
             <groupId>com.baomidou</groupId>
