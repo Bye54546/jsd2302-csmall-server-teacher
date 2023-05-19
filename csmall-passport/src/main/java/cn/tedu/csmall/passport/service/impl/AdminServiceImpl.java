@@ -13,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -26,7 +25,6 @@ public class AdminServiceImpl implements IAdminService {
     @Autowired
     private AdminRoleMapper adminRoleMapper;
 
-    @Transactional
     @Override
     public void addNew(AdminAddNewParam adminAddNewParam) {
         log.debug("开始处理【添加管理员】的业务，参数：{}", adminAddNewParam);
