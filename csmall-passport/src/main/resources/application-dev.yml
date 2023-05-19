@@ -9,4 +9,4 @@ spring:
 
 logging:
   level:
-    cn.tedu.csmall: info
+    cn.tedu.csmall: trace

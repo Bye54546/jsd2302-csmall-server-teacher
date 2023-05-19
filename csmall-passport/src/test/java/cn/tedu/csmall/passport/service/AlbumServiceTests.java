@@ -15,9 +15,9 @@ public class AlbumServiceTests {
     @Test
     void addNew() {
         AdminAddNewParam adminAddNewParam = new AdminAddNewParam();
-        adminAddNewParam.setUsername("测试用户名0001");
-        adminAddNewParam.setPassword("测试密码0001");
-        adminAddNewParam.setDescription("测试简介0001");
+        adminAddNewParam.setUsername("测试用户名0003");
+        adminAddNewParam.setPassword("测试密码0003");
+        adminAddNewParam.setDescription("测试简介0003");
         adminAddNewParam.setRoleIds(new Long[]{3L, 4L, 6L});
 
         try {
