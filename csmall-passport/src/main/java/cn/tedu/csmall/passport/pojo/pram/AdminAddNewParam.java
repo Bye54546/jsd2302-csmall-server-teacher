@@ -17,5 +17,6 @@ public class AdminAddNewParam implements Serializable {
     private String email;
     private String description;
     private Integer enable;
+    private Long[] roleIds;
 
 }

@@ -2,7 +2,9 @@ package cn.tedu.csmall.passport.service.impl;
 
 import cn.tedu.csmall.passport.ex.ServiceException;
 import cn.tedu.csmall.passport.mapper.AdminMapper;
+import cn.tedu.csmall.passport.mapper.AdminRoleMapper;
 import cn.tedu.csmall.passport.pojo.entity.Admin;
+import cn.tedu.csmall.passport.pojo.entity.AdminRole;
 import cn.tedu.csmall.passport.pojo.pram.AdminAddNewParam;
 import cn.tedu.csmall.passport.service.IAdminService;
 import cn.tedu.csmall.passport.web.ServiceCode;
@@ -20,6 +22,8 @@ public class AdminServiceImpl implements IAdminService {
 
     @Autowired
     private AdminMapper adminMapper;
+    @Autowired
+    private AdminRoleMapper adminRoleMapper;
 
     @Override
     public void addNew(AdminAddNewParam adminAddNewParam) {
@@ -48,6 +52,21 @@ public class AdminServiceImpl implements IAdminService {
         admin.setGmtModified(LocalDateTime.now());
         adminMapper.insert(admin);
         log.debug("将新的管理员数据插入到数据库，完成！");
+
+        // 将管理员与角色的关联数据写入到数据库中
+        Long[] roleIds = adminAddNewParam.getRoleIds();
+        AdminRole[] adminRoleList = new AdminRole[roleIds.length];
+        LocalDateTime now = LocalDateTime.now();
+        for (int i = 0; i < adminRoleList.length; i++) {
+            AdminRole adminRole = new AdminRole();
+            adminRole.setAdminId(admin.getId());
+            adminRole.setRoleId(roleIds[i]);
+            adminRole.setGmtCreate(now);
+            adminRole.setGmtModified(now);
+            adminRoleList[i] = adminRole;
+        }
+        adminRoleMapper.insertBatch(adminRoleList);
+        log.debug("将新的管理员与角色的关联数据插入到数据库，完成！");
     }
 
 }
