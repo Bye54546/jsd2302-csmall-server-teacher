@@ -187,6 +187,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 另外，Spring Security框架认为所有的密码都是必须显式的经过某种算法处理过的，如果使用的密码是明文（原始密码），也必须明确的指出！例如，在Security的配置类中添加配置`NoOpPasswordEncoder`这种密码编码器：
 
 ```java
+@Bean
+public PasswordEncoder passwordEncoder() {
+    return NoOpPasswordEncoder.getInstance();
+}
 ```
 
 
