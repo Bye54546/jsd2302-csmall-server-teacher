@@ -102,6 +102,12 @@
                 <artifactId>spring-boot-starter-validation</artifactId>
                 <version>${spring-boot.version}</version>
             </dependency>
+            <!-- Spring Boot支持Spring Security的依赖项，主要解决认证与授权的问题 -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-security</artifactId>
+                <version>${spring-boot.version}</version>
+            </dependency>
             <!-- Spring Boot测试的依赖项 -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
