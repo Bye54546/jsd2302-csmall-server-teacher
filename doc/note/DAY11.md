@@ -278,6 +278,99 @@ public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException
 
 因为目前配置的密码编码器是`NoOpPasswordEncoder`，所以，本次测试运行时，使用的账号在数据库的密码应该是明文密码！
 
+## 关于密码编码器
+
+Spring Security定义了`PasswordEncoder`接口，可以有多种不同的实现，此接口中的抽象方法主要有：
+
+```java
+// 对原密码进行编码，返回编码后的结果（密文）
+String encode(String rawPassword);
+
+// 验证密码原文（第1个参数）和密文（第2个参数）是否匹配
+boolean matches(String rawPassword, String encodedPassword);
+```
+
+常见的对密码进行编码，实现“加密”效果所使用的算法主要有：
+
+- MD（Message Digest）系列：MD2 / MD4 / MD5
+- SHA（Secure Hash Algorithm）系列：SHA-1 / SHA-256 / SHA-384 / SHA-512
+
+- BCrypt
+- SCrypt
+
+目前，推荐使用的算法是`BCrypt`算法！在Spring Security框架中，也提供了`BCryptPasswordEncoder`类，其基本使用：
+
+```java
+public class BCryptTests {
+
+    PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    @Test
+    void encode() {
+        String rawPassword = "123456";
+        System.out.println("原文：" + rawPassword);
+
+        for (int i = 0; i < 5; i++) {
+            String encodedPassword = passwordEncoder.encode(rawPassword);
+            System.out.println("密文：" + encodedPassword);
+        }
+    }
+
+    // 原文：123456
+    // 密文：$2a$10$YOW67gn1jGQsNd1lWFOktuxGEK3Ai4obSCo6m0o0zP3YA4iTm0QoS
+    // 密文：$2a$10$AoGlKthb1ZKzTAng5ssX6OUwN8.tC9junqbYhtF0POkr.XdFuoEWy
+    // 密文：$2a$10$wgBhSmnoFQ.LdvFCLd8lyOSsHuGVIpVYKW8.bW4yt2kBMYqG1G.5u
+    // 密文：$2a$10$OIiWGSjFH02Vr9khLEQnG.s2rGowkotMV14TThAgJK8KQm.WQq6pm
+    // 密文：$2a$10$DluGioTO7Zcc0hmwDz8Ld.4Uyp2hIIZ/PcGhFCVd1P3FuSukqJN36
+    
+    @Test
+    void matches() {
+        String rawPassword = "123456";
+        System.out.println("原文：" + rawPassword);
+
+        String encodedPassword = "$2a$10$wgBhSmnoFQ.LdvFCLd8lyOSsHuGVIpVYKW8.bW4yt2kBMYqG1G.5u";
+        System.out.println("密文：" + encodedPassword);
+
+        boolean result = passwordEncoder.matches(rawPassword, encodedPassword);
+        System.out.println("匹配结果：" + result);
+    }
+
+}
+```
+
+关于BCrypt算法，其典型特征有：
+
+- 使用同样的原文，每次得到的密文都不相同
+  - BCrypt算法在编码过程中，使用了随机的“盐”（salt）值，所以，每次编码结果都不同
+  - 编码结果中保存了这个随机的盐值，所以，并不影响验证是否匹配
+- 运算效率极为低下，可以非常有效的避免暴力破解
+  - 可以通过构造方法传入`strength`值，增加强度（默认为`10`），表示运算过程中执行2的多少次方的哈希运算
+  - 此特征是MD系列和SHA家庭的算法所不具备的特征
+
+另外，SCrypt算法的安全性比BCrypt还要高，但是，执行效率比BCrypt更低，通常，由于BCrypt算法已经能够提供足够的安全强度，所以，目前，使用BCrypt是常见的选择。
+
+## 使用BCrypt算法
+
+只需要在Security配置类中将密码编码器换成`BCryptPasswordEncoder`即可：
+
+![image-20230520174445344](assets/image-20230520174445344.png)
+
+接下来，你可以使用数据库中那些密码是密文的账号测试登录（默认的原文都是`123456`）：
+
+![image-20230520174524350](assets/image-20230520174524350.png)
+
+
+
+
+
+```
+2023-05-20 17:46:07.014  WARN 36256 --- [nio-9181-exec-2] o.s.s.c.bcrypt.BCryptPasswordEncoder     : Encoded password does not look like BCrypt
+```
+
+
+
+
+
 
 
 
