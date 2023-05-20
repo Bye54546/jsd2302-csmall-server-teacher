@@ -211,7 +211,7 @@ public class ServiceException extends RuntimeException {
 关于自定义异常需要继承自`RuntimeException`，原因主要有2点：
 
 - 如果继承的不是`RuntimeException`，抛出异常的方法必须显式的使用`throws`声明抛出，并且，Service方法的调用者（Controller）也必须在代码中明确的`try...catch`或`throws`，而开发实践中，会使用Spring MVC框架的全局异常处理机制来统一处理异常，则Service、Controller等组件都必须将异常抛出，这是固定的做法，所以，没有必要继承自非`RuntimeException`并反复声明抛出异常
-- 再议
+- 基于Spring JDBC的事务管理将根据`RuntimeException`进行回滚
 
 然后，在`AlbumServiceImpl`类上添加`@Service`注解，在类中自动装配`AlbumMapper`类型的属性，并实现接口中定义的抽象方法，在实现过程中，如果判断违背了所设计的规则，应该抛出自定义的`ServiceException`类型的异常对象：
 
