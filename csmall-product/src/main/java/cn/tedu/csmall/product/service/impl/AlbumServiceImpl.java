@@ -52,7 +52,12 @@ public class AlbumServiceImpl implements IAlbumService {
         BeanUtils.copyProperties(albumAddNewParam, album);
         album.setGmtCreate(LocalDateTime.now());
         album.setGmtModified(LocalDateTime.now());
-        albumMapper.insert(album);
+        int rows = albumMapper.insert(album);
+        if (rows != 1) {
+            String message = "添加相册失败，服务器忙，请稍后再试！";
+            log.warn(message);
+            throw new ServiceException(ServiceCode.ERR_INSERT, message);
+        }
         log.debug("将新的相册数据插入到数据库，完成！");
     }
 
@@ -85,7 +90,12 @@ public class AlbumServiceImpl implements IAlbumService {
 
         // 检查是否有SKU关联到了此相册，如果存在，则抛出异常
 
-        albumMapper.deleteById(id);
+        int rows = albumMapper.deleteById(id);
+        if (rows != 1) {
+            String message = "删除相册失败，服务器忙，请稍后再试！";
+            log.warn(message);
+            throw new ServiceException(ServiceCode.ERR_DELETE, message);
+        }
     }
 
     @Override
@@ -121,7 +131,12 @@ public class AlbumServiceImpl implements IAlbumService {
         Album album = new Album();
         BeanUtils.copyProperties(albumUpdateInfoParam, album);
         album.setId(id);
-        albumMapper.updateById(album);
+        int rows = albumMapper.updateById(album);
+        if (rows != 1) {
+            String message = "修改相册详情失败，服务器忙，请稍后再试！";
+            log.warn(message);
+            throw new ServiceException(ServiceCode.ERR_UPDATE, message);
+        }
         log.debug("将新的相册数据更新入到数据库，完成！");
     }
 
