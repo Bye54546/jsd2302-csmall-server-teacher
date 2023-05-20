@@ -104,7 +104,94 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 在配置类中的`void configure(HttpSecurity http)`方法中，调用参数对象的`authorizeRequests()`方法开始配置授权访问：
 
 ```java
+@Override
+protected void configure(HttpSecurity http) throws Exception {
+    // 白名单
+    // 使用1个星号，可以通配此层级的任何资源，例如：/admin/*，可以匹配：/admin/add-new、/admin/list，但不可以匹配：/admin/password/change
+    // 使用2个连续的星可以，可以通配若干层级的资源，例如：/admin/**，可以匹配：/admin/add-new、/admin/password/change
+    String[] urls = {
+            "/doc.html",
+            "/**/*.css",
+            "/**/*.js",
+            "/swagger-resources",
+            "/v2/api-docs",
+    };
+
+    // 配置授权访问
+    // 注意：以下授权访问的配置，是遵循“第一匹配原则”的，即“以最先匹配到的规则为准”
+    // 例如：anyRequest()是匹配任何请求，通常，应该配置在最后，表示“除了以上配置过的以外的所有请求”
+    // 所以，在开发实践中，应该将更具体的请求配置在靠前的位置，将更笼统的请求配置在靠后的位置
+    http.authorizeRequests() // 开始对请求进行授权
+            .mvcMatchers(urls) // 匹配某些请求
+            .permitAll() // 许可，即不需要通过认证就可以访问
+            .anyRequest() // 任何请求
+            .authenticated() // 要求已经完成认证的
+    ;
+}
 ```
+
+## 使用自定义的账号登录
+
+在使用Spring Security框架时，可以自定义组件类，实现`UserDetailsService`接口，则Spring Security就会基于此类的对象来处理认证！
+
+则在项目的根包下创建`security.UserDetailsServiceImpl`，在类上添加`@Service`注解，实现`UserDetailsService`接口：
+
+```java
+@Slf4j
+@Service
+public class UserDetailsServiceImpl implements UserDetailsService {
+    @Override
+    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+        return null;
+    }
+}
+```
+
+在项目中存在`UserDetailsService`接口类型的组件对象时，尝试登录时，Spring Security就会自动使用登录表单中输入的用户名来调用以上方法，并得到方法返回的`UserDetails`类型的结果，此结果中应该包含用户的相关信息，例如密码、账号状态、权限等等，接下来，Spring Security框架会自动判断账号的状态（例如是否启用或禁用）、验证密码（在`UserDetails`中的密码与登录表单中的密码是否匹配）等，从而决定此次是否登录成功！
+
+所以，对于开发者而言，在以上方法中只需要完成“根据用户名返回匹配的用户详情”即可！例如：
+
+```java
+@Slf4j
+@Service
+public class UserDetailsServiceImpl implements UserDetailsService {
+
+    @Override
+    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+        log.debug("用户名：{}", s);
+        // 假设正确的用户名是root，匹配的密码是1234
+        if (!"root".equals(s)) {
+            log.debug("此用户名没有匹配的用户数据，将返回null");
+            return null;
+        }
+
+        log.debug("用户名匹配成功！准备返回此用户名匹配的UserDetails类型的对象");
+        UserDetails userDetails = User.builder()
+                .username(s)
+                .password("1234")
+                .disabled(false) // 账号状态是否禁用
+                .accountLocked(false) // 账号状态是否锁定
+                .accountExpired(false) // 账号状态是否过期
+                .credentialsExpired(false) // 账号的凭证是否过期
+                .authorities("这是一个临时使用的山寨的权限！！！") // 权限
+                .build();
+        log.debug("即将向Spring Security返回UserDetails类型的对象：{}", userDetails);
+        return userDetails;
+    }
+
+}
+```
+
+当项目中存在`UserDetailsService`类型的对象后，启动项目时，控制台不会再提示临时使用的UUID密码！并且，`user`账号也不可用！
+
+另外，Spring Security框架认为所有的密码都是必须显式的经过某种算法处理过的，如果使用的密码是明文（原始密码），也必须明确的指出！例如，在Security的配置类中添加配置`NoOpPasswordEncoder`这种密码编码器：
+
+```java
+```
+
+
+
+
 
 
 
