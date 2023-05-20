@@ -28,4 +28,11 @@ public class AdminMapperTests {
         System.out.println("插入数据之后，参数：" + admin);
     }
 
+    @Test
+    void getStandardById() {
+        String username = "root1";
+        Object queryResult = mapper.getLoginInfoByUsername(username);
+        System.out.println("根据【username=" + username + "】查询数据完成，结果：" + queryResult);
+    }
+
 }

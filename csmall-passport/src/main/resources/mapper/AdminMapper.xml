@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.tedu.csmall.passport.mapper.AdminMapper">
+
+    <!-- AdminLoginInfoVO getLoginInfoByUsername(String username); -->
+    <select id="getLoginInfoByUsername" resultType="cn.tedu.csmall.passport.pojo.vo.AdminLoginInfoVO">
+        SELECT
+            username, password, enable
+        FROM
+             ams_admin
+        WHERE
+            username=#{username}
+    </select>
+
+</mapper>

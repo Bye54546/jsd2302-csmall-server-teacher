@@ -223,19 +223,60 @@ AdminLoginInfoVO getLoginInfoByUsername(String username);
 
 ```xml
 <!-- AdminLoginInfoVO getLoginInfoByUsername(String username); -->
-<select id="getLoginInfoByUsername" resultType="xx.xx.xx.xx.xx.AdminLoginInfoVO">
-    select username, password, enable from ams_admin where username=#{username}
+<select id="getLoginInfoByUsername" resultType="cn.tedu.csmall.passport.pojo.vo.AdminLoginInfoVO">
+    SELECT 
+        username, password, enable 
+    FROM 
+         ams_admin 
+    WHERE 
+        username=#{username}
 </select>
 ```
 
 在`AdminMapperTests`中编写并执行测试：
 
 ```java
+@Test
+void getStandardById() {
+    String username = "root";
+    Object queryResult = mapper.getLoginInfoByUsername(username);
+    System.out.println("根据【username=" + username + "】查询数据完成，结果：" + queryResult);
+}
 ```
 
+然后，在`UserDetailsServiceImpl`中调整原来的实现，改成：
 
+```java
+@Override
+public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+    log.debug("Spring Security框架自动调用了UserDetailsServiceImpl.loadUserByUsername()方法，用户名：{}", s);
+    // 根据用户名从数据库中查询匹配的用户信息
+    AdminLoginInfoVO loginInfo = adminMapper.getLoginInfoByUsername(s);
+    if (loginInfo == null) {
+        log.debug("此用户名没有匹配的用户数据，将返回null");
+        return null;
+    }
 
+    log.debug("用户名匹配成功！准备返回此用户名匹配的UserDetails类型的对象");
+    UserDetails userDetails = User.builder()
+            .username(loginInfo.getUsername())
+            .password(loginInfo.getPassword())
+            .disabled(loginInfo.getEnable() == 0) // 账号状态是否禁用
+            .accountLocked(false) // 账号状态是否锁定
+            .accountExpired(false) // 账号状态是否过期
+            .credentialsExpired(false) // 账号的凭证是否过期
+            .authorities("这是一个临时使用的山寨的权限！！！") // 权限
+            .build();
+    log.debug("即将向Spring Security返回UserDetails类型的对象：{}", userDetails);
+    return userDetails;
+}
+```
 
+为了得到较好的运行效果，你应该在数据表中插入一些新的测试数据，例如：
+
+![image-20230520165759078](assets/image-20230520165759078.png)
+
+因为目前配置的密码编码器是`NoOpPasswordEncoder`，所以，本次测试运行时，使用的账号在数据库的密码应该是明文密码！
 
 
 
