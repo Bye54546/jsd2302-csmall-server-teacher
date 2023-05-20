@@ -193,6 +193,46 @@ public PasswordEncoder passwordEncoder() {
 }
 ```
 
+# 使用数据库中的账号登录
+
+需要将`UserDetailsServiceImpl`中的实现改为“根据用户名查询数据库中的用户信息”！需要执行的SQL语句大致是：
+
+```mysql
+select username, password, enable from ams_admin where username=?
+```
+
+在`pojo.vo.AdminLoginInfoVO`类：
+
+```java
+@Data
+@Accessors(chain = true)
+public class AdminLoginInfoVO implements Serializable {
+    private String username;
+    private String password;
+    private Integer enable;
+}
+```
+
+在`AdminMapper`接口中添加抽象方法：
+
+```java
+AdminLoginInfoVO getLoginInfoByUsername(String username);
+```
+
+在`AdminMapper.xml`中配置SQL：
+
+```xml
+<!-- AdminLoginInfoVO getLoginInfoByUsername(String username); -->
+<select id="getLoginInfoByUsername" resultType="xx.xx.xx.xx.xx.AdminLoginInfoVO">
+    select username, password, enable from ams_admin where username=#{username}
+</select>
+```
+
+在`AdminMapperTests`中编写并执行测试：
+
+```java
+```
+
 
 
 
