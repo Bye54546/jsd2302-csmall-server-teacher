@@ -49,13 +49,42 @@ Spring Security框架主要解决了认证与授权相关的问题。
 当添加了`spring-boot-starter-security`依赖后，在启动项目时执行一些自动配置，具体表现有：
 
 - 所有请求（包括根本不存在的）都是必须要登录才允许访问的，如果未登录，会自动跳转到框架自带的登录页面
+- 当尝试登录时，如果在打开登录页面后重启过服务器端，则第1次的输入是无效的
+  - 具体原因参见后续的`CSRF`相关内容
 - 默认的用户名是`user`，密码是在启动项目是控制台提示的一段UUID值，每次启动项目时都不同
   - UUID是通过**128位算法**（运算结果是128个bit）运算得到的，是一个随机数，在同一时空是唯一的，通常使用32个十六进制数来表示，每种平台生成UUID的API和表现可能不同，UUID值的种类有2的128次方个，即：3.4028237e+38，也就是340282366920938463463374607431768211456
 
 - 当登录成功后，会自动跳转到此前尝试访问的URL
 - 当登录成功后，可以通过 `/logout` 退出登录
 - 默认不接受普通`POST`请求，如果提交`POST`请求，将响应`403（Forbidden）`
-  - 具体原因参考后续的`CSRF`相关内容
+  - 具体原因参见后续的`CSRF`相关内容
+
+## 关于Spring Security的配置
+
+在项目的根包下创建`config.SecurityConfiguration`类，作为Spring Security的配置类，此类需要继承自`WebSecurityConfigurerAdapter`，并重写`void configure(HttpSecurity http)`方法，例如：
+
+```java
+@Slf4j
+@Configuration
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        // super.configure(http); // 不要保留调用父级同名方法的代码，不要保留！不要保留！不要保留！
+    }
+
+}
+```
+
+# 关于默认的登录页
+
+在自定义的配置类中的`void configure(HttpSecurity http)`方法中，调用参数对象的`formLogin()`方法即可开启默认的登录表单，如果没有调用此方法，则不会应用默认的登录表单
+
+
+
+
+
+
 
 
 
