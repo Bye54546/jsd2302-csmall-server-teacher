@@ -78,9 +78,33 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 # 关于默认的登录页
 
-在自定义的配置类中的`void configure(HttpSecurity http)`方法中，调用参数对象的`formLogin()`方法即可开启默认的登录表单，如果没有调用此方法，则不会应用默认的登录表单
+在自定义的配置类中的`void configure(HttpSecurity http)`方法中，调用参数对象的`formLogin()`方法即可开启默认的登录表单，如果没有调用此方法，则不会应用默认的登录表单，例如：
 
+```java
+@Slf4j
+@Configuration
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        // super.configure(http); // 不要保留调用父级同名方法的代码，不要保留！不要保留！不要保留！
+
+        // 如果调用以下方法，当Security认为需要通过认证，但实际未通过认证时，就会跳转到登录页面
+        // 如果未调用以下方法，将会响应403错误
+        http.formLogin();
+    }
+
+}
+```
+
+## 关于请求的授权访问（访问控制）
+
+在刚刚添加`spring-boot-starter-security`时，所有请求都是**需要**登录后才允许访问的，当添加了自定义的配置类且没有调用父级同名方法后，所有请求都是**不需要**登录就可以访问的！
+
+在配置类中的`void configure(HttpSecurity http)`方法中，调用参数对象的`authorizeRequests()`方法开始配置授权访问：
+
+```java
+```
 
 
 
