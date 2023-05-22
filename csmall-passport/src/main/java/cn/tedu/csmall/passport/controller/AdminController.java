@@ -1,6 +1,6 @@
 package cn.tedu.csmall.passport.controller;
 
-import cn.tedu.csmall.passport.pojo.pram.AdminAddNewParam;
+import cn.tedu.csmall.passport.pojo.param.AdminAddNewParam;
 import cn.tedu.csmall.passport.service.IAdminService;
 import cn.tedu.csmall.passport.web.JsonResult;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
@@ -15,11 +15,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
+/**
+ * 处理管理员相关请求的控制器
+ *
+ * @author java@tedu.cn
+ * @version 0.0.1
+ */
+@Slf4j
 @RestController
 @RequestMapping("/admin")
-@Api(tags = "01. 管理员管理模块")
-@Slf4j
 @Validated
+@Api(tags = "01. 管理员管理模块")
 public class AdminController {
 
     @Autowired

@@ -16,6 +16,10 @@ public class RoleServiceImpl implements IRoleService {
     @Autowired
     private RoleMapper roleMapper;
 
+    public RoleServiceImpl() {
+        log.debug("创建业务类对象：RoleServiceImpl");
+    }
+
     @Override
     public List<RoleListItemVO> list() {
         log.debug("开始处理【查询角色列表】的业务，无参数");

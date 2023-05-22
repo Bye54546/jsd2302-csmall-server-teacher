@@ -3,8 +3,12 @@ package cn.tedu.csmall.product.service.impl;
 import cn.tedu.csmall.product.ex.ServiceException;
 import cn.tedu.csmall.product.mapper.AlbumMapper;
 import cn.tedu.csmall.product.mapper.PictureMapper;
+import cn.tedu.csmall.product.mapper.SkuMapper;
+import cn.tedu.csmall.product.mapper.SpuMapper;
 import cn.tedu.csmall.product.pojo.entity.Album;
 import cn.tedu.csmall.product.pojo.entity.Picture;
+import cn.tedu.csmall.product.pojo.entity.Sku;
+import cn.tedu.csmall.product.pojo.entity.Spu;
 import cn.tedu.csmall.product.pojo.param.AlbumAddNewParam;
 import cn.tedu.csmall.product.pojo.param.AlbumUpdateInfoParam;
 import cn.tedu.csmall.product.pojo.vo.AlbumListItemVO;
@@ -32,13 +36,21 @@ public class AlbumServiceImpl implements IAlbumService {
     private AlbumMapper albumMapper;
     @Autowired
     private PictureMapper pictureMapper;
+    @Autowired
+    private SpuMapper spuMapper;
+    @Autowired
+    private SkuMapper skuMapper;
+
+    public AlbumServiceImpl() {
+        log.debug("创建业务类对象：AlbumServiceImpl");
+    }
 
     @Override
     public void addNew(AlbumAddNewParam albumAddNewParam) {
         log.debug("开始处理【添加相册】的业务，参数：{}", albumAddNewParam);
         // 检查相册名称是否被占用，如果被占用，则抛出异常
         QueryWrapper<Album> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("name", albumAddNewParam.getName()); // name='参数中的相册名称'
+        queryWrapper.eq("name", albumAddNewParam.getName());
         int countByName = albumMapper.selectCount(queryWrapper);
         log.debug("根据相册名称统计匹配的相册数量，结果：{}", countByName);
         if (countByName > 0) {
@@ -87,8 +99,26 @@ public class AlbumServiceImpl implements IAlbumService {
         }
 
         // 检查是否有SPU关联到了此相册，如果存在，则抛出异常
+        QueryWrapper<Spu> queryWrapper3 = new QueryWrapper<>();
+        queryWrapper3.eq("album_id", id);
+        int countBySpuId = spuMapper.selectCount(queryWrapper3);
+        log.debug("根据相册ID统计匹配的SPU数量，结果：{}", countByAlbumId);
+        if (countBySpuId > 0) {
+            String message = "删除相册失败，仍有SPU关联到此相册！";
+            log.warn(message);
+            throw new ServiceException(ServiceCode.ERR_CONFLICT, message);
+        }
 
         // 检查是否有SKU关联到了此相册，如果存在，则抛出异常
+        QueryWrapper<Sku> queryWrapper4 = new QueryWrapper<>();
+        queryWrapper4.eq("album_id", id);
+        int countBySkuId = skuMapper.selectCount(queryWrapper4);
+        log.debug("根据相册ID统计匹配的SKU数量，结果：{}", countByAlbumId);
+        if (countBySkuId > 0) {
+            String message = "删除相册失败，仍有SKU关联到此相册！";
+            log.warn(message);
+            throw new ServiceException(ServiceCode.ERR_CONFLICT, message);
+        }
 
         int rows = albumMapper.deleteById(id);
         if (rows != 1) {

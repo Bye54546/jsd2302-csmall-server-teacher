@@ -20,17 +20,27 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+/**
+ * 处理相册相关请求的控制器类
+ *
+ * @author java@tedu.cn
+ * @version 0.0.1
+ */
+@Slf4j
 @RestController
 @RequestMapping("/album")
-@Api(tags = "04. 相册管理模块")
-@Slf4j
 @Validated
+@Api(tags = "04. 相册管理模块")
 public class AlbumController {
 
     @Autowired
     private IAlbumService albumService;
 
-    // http://localhost:8080/album/add-new
+    public AlbumController() {
+        log.debug("创建控制器类对象：AlbumController");
+    }
+
+    // http://localhost:9180/album/add-new
     @PostMapping("/add-new")
     @ApiOperation("添加相册")
     @ApiOperationSupport(order = 100)
@@ -40,7 +50,7 @@ public class AlbumController {
         return JsonResult.ok();
     }
 
-    // http://localhost:8080/album/delete
+    // http://localhost:9180/album/delete
     @PostMapping("/delete")
     @ApiOperation("根据ID删除相册")
     @ApiOperationSupport(order = 200)
@@ -54,7 +64,7 @@ public class AlbumController {
         return JsonResult.ok();
     }
 
-    // http://localhost:8080/album/update
+    // http://localhost:9180/album/update
     @PostMapping("/update")
     @ApiOperation("修改相册详情")
     @ApiOperationSupport(order = 300)
@@ -68,7 +78,7 @@ public class AlbumController {
         return JsonResult.ok();
     }
 
-    // http://localhost:8080/album/standard
+    // http://localhost:9180/album/standard
     @GetMapping("/standard")
     @ApiOperation("根据ID查询相册详情")
     @ApiOperationSupport(order = 410)
@@ -76,13 +86,13 @@ public class AlbumController {
             @ApiImplicitParam(name = "id", value = "相册ID", required = true, dataType = "long")
     })
     public JsonResult getStandardById(@Range(min = 1, message = "根据ID查询相册详情失败，请提交合法的ID值！")
-                             @RequestParam Long id) {
+                                      @RequestParam Long id) {
         log.debug("开始处理【根据ID查询相册详情】的请求，参数：{}", id);
         AlbumStandardVO result = albumService.getStandardById(id);
         return JsonResult.ok(result);
     }
 
-    // http://localhost:8080/album/list
+    // http://localhost:9180/album/list
     @GetMapping("/list")
     @ApiOperation("查询相册列表")
     @ApiOperationSupport(order = 420)

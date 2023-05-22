@@ -15,11 +15,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * 处理角色相关请求的控制器
+ *
+ * @author java@tedu.cn
+ * @version 0.0.1
+ */
+@Slf4j
 @RestController
 @RequestMapping("/role")
-@Api(tags = "02. 角色管理模块")
-@Slf4j
 @Validated
+@Api(tags = "02. 角色管理模块")
 public class RoleController {
 
     @Autowired

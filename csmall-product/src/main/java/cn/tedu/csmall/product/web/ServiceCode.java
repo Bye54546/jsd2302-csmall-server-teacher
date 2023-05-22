@@ -1,5 +1,11 @@
 package cn.tedu.csmall.product.web;
 
+/**
+ * 业务状态码枚举类型
+ *
+ * @author java@tedu.cn
+ * @version 0.0.1
+ */
 public enum ServiceCode {
 
     OK(20000),

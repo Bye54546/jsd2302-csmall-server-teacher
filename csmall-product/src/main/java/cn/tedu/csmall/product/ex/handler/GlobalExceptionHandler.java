@@ -12,9 +12,19 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.util.Set;
 
+/**
+ * 全局异常处理器
+ *
+ * @author java@tedu.cn
+ * @version 0.0.1
+ */
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    public GlobalExceptionHandler() {
+        log.debug("创建全局异常处理器类对象：GlobalExceptionHandler");
+    }
 
     @ExceptionHandler
     public JsonResult handleServiceException(ServiceException e) {

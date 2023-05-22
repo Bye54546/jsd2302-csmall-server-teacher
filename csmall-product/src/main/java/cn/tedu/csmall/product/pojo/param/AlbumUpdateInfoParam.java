@@ -8,6 +8,12 @@ import org.hibernate.validator.constraints.Range;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
+/**
+ * 修改相册数据的参数类
+ *
+ * @author java@tedu.cn
+ * @version 0.0.1
+ */
 @Data
 @Accessors(chain = true)
 public class AlbumUpdateInfoParam implements Serializable {

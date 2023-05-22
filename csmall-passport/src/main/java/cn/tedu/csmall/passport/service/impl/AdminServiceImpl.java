@@ -5,7 +5,7 @@ import cn.tedu.csmall.passport.mapper.AdminMapper;
 import cn.tedu.csmall.passport.mapper.AdminRoleMapper;
 import cn.tedu.csmall.passport.pojo.entity.Admin;
 import cn.tedu.csmall.passport.pojo.entity.AdminRole;
-import cn.tedu.csmall.passport.pojo.pram.AdminAddNewParam;
+import cn.tedu.csmall.passport.pojo.param.AdminAddNewParam;
 import cn.tedu.csmall.passport.service.IAdminService;
 import cn.tedu.csmall.passport.web.ServiceCode;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -24,6 +24,10 @@ public class AdminServiceImpl implements IAdminService {
     private AdminMapper adminMapper;
     @Autowired
     private AdminRoleMapper adminRoleMapper;
+
+    public AdminServiceImpl() {
+        log.debug("创建业务类对象：AdminServiceImpl");
+    }
 
     @Override
     public void addNew(AdminAddNewParam adminAddNewParam) {
