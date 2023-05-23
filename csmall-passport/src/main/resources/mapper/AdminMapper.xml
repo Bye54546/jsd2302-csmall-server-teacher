@@ -5,9 +5,10 @@
 <mapper namespace="cn.tedu.csmall.passport.mapper.AdminMapper">
 
     <!-- AdminLoginInfoVO getLoginInfoByUsername(String username); -->
-    <select id="getLoginInfoByUsername" resultType="cn.tedu.csmall.passport.pojo.vo.AdminLoginInfoVO">
+    <select id="getLoginInfoByUsername"
+            resultType="cn.tedu.csmall.passport.pojo.vo.AdminLoginInfoVO">
         SELECT
-            username, password, enable
+            id, username, password, enable
         FROM
             ams_admin
         WHERE

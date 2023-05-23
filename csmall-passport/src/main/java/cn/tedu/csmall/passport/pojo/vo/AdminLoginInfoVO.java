@@ -14,6 +14,11 @@ import java.io.Serializable;
 public class AdminLoginInfoVO implements Serializable {
 
     /**
+     * 管理员ID
+     */
+    private Long id;
+
+    /**
      * 用户名
      */
     private String username;

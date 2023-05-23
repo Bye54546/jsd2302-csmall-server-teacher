@@ -2,6 +2,7 @@ package cn.tedu.csmall.passport.controller;
 
 import cn.tedu.csmall.passport.pojo.param.AdminAddNewParam;
 import cn.tedu.csmall.passport.pojo.param.AdminLoginInfoParam;
+import cn.tedu.csmall.passport.security.AdminDetails;
 import cn.tedu.csmall.passport.service.IAdminService;
 import cn.tedu.csmall.passport.web.JsonResult;
 import cn.tedu.csmall.passport.web.ServiceCode;
@@ -61,8 +62,9 @@ public class AdminController {
     @GetMapping("/list")
     @ApiOperation("查询管理员列表")
     @ApiOperationSupport(order = 420)
-    public JsonResult list(@ApiIgnore @AuthenticationPrincipal User user) {
-        log.debug("当事人的用户名：{}", user.getUsername());
+    public JsonResult list(@ApiIgnore @AuthenticationPrincipal AdminDetails adminDetails) {
+        log.debug("当事人的ID：{}", adminDetails.getId());
+        log.debug("当事人的用户名：{}", adminDetails.getUsername());
         return JsonResult.fail(ServiceCode.ERR_UNKNOWN, "此功能尚未开发！");
     }
 

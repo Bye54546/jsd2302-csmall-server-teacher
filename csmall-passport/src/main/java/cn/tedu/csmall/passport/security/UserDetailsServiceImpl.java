@@ -4,11 +4,16 @@ import cn.tedu.csmall.passport.mapper.AdminMapper;
 import cn.tedu.csmall.passport.pojo.vo.AdminLoginInfoVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 @Slf4j
 @Service
@@ -28,15 +33,22 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
 
         log.debug("用户名匹配成功！准备返回此用户名匹配的UserDetails类型的对象");
-        UserDetails userDetails = User.builder()
-                .username(loginInfo.getUsername())
-                .password(loginInfo.getPassword())
-                .disabled(loginInfo.getEnable() == 0) // 账号状态是否禁用
-                .accountLocked(false) // 账号状态是否锁定
-                .accountExpired(false) // 账号状态是否过期
-                .credentialsExpired(false) // 账号的凭证是否过期
-                .authorities("这是一个临时使用的山寨的权限！！！") // 权限
-                .build();
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        GrantedAuthority authority = new SimpleGrantedAuthority("临时的山寨权限");
+        authorities.add(authority);
+
+        AdminDetails userDetails = new AdminDetails(
+                loginInfo.getId(), loginInfo.getUsername(), loginInfo.getPassword(),
+                loginInfo.getEnable() == 1, authorities);
+        // UserDetails userDetails = User.builder()
+        //         .username(loginInfo.getUsername())
+        //         .password(loginInfo.getPassword())
+        //         .disabled(loginInfo.getEnable() == 0) // 账号状态是否禁用
+        //         .accountLocked(false) // 账号状态是否锁定
+        //         .accountExpired(false) // 账号状态是否过期
+        //         .credentialsExpired(false) // 账号的凭证是否过期
+        //         .authorities("这是一个临时使用的山寨的权限！！！") // 权限
+        //         .build();
         log.debug("即将向Spring Security返回UserDetails类型的对象：{}", userDetails);
         return userDetails;
     }
