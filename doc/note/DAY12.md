@@ -164,6 +164,34 @@ UsernamePasswordAuthenticationToken [
 
 ![image-20230523143939643](assets/image-20230523143939643.png)
 
+## 使用前后端分离模式处理登录的数据处理流程
+
+时序图如下：
+
+```mermaid
+sequenceDiagram
+    participant 客户端
+    participant AdminController
+    participant IAdminService
+    participant AuthenticationManager
+    participant UserDetailsService
+
+    客户端->>AdminController: 提交用户名和密码
+    AdminController->>AdminController: 将用户名和密码封装成为AdminLoginInfoParam对象
+    AdminController->>IAdminService: 传递AdminLoginInfoParam对象
+    IAdminService->>IAdminService: 将用户名和密码封装成Authentication对象
+    IAdminService->>AuthenticationManager: 传递Authentication对象
+    AuthenticationManager->>AuthenticationManager: 执行authenticate()方法
+    AuthenticationManager->>UserDetailsService: 传递用户名
+    UserDetailsService->>UserDetailsService: 执行loadUserByUsername()方法
+    UserDetailsService-->>AuthenticationManager: 返回UserDetails对象
+    AuthenticationManager->>AuthenticationManager: 检查账号状态和验证密码
+    AuthenticationManager-->>IAdminService: 返回Authentication结果
+    IAdminService->>IAdminService: 将返回认证的结果保存到SecurityContext中
+    IAdminService->>AdminController: 
+    AdminController-->>客户端: 响应
+```
+
 
 
 
