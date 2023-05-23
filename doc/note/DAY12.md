@@ -21,6 +21,38 @@ Spring Security框架自带了登录页面和退出登录页面，不是前后�
 - 使用控制器接收客户端的登录请求
   - 自定义Param类，封装客户端将提交的用户名和密码，在控制器类中添加接收登录请求的方法
   - 注意：需要将此请求配置在“白名单”中
+- 使用Service处理登录的业务
+  - 在接口中声明抽象方法，并在实现类中重写此方法
+  - 具体的验证登录，仍可以由Spring Security框架来完成，**调用`AuthenticationManager`（认证管理器）对象的`authenticate()`方法即可**，则Spring Security框架会自动基于调用方法时传入的用户名来调用`UserDetailsService`接口对象的`loadUserByUsername()`方法，并得到返回的`UserDetails`对象，然后，自动判断账号状态、对比密码等等
+    - 可以在Spring Security的配置类中重写`authenticationManagerBean()`方法，并在此方法上添加`@Bean`注解，则可以在任何所需要的位置自动装配`AuthenticationManager`类型的数据，注意：不要使用`authenticationManager()`方法，此方法在某些场景（例如某些测试等）中可能导致死循环，最终内存溢出
+
+关于在Service中实现验证登录：
+
+![image-20230523105308693](assets/image-20230523105308693.png)
+
+完成后，重启项目，可以通过API文档的调试功能来测试登录，如果使用无法登录的账号信息，会在服务器端的控制台看到对应的异常：
+
+- 用户名不存在
+
+```
+org.springframework.security.authentication.InternalAuthenticationServiceException: UserDetailsService returned null, which is an interface contract violation
+```
+
+- 密码错误
+
+```
+org.springframework.security.authentication.BadCredentialsException: 用户名或密码错误
+```
+
+- 账号被禁用
+
+```
+org.springframework.security.authentication.DisabledException: 用户已失效
+```
+
+
+
+
 
 
 

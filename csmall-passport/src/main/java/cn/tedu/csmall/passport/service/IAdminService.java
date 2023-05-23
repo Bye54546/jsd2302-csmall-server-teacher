@@ -1,6 +1,7 @@
 package cn.tedu.csmall.passport.service;
 
 import cn.tedu.csmall.passport.pojo.param.AdminAddNewParam;
+import cn.tedu.csmall.passport.pojo.param.AdminLoginInfoParam;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -11,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Transactional
 public interface IAdminService {
+
+    void login(AdminLoginInfoParam adminLoginInfoParam);
 
     /**
      * 添加管理员

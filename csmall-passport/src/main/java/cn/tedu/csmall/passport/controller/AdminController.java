@@ -36,7 +36,7 @@ public class AdminController {
     @ApiOperationSupport(order = 50)
     public JsonResult login(AdminLoginInfoParam adminLoginInfoParam) {
         log.debug("开始处理【管理员登录】的请求，参数：{}", adminLoginInfoParam);
-        // TODO 处理登录
+        adminService.login(adminLoginInfoParam);
         return JsonResult.ok();
     }
 
