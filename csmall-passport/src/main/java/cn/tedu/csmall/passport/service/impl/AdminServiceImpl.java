@@ -47,7 +47,7 @@ public class AdminServiceImpl implements IAdminService {
         // 执行认证，并获取认证结果
         Authentication authenticateResult
                 = authenticationManager.authenticate(authentication);
-        log.debug("验证登录完成！");
+        log.debug("验证登录完成，认证结果：{}", authenticateResult);
 
         // 将认证结果存入到SecurityContext中
         SecurityContext securityContext = SecurityContextHolder.getContext();

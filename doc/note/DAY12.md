@@ -119,9 +119,50 @@ Spring Security为每个客户端分配了一个`SecurityContext`（可称之为
 
 ![image-20230523115852244](assets/image-20230523115852244.png)
 
+以上认证方法返回的结果例如：
 
+```
+UsernamePasswordAuthenticationToken [
+	Principal=org.springframework.security.core.userdetails.User [
+		Username=root, 
+		Password=[PROTECTED], 
+		Enabled=true, 
+		AccountNonExpired=true, 
+		credentialsNonExpired=true, 
+		AccountNonLocked=true, 
+		Granted Authorities=[这是一个临时使用的山寨的权限！！！]
+	], 
+	Credentials=[PROTECTED], 
+	Authenticated=true, 
+	Details=null, 
+	Granted Authorities=[这是一个临时使用的山寨的权限！！！]
+]
+```
 
+其实，以上数据是基于`UserDetailsSerivce`实现类中`loadUserByUsername()`返回的`UserDetails`对象来创建的！
 
+## 未通过认证时拒绝访问
+
+当未通过认证（Spring Security从`SecurityContext`中未找到认证信息）时，尝试访问那些需要授权的资源（不在白名单中的，需要先登录才可以访问的资源），在没有启用`http.formLogin()`时，默认将响应`403`错误！
+
+另外，响应的结果应该都是基于`JsonResult`类型转换得到的JSON格式的字符串，此前，处理请求和处理响应时，都可以由Spring MVC框架自动完成数据格式的转换，此处，Spring MVC框架不会参与处理，则需要人为创建JSON格式的结果！可以借助`fastjson`工具进行处理，这是一款可以实现对象与JSON格式字符串相互转换的工具！需要添加依赖：
+
+```xml
+<fastjson.version>1.2.75</fastjson.version>
+```
+
+```xml
+<!-- fastjson：实现对象与JSON的相互转换 -->
+<dependency>
+    <groupId>com.alibaba</groupId>
+    <artifactId>fastjson</artifactId>
+    <version>${fastjson.version}</version>
+</dependency>
+```
+
+需要在Spring Security的配置类中进行处理：
+
+![image-20230523143939643](assets/image-20230523143939643.png)
 
 
 
