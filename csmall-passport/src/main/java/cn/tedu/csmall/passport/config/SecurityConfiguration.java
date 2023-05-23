@@ -39,6 +39,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 "/**/*.js",
                 "/swagger-resources",
                 "/v2/api-docs",
+                "/admin/login"
         };
 
         // 配置授权访问
@@ -54,7 +55,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         // 如果调用以下方法，当Security认为需要通过认证，但实际未通过认证时，就会跳转到登录页面
         // 如果未调用以下方法，将会响应403错误
-        http.formLogin();
+        // http.formLogin();
 
         // super.configure(http); // 不要保留调用父级同名方法的代码，不要保留！不要保留！不要保留！
     }
