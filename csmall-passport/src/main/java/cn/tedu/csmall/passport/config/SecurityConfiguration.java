@@ -27,6 +27,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        // 禁用“防止伪造的跨域攻击的防御机制”
+        http.csrf().disable();
+
         // 白名单
         // 使用1个星号，可以通配此层级的任何资源，例如：/admin/*，可以匹配：/admin/add-new、/admin/list，但不可以匹配：/admin/password/change
         // 使用2个连续的星可以，可以通配若干层级的资源，例如：/admin/**，可以匹配：/admin/add-new、/admin/password/change
@@ -49,11 +52,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authenticated() // 要求已经完成认证的
         ;
 
-        // super.configure(http); // 不要保留调用父级同名方法的代码，不要保留！不要保留！不要保留！
-
         // 如果调用以下方法，当Security认为需要通过认证，但实际未通过认证时，就会跳转到登录页面
         // 如果未调用以下方法，将会响应403错误
         http.formLogin();
+
+        // super.configure(http); // 不要保留调用父级同名方法的代码，不要保留！不要保留！不要保留！
     }
 
 }

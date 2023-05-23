@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-
 /**
  * 处理管理员相关请求的控制器
  *
@@ -29,15 +27,15 @@ import javax.validation.Valid;
 public class AdminController {
 
     @Autowired
-    private IAdminService albumService;
+    private IAdminService adminService;
 
     // http://localhost:8080/admin/add-new
     @PostMapping("/add-new")
     @ApiOperation("添加管理员")
     @ApiOperationSupport(order = 100)
-    public JsonResult addNew(@Valid AdminAddNewParam albumAddNewParam) {
+    public JsonResult addNew(AdminAddNewParam albumAddNewParam) {
         log.debug("开始处理【添加管理员】的请求，参数：{}", albumAddNewParam);
-        albumService.addNew(albumAddNewParam);
+        adminService.addNew(albumAddNewParam);
         return JsonResult.ok();
     }
 
