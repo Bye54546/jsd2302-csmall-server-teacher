@@ -5,14 +5,41 @@
 <mapper namespace="cn.tedu.csmall.passport.mapper.AdminMapper">
 
     <!-- AdminLoginInfoVO getLoginInfoByUsername(String username); -->
-    <select id="getLoginInfoByUsername"
-            resultType="cn.tedu.csmall.passport.pojo.vo.AdminLoginInfoVO">
+    <select id="getLoginInfoByUsername" resultMap="LoginInfoResultMap">
         SELECT
-            id, username, password, enable
-        FROM
-            ams_admin
+            ams_admin.id,
+            ams_admin.username,
+            ams_admin.password,
+            ams_admin.enable,
+            ams_permission.value
+        FROM ams_admin
+            LEFT JOIN ams_admin_role ON ams_admin.id=ams_admin_role.admin_id
+            LEFT JOIN ams_role_permission ON ams_admin_role.role_id=ams_role_permission.role_id
+            LEFT JOIN ams_permission ON ams_role_permission.permission_id=ams_permission.id
         WHERE
             username=#{username}
     </select>
+
+    <!-- resultMap标签：指导MyBatis封装查询结果 -->
+    <!-- resultMap标签的id属性：自定义名称，也是select标签上使用resultMap属性的值 -->
+    <!-- resultMap标签的type属性：封装查询结果的类型的全限定名 -->
+    <resultMap id="LoginInfoResultMap"
+               type="cn.tedu.csmall.passport.pojo.vo.AdminLoginInfoVO">
+        <!-- id标签：配置主键的列与属性的对应关系 -->
+        <!-- result标签：配置普通的列与属性的对应关系 -->
+        <!-- collection标签：配置List集合类型的属性与查询结果中的数据的对应关系 -->
+        <!-- collection标签的ofType属性：集合中的元素类型，取值为类型的全限定名 -->
+        <id column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="enable" property="enable"/>
+        <collection property="permissions" ofType="String">
+            <!-- constructor标签：通过构造方法来创建对象 -->
+            <constructor>
+                <!-- arg标签：配置构造方法的参数，如果构造方法有多个参数，依次使用多个此标签 -->
+                <arg column="value"></arg>
+            </constructor>
+        </collection>
+    </resultMap>
 
 </mapper>

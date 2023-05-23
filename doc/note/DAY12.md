@@ -256,6 +256,88 @@ Spring Security提供了非常便利的获取当事人的做法，在控制器�
 
 完成后，可以再次通过API文档调试进行测试访问。
 
+## 实现根据权限限制访问
+
+首先，需要在管理员登录时，明确此管理员的权限，则需要在Mapper层实现“**根据用户名查询管理员的登录信息，且需要包含此管理员对应的各权限**”，需要执行的SQL语句大致是：
+
+```sql
+select
+    ams_admin.id,
+    ams_admin.username,
+    ams_admin.password,
+    ams_admin.enable,
+    ams_permission.value
+from ams_admin
+left join ams_admin_role on ams_admin.id=ams_admin_role.admin_id
+left join ams_role_permission on ams_admin_role.role_id=ams_role_permission.role_id
+left join ams_permission on ams_role_permission.permission_id=ams_permission.id
+where username='root';
+```
+
+然后，修改现有的查询功能，需要先在`AdminLoginInfoVO`类中添加新的属性，用于存放“权限列表”：
+
+![image-20230523173331127](assets/image-20230523173331127.png)
+
+然后，调整`AdminMapper.xml`中的配置：
+
+```xml
+<!-- AdminLoginInfoVO getLoginInfoByUsername(String username); -->
+<select id="getLoginInfoByUsername" resultMap="LoginInfoResultMap">
+    SELECT
+        ams_admin.id,
+        ams_admin.username,
+        ams_admin.password,
+        ams_admin.enable,
+        ams_permission.value
+    FROM ams_admin
+        LEFT JOIN ams_admin_role ON ams_admin.id=ams_admin_role.admin_id
+        LEFT JOIN ams_role_permission ON ams_admin_role.role_id=ams_role_permission.role_id
+        LEFT JOIN ams_permission ON ams_role_permission.permission_id=ams_permission.id
+    WHERE
+        username=#{username}
+</select>
+
+<!-- resultMap标签：指导MyBatis封装查询结果 -->
+<!-- resultMap标签的id属性：自定义名称，也是select标签上使用resultMap属性的值 -->
+<!-- resultMap标签的type属性：封装查询结果的类型的全限定名 -->
+<resultMap id="LoginInfoResultMap"
+           type="cn.tedu.csmall.passport.pojo.vo.AdminLoginInfoVO">
+    <!-- id标签：配置主键的列与属性的对应关系 -->
+    <!-- result标签：配置普通的列与属性的对应关系 -->
+    <!-- collection标签：配置List集合类型的属性与查询结果中的数据的对应关系 -->
+    <!-- collection标签的ofType属性：集合中的元素类型，取值为类型的全限定名 -->
+    <id column="id" property="id"/>
+    <result column="username" property="username"/>
+    <result column="password" property="password"/>
+    <result column="enable" property="enable"/>
+    <collection property="permissions" ofType="String">
+        <!-- constructor标签：通过构造方法来创建对象 -->
+        <constructor>
+            <!-- arg标签：配置构造方法的参数，如果构造方法有多个参数，依次使用多个此标签 -->
+            <arg column="value"></arg>
+        </constructor>
+    </collection>
+</resultMap>
+```
+
+配置完成后，可以通过测试进行检验，查询结果例如：
+
+```
+根据【username=super_admin】查询数据完成，结果：
+
+AdminLoginInfoVO(
+	id=2, 
+	username=super_admin, 
+	password=$2a$10$N.ZOn9G6/YLFixAOPMg/h.z7pCu6v2XyFDtC4q.jeeGm/TEZyj15C, 
+	enable=1, 
+	permissions=[/pms/product/read, /pms/product/add-new, /pms/product/delete, /pms/product/update, /pms/brand/read, /pms/brand/add-new, /pms/brand/delete, /pms/brand/update, /pms/category/read, /pms/category/add-new, /pms/category/delete, /pms/category/update, /pms/picture/read, /pms/picture/add-new, /pms/picture/delete, /pms/picture/update, /pms/album/read, /pms/album/add-new, /pms/album/delete, /pms/album/update]
+)
+```
+
+
+
+
+
 
 
 
