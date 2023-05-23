@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -38,11 +40,18 @@ public class AdminServiceImpl implements IAdminService {
     @Override
     public void login(AdminLoginInfoParam adminLoginInfoParam) {
         log.debug("开始处理【管理员登录】的业务，参数：{}", adminLoginInfoParam);
+        // 创建认证时所需的参数对象
         Authentication authentication = new UsernamePasswordAuthenticationToken(
                 adminLoginInfoParam.getUsername(),
                 adminLoginInfoParam.getPassword());
-        authenticationManager.authenticate(authentication);
+        // 执行认证，并获取认证结果
+        Authentication authenticateResult
+                = authenticationManager.authenticate(authentication);
         log.debug("验证登录完成！");
+
+        // 将认证结果存入到SecurityContext中
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        securityContext.setAuthentication(authenticateResult);
     }
 
     @Override

@@ -104,6 +104,29 @@ public JsonResult handleDisabledException(DisabledException e) {
 }
 ```
 
+## 关于认证的标准
+
+Spring Security为每个客户端分配了一个`SecurityContext`（可称之为“Security上下文”），并且，会根据在`SecurityContext`中**是否存在认证信息**来判断当前请求是否已经通过认证！即：
+
+- 如果在`SecurityContext`中**存在**有效的认证信息，则视为“**已通过**认证”
+- 如果在`SecurityContext`中**没有**有效的认证信息，则视为“**未通过**认证”
+
+所以，在验证登录成功后，需要将认证信息存入到`SecurityContext`中，否则，所开发的登录功能是没有意义的！
+
+使用`SecurityContextHolder`的`getContext()`静态方法可以获取当前客户端对应的`SecurityContext`对象！
+
+具体处理为：
+
+![image-20230523115852244](assets/image-20230523115852244.png)
+
+
+
+
+
+
+
+
+
 
 
 
