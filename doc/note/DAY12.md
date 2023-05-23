@@ -188,15 +188,41 @@ sequenceDiagram
     AuthenticationManager->>AuthenticationManager: 检查账号状态和验证密码
     AuthenticationManager-->>IAdminService: 返回Authentication结果
     IAdminService->>IAdminService: 将返回认证的结果保存到SecurityContext中
-    IAdminService->>AdminController: 
+    IAdminService-->>AdminController: 
     AdminController-->>客户端: 响应
 ```
 
+## 识别当事人（Principal）
 
+当事人：当前提交请求的客户端的身份数据
 
+当通过登录的验证后，`AuthenticationManager`的`authenticate()`方法返回的`Authentication`对象中，就包含了当事人信息！例如：
 
+```
+UsernamePasswordAuthenticationToken [
+	Principal=org.springframework.security.core.userdetails.User [
+		Username=root, 
+		Password=[PROTECTED], 
+		Enabled=true, 
+		AccountNonExpired=true, 
+		credentialsNonExpired=true, 
+		AccountNonLocked=true, 
+		Granted Authorities=[这是一个临时使用的山寨的权限！！！]
+	], 
+	Credentials=[PROTECTED], 
+	Authenticated=true, 
+	Details=null, 
+	Granted Authorities=[这是一个临时使用的山寨的权限！！！]
+]
+```
 
+由于已经将以上认证结果存入到`SecurityContext`中，则可以在后续任何需要识别当事人的场景中，获取当事人信息！
 
+Spring Security提供了非常便利的获取当事人的做法，在控制器类中的处理请求的方法的参数列表中，可以声明当事人类型的参数，并在参数上添加`@AuthenticationPrincipal`注解即可，例如：
 
+![image-20230523153045649](assets/image-20230523153045649.png)
 
+完成以上代码后，重启项目，可以在API文档中使用各个账号尝试登录并访问以上“查询管理员列表”，可以看到日志中输出了当次登录的账号的用户名，例如：
+
+![image-20230523153204336](assets/image-20230523153204336.png)
 

@@ -4,15 +4,22 @@ import cn.tedu.csmall.passport.pojo.param.AdminAddNewParam;
 import cn.tedu.csmall.passport.pojo.param.AdminLoginInfoParam;
 import cn.tedu.csmall.passport.service.IAdminService;
 import cn.tedu.csmall.passport.web.JsonResult;
+import cn.tedu.csmall.passport.web.ServiceCode;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
+import springfox.documentation.spring.web.json.Json;
 
 /**
  * 处理管理员相关请求的控制器
@@ -48,6 +55,15 @@ public class AdminController {
         log.debug("开始处理【添加管理员】的请求，参数：{}", albumAddNewParam);
         adminService.addNew(albumAddNewParam);
         return JsonResult.ok();
+    }
+
+    // http://localhost:9081/admin/list
+    @GetMapping("/list")
+    @ApiOperation("查询管理员列表")
+    @ApiOperationSupport(order = 420)
+    public JsonResult list(@ApiIgnore @AuthenticationPrincipal User user) {
+        log.debug("当事人的用户名：{}", user.getUsername());
+        return JsonResult.fail(ServiceCode.ERR_UNKNOWN, "此功能尚未开发！");
     }
 
 }
