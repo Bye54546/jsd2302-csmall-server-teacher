@@ -9,7 +9,7 @@
         SELECT
             username, password, enable
         FROM
-             ams_admin
+            ams_admin
         WHERE
             username=#{username}
     </select>

@@ -226,3 +226,26 @@ Spring Security提供了非常便利的获取当事人的做法，在控制器�
 
 ![image-20230523153204336](assets/image-20230523153204336.png)
 
+通过以上做法，虽然可以获取当事人信息，但是，无论是`UserDetails`还是`User`类型，可以获取的数据信息较少，且不包含当前登录的用户的ID，通常并不满足开发需求！
+
+需要记住：当前在控制器类中处理请求的方法中注入的当事人数据，就是`UserDetailsService`接口的实现类中返回的数据！
+
+如果需要获取当事人的ID，需要：
+
+- 在`AdminLoginInfoVO`中添加ID属性
+- 修改Mapper层的`getLoginInfoByUsername()`，需要查询管理员ID
+- 现有的`UserDetails`的实现类`User`并不支持ID属性，需要自定义类实现`UserDetails`接口，或者，自定义类继承自`User`类，在自定义类中扩展出所需的各种属性，例如ID
+
+- 在`UserDetailsService`中返回数据时，改为返回自定义类的对象，其中将包含ID等属性值
+- 在控制器类中处理请求的方法中，注入的当事人类型改为自定义类型
+
+
+
+
+
+
+
+
+
+
+
