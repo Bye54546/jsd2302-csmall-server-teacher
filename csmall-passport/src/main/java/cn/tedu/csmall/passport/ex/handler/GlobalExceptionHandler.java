@@ -4,6 +4,10 @@ import cn.tedu.csmall.passport.ex.ServiceException;
 import cn.tedu.csmall.passport.web.JsonResult;
 import cn.tedu.csmall.passport.web.ServiceCode;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -75,6 +79,27 @@ public class GlobalExceptionHandler {
         //jsonResult.setState(3);
         //jsonResult.setMessage(message);
         return JsonResult.fail(ServiceCode.ERR_BAD_REQUEST, message);
+    }
+
+    // 如果@ExceptionHandler没有配置参数，则以方法参数的异常为准，来处理异常
+    // 如果@ExceptionHandler配置了参数，则只处理此处配置的异常
+    @ExceptionHandler({
+            InternalAuthenticationServiceException.class,
+            BadCredentialsException.class
+    })
+    public JsonResult handleAuthenticationException(AuthenticationException e) {
+        log.warn("程序运行过程中出现了AuthenticationException，将统一处理！");
+        log.warn("异常：", e);
+        String message = "登录失败，用户名或密码错误！";
+        return JsonResult.fail(ServiceCode.ERR_UNAUTHORIZED, message);
+    }
+
+    @ExceptionHandler
+    public JsonResult handleDisabledException(DisabledException e) {
+        log.warn("程序运行过程中出现了DisabledException，将统一处理！");
+        log.warn("异常：", e);
+        String message = "登录失败，账号已经被禁用！";
+        return JsonResult.fail(ServiceCode.ERR_UNAUTHORIZED_DISABLE, message);
     }
 
     @ExceptionHandler

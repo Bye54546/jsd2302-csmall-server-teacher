@@ -50,9 +50,59 @@ org.springframework.security.authentication.BadCredentialsException: 用户名�
 org.springframework.security.authentication.DisabledException: 用户已失效
 ```
 
+可以在全局异常处理器中添加处理以上异常的方法，通常，在处理时，不会严格区分“用户名不存在”和“密码错误”这2种错误，也就是说，无论是这2种错误中的哪一种，一般提示“用户名或密码错误”即可，以进一步保障账号安全！
 
+关于以上用户名不存在、密码错误时对应的异常，其继承结构是：
 
+```
+AuthenticationException
+-- BadCredentialsException // 密码错误
+-- AuthenticationServiceException
+-- -- InternalAuthenticationServiceException // 用户名不存在
+```
 
+则可以在处理异常的方法上，在`@ExceptionHandler`注解中指定需要处理的2种异常，并且，使用这2种异常公共的父类作为方法的参数，例如：
+
+```java
+// 如果@ExceptionHandler没有配置参数，则以方法参数的异常为准，来处理异常
+// 如果@ExceptionHandler配置了参数，则只处理此处配置的异常
+@ExceptionHandler({
+        InternalAuthenticationServiceException.class,
+        BadCredentialsException.class
+})
+public JsonResult handleAuthenticationException(AuthenticationException e) {
+    // 暂不关心方法内部的代码
+}
+```
+
+在实际处理时，需要先在`ServiceCode`中添加新的枚举值，以表示以上错误的状态码：
+
+![image-20230523113815119](assets/image-20230523113815119.png)
+
+然后，在全局异常处理器中添加处理异常的方法：
+
+```java
+// 如果@ExceptionHandler没有配置参数，则以方法参数的异常为准，来处理异常
+// 如果@ExceptionHandler配置了参数，则只处理此处配置的异常
+@ExceptionHandler({
+        InternalAuthenticationServiceException.class,
+        BadCredentialsException.class
+})
+public JsonResult handleAuthenticationException(AuthenticationException e) {
+    log.warn("程序运行过程中出现了AuthenticationException，将统一处理！");
+    log.warn("异常：", e);
+    String message = "登录失败，用户名或密码错误！";
+    return JsonResult.fail(ServiceCode.ERR_UNAUTHORIZED, message);
+}
+
+@ExceptionHandler
+public JsonResult handleDisabledException(DisabledException e) {
+    log.warn("程序运行过程中出现了DisabledException，将统一处理！");
+    log.warn("异常：", e);
+    String message = "登录失败，账号已经被禁用！";
+    return JsonResult.fail(ServiceCode.ERR_UNAUTHORIZED_DISABLE, message);
+}
+```
 
 
 
