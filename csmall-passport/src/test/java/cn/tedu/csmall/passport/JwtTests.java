@@ -12,13 +12,13 @@ import java.util.Map;
 public class JwtTests {
 
     // 不太简单的、难以预测的字符串
-    String secretKey = "jhkkjKJ3831HdSfdsDkdfSA9jklJD734f49FhsadsKf08dfjFhkdfs";
+    String secretKey = "jhdSfkkjKJ3831HdsDkdfSA9jklJD749Fhsa34fdsKf08dfjFhkdfs";
 
     @Test
     void generate() {
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", 9527);
-        claims.put("name", "张三");
+        claims.put("username", "张三");
 
         String jwt = Jwts.builder()
                 // Header
@@ -39,12 +39,12 @@ public class JwtTests {
 
     @Test
     void parse() {
-        String jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoi5byg5LiJIiwiaWQiOjk1MjcsImV4cCI6MTY4NDkwMDk1OH0.PSnyoKmJwysqf9HrmOcW3ckcik3Xwnok3TlbW_QRV-8";
+        String jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiZXhwIjoxNjg3NTAyMDIyLCJ1c2VybmFtZSI6ImZhbmNodWFucWkifQ.4TQc2_soVwFI0pNk4U2qYAwbnYsIwwPIO0s0VYRa3l4";
         Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwt).getBody();
-        Object id = claims.get("id");
-        Object name = claims.get("name");
+        Long id = claims.get("id", Long.class);
+        String username = claims.get("username", String.class);
         System.out.println("id = " + id);
-        System.out.println("name = " + name);
+        System.out.println("username = " + username);
     }
 
 }

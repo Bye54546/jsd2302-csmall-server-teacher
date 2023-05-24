@@ -84,23 +84,86 @@ JWT的官网：https://jwt.io/
 </dependency>
 ```
 
+基本使用大致如下：
 
+```java
+public class JwtTests {
 
+    // 不太简单的、难以预测的字符串
+    String secretKey = "jhdSfkkjKJ3831HdsDkdfSA9jklJD749Fhsa34fdsKf08dfjFhkdfs";
 
+    @Test
+    void generate() {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("id", 9527);
+        claims.put("name", "张三");
 
+        String jwt = Jwts.builder()
+                // Header
+                .setHeaderParam("alg", "HS256")
+                .setHeaderParam("typ", "JWT")
+                // Payload
+                .setClaims(claims)
+                .setExpiration(new Date(System.currentTimeMillis() + 3 * 60 * 1000))
+                // Verify Signature
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                // 生成
+                .compact();
+        System.out.println(jwt);
+    }
 
+    @Test
+    void parse() {
+        String jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoi5byg5LiJIiwiaWQiOjk1MjcsImV4cCI6MTY4NDkwODUwMn0.tBo7YKRqQv6TG2cf5jeu7nNjUim5X8H6pKLF1LrYuKI";
+        Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwt).getBody();
+        Long id = claims.get("id", Long.class);
+        String name = claims.get("name", String.class);
+        System.out.println("id = " + id);
+        System.out.println("name = " + name);
+    }
 
+}
+```
 
+如果尝试解析的JWT已经过期，会出现异常：
 
+```
+io.jsonwebtoken.ExpiredJwtException: JWT expired at 2023-05-24T12:02:38Z. Current time: 2023-05-24T14:04:35Z, a difference of 7317175 milliseconds.  Allowed clock skew: 0 milliseconds.
+```
 
+如果解析JWT时使用的secretKey有误，会出现异常：
 
+```
+io.jsonwebtoken.SignatureException: JWT signature does not match locally computed signature. JWT validity cannot be asserted and should not be trusted.
+```
 
+如果解析JWT的数据格式错误，会出现异常：
 
+```
+io.jsonwebtoken.MalformedJwtException: JWT strings must contain exactly 2 period characters. Found: 1
+```
 
+**注意：在不知晓secretKey的情况下，也可以解析出JWT中的数据（例如将JWT数据粘贴到官网），只不过验证签名是失败的，所以，不要在JWT中存放敏感信息！**
 
+## 在项目中使用JWT识别用户的身份
 
+需要：
 
+- 当验证登录成功时，生成JWT数据，并响应到客户端去，是“卖票”的过程
+  - 当验证登录成功后，不再需要（没有必要）将认证结果存入到`SecurityContext`中
+- 检票
 
+### 验证登录成功时响应JWT
+
+需要调整的代码大致包括：
+
+- 在`IAdminService`中，将`login()`方法的返回值类型改为`String`类型，重写的方法作同样的修改
+- 在`AdminServiceImpl`中，验证登录成功后，生成此管理员的信息对应的JWT，并返回
+- 在`AdminController`中，处理登录时，调用Service方法时获取返回的JWT，并响应到客户端去
+
+关于`AdminServiceImpl`中的调整：
+
+![image-20230524143453145](assets/image-20230524143453145.png)
 
 
 

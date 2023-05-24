@@ -7,9 +7,12 @@ import cn.tedu.csmall.passport.pojo.entity.Admin;
 import cn.tedu.csmall.passport.pojo.entity.AdminRole;
 import cn.tedu.csmall.passport.pojo.param.AdminAddNewParam;
 import cn.tedu.csmall.passport.pojo.param.AdminLoginInfoParam;
+import cn.tedu.csmall.passport.security.AdminDetails;
 import cn.tedu.csmall.passport.service.IAdminService;
 import cn.tedu.csmall.passport.web.ServiceCode;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +24,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -38,7 +44,7 @@ public class AdminServiceImpl implements IAdminService {
     }
 
     @Override
-    public void login(AdminLoginInfoParam adminLoginInfoParam) {
+    public String login(AdminLoginInfoParam adminLoginInfoParam) {
         log.debug("开始处理【管理员登录】的业务，参数：{}", adminLoginInfoParam);
         // 创建认证时所需的参数对象
         Authentication authentication = new UsernamePasswordAuthenticationToken(
@@ -49,9 +55,33 @@ public class AdminServiceImpl implements IAdminService {
                 = authenticationManager.authenticate(authentication);
         log.debug("验证登录完成，认证结果：{}", authenticateResult);
 
+        // 从认证结果中取出所需的数据
+        Object principal = authenticateResult.getPrincipal();
+        AdminDetails adminDetails = (AdminDetails) principal;
+
+        // 生成JWT
+        String secretKey = "jhdSfkkjKJ3831HdsDkdfSA9jklJD749Fhsa34fdsKf08dfjFhkdfs";
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("id", adminDetails.getId());
+        claims.put("username", adminDetails.getUsername());
+        String jwt = Jwts.builder()
+                // Header
+                .setHeaderParam("alg", "HS256")
+                .setHeaderParam("typ", "JWT")
+                // Payload
+                .setClaims(claims)
+                .setExpiration(new Date(System.currentTimeMillis() + 30L * 24 * 60 * 60 * 1000))
+                // Verify Signature
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                // 生成
+                .compact();
+        log.debug("生成了此管理员的信息对应的JWT：{}", jwt);
+        return jwt;
+
+        // ===== 使用JWT后不再需要以下2行代码 =====
         // 将认证结果存入到SecurityContext中
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        securityContext.setAuthentication(authenticateResult);
+        // SecurityContext securityContext = SecurityContextHolder.getContext();
+        // securityContext.setAuthentication(authenticateResult);
     }
 
     @Override
