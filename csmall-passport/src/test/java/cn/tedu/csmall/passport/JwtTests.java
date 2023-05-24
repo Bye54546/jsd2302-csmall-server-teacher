@@ -11,11 +11,11 @@ import java.util.Map;
 
 public class JwtTests {
 
+    // 不太简单的、难以预测的字符串
+    String secretKey = "jhkkjKJ3831HdSfdsDkdfSA9jklJD734f49FhsadsKf08dfjFhkdfs";
+
     @Test
     void generate() {
-        // 不太简单的、难以预测的字符串
-        String secretKey = "jhkkjKJ3831HdSfdsDkdfSA9jklJD734f49FhsadsKf08dfjFhkdfs";
-
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", 9527);
         claims.put("name", "张三");
@@ -39,7 +39,12 @@ public class JwtTests {
 
     @Test
     void parse() {
-
+        String jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoi5byg5LiJIiwiaWQiOjk1MjcsImV4cCI6MTY4NDkwMDk1OH0.PSnyoKmJwysqf9HrmOcW3ckcik3Xwnok3TlbW_QRV-8";
+        Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwt).getBody();
+        Object id = claims.get("id");
+        Object name = claims.get("name");
+        System.out.println("id = " + id);
+        System.out.println("name = " + name);
     }
 
 }
