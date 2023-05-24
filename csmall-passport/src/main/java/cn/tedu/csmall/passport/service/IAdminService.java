@@ -16,7 +16,7 @@ public interface IAdminService {
     /**
      * 管理员登录
      *
-     * @param adminLoginInfoParam
+     * @param adminLoginInfoParam 封装了用户名、密码等登录相关信息的对象
      * @return 此管理员的信息对应的JWT数据
      */
     String login(AdminLoginInfoParam adminLoginInfoParam);

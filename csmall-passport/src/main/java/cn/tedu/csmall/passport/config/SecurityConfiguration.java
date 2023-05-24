@@ -1,9 +1,11 @@
 package cn.tedu.csmall.passport.config;
 
+import cn.tedu.csmall.passport.filter.JwtAuthorizationFilter;
 import cn.tedu.csmall.passport.web.JsonResult;
 import cn.tedu.csmall.passport.web.ServiceCode;
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -45,8 +48,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
+    @Autowired
+    private JwtAuthorizationFilter jwtAuthorizationFilter;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        // 将JWT过滤器添加到Spring Security框架的某些过滤器之前
+        http.addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
+
         // 处理未通过认证时访问受保护的资源时拒绝访问
         http.exceptionHandling().authenticationEntryPoint(new AuthenticationEntryPoint() {
             @Override

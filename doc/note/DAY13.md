@@ -147,11 +147,14 @@ io.jsonwebtoken.MalformedJwtException: JWT strings must contain exactly 2 period
 
 ## 在项目中使用JWT识别用户的身份
 
-需要：
+### 核心流程
+
+在项目中使用JWT识别用户的身份，至少需要：
 
 - 当验证登录成功时，生成JWT数据，并响应到客户端去，是“卖票”的过程
   - 当验证登录成功后，不再需要（没有必要）将认证结果存入到`SecurityContext`中
-- 检票
+- 当客户端提交请求时，需要获取客户端携带的JWT数据，并尝试解析，解析成功后，再将相关信息存入到`SecurityContext`中去，是“检票”的过程
+  - 可以调整Spring Security使用Session的策略，改为不使用Session，则不会将`SecurityContext`存入到Session中
 
 ### 验证登录成功时响应JWT
 
@@ -165,11 +168,35 @@ io.jsonwebtoken.MalformedJwtException: JWT strings must contain exactly 2 period
 
 ![image-20230524143453145](assets/image-20230524143453145.png)
 
+### 解析客户端携带的JWT
 
+客户端提交若干种不同的请求时，可能都会携带JWT，对应的，在服务器，处理若干种不同的请求时，也都需要尝试接收并解析JWT，则应该使用**过滤器（Filter）**组件进行处理！
 
+其实，Spring Security框架也使用了许多不同的过滤器来解决各种问题，为了保证解析JWT是有效的，解析JWT的代码**必须运行在Spring Security的某些过滤器之前**，则接收、解析JWT的代码也**必须**定义在过滤器中！
 
+> 提示：过滤器（Filter）是Java服务器端应用程序的核心组件之一，它是最早接收到请求的组件！过滤器可以对请求选择“阻止”或“放行”！同一个项目中，允许存在若干个过滤器，形成“过滤器链（Filter Chain）”，任何请求必须被所有过滤器都“放行”，才会被控制器或其它组件所处理！
 
+在项目的根包下创建`filter.JwtAuthorizationFilter`类，继承自`OncePerRequestFilter`类，并添加`@Component`注解：
 
+```java
+@Slf4j
+@Component
+public class JwtAuthorizationFilter extends OncePerRequestFilter {
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        log.debug("JwtAuthorizationFilter开始执行……");
+
+        // 放行
+        filterChain.doFilter(request, response);
+    }
+
+}
+```
+
+然后，需要在Spring Security的配置类中，将其添加在Spring Security的某个过滤器之前：
+
+![image-20230524153133103](assets/image-20230524153133103.png)
 
 
 
