@@ -36,7 +36,6 @@ public class RoleController {
     // http://localhost:8080/role/list
     @GetMapping("/list")
     @PreAuthorize("hasAuthority('/ams/admin/read')")
-    // @PostAuthorize()
     @ApiOperation("查询角色列表")
     @ApiOperationSupport(order = 420)
     public JsonResult list() {
