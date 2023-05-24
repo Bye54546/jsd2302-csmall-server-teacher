@@ -198,5 +198,9 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
 ![image-20230524153133103](assets/image-20230524153133103.png)
 
+关于携带JWT，根据业内惯用的做法，客户端会将JWT放在请求头（Request Header）中的Authorization属性中，在Knife4j的API文档中，可以：
 
+![image-20230524154130395](assets/image-20230524154130395.png)
+
+![image-20230524154211821](assets/image-20230524154211821.png)
 
