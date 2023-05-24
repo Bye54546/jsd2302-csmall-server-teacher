@@ -1,5 +1,6 @@
 package cn.tedu.csmall.passport.filter;
 
+import cn.tedu.csmall.passport.security.LoginPrincipal;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;
@@ -48,13 +49,10 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwt).getBody();
         Long id = claims.get("id", Long.class);
         String username = claims.get("username", String.class);
-        System.out.println("id = " + id);
-        System.out.println("username = " + username);
 
-        // TODO 需要考虑使用什么数据作为当事人
         // TODO 需要使用真实的权限
         // 创建认证信息
-        Object principal = username; // 可以是任何类型，暂时使用用户名
+        Object principal = new LoginPrincipal().setId(id).setUsername(username);
         Object credentials = null; // 本次不需要
         Collection<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("山寨权限"));

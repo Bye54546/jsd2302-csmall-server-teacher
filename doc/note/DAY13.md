@@ -265,6 +265,18 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
 ![image-20230524164412472](assets/image-20230524164412472.png)
 
+## 关于认证信息中的当事人
+
+Spring Security框架并不介意你使用什么类型作为认证信息（`Authentication`）中的当事人（`principal`）！
+
+在项目中，到底使用什么类型作为当事人，可以自行考虑，主要考虑的因素就是：当你需要注入当事人数据的时候，你希望能够得到哪些数据！
+
+
+
+
+
+
+
 
 
 
