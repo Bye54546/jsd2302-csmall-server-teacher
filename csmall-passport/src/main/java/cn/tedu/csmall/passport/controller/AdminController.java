@@ -62,9 +62,7 @@ public class AdminController {
     @GetMapping("/list")
     @ApiOperation("查询管理员列表")
     @ApiOperationSupport(order = 420)
-    public JsonResult list(@ApiIgnore @AuthenticationPrincipal AdminDetails adminDetails) {
-        log.debug("当事人的ID：{}", adminDetails.getId());
-        log.debug("当事人的用户名：{}", adminDetails.getUsername());
+    public JsonResult list() {
         return JsonResult.fail(ServiceCode.ERR_UNKNOWN, "此功能尚未开发！");
     }
 

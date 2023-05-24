@@ -204,3 +204,74 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
 ![image-20230524154211821](assets/image-20230524154211821.png)
 
+关于过滤器的初步实现：
+
+```java
+/**
+ * JWT过滤器，解决的问题：接收JWT，解析JWT，将解析得到的数据创建为认证信息并存入到SecurityContext
+ */
+@Slf4j
+@Component
+public class JwtAuthorizationFilter extends OncePerRequestFilter {
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        log.debug("JwtAuthorizationFilter开始执行……");
+        // 根据业内惯用的做法，客户端会将JWT放在请求头（Request Header）中的Authorization属性中
+        String jwt = request.getHeader("Authorization");
+        log.debug("客户端携带的JWT：{}", jwt);
+
+        // 判断客户端是否携带了有效的JWT
+        if (!StringUtils.hasText(jwt)) {
+            // 如果JWT无效，则放行
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        // TODO 当前类和AdminServiceImpl中都声明了同样的secretKey变量，是不合理的
+        // TODO 解析JWT过程中可能出现异常，需要处理
+        // 尝试解析JWT
+        String secretKey = "jhdSfkkjKJ3831HdsDkdfSA9jklJD749Fhsa34fdsKf08dfjFhkdfs";
+        Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwt).getBody();
+        Long id = claims.get("id", Long.class);
+        String username = claims.get("username", String.class);
+        System.out.println("id = " + id);
+        System.out.println("username = " + username);
+
+        // TODO 需要考虑使用什么数据作为当事人
+        // TODO 需要使用真实的权限
+        // 创建认证信息
+        Object principal = username; // 可以是任何类型，暂时使用用户名
+        Object credentials = null; // 本次不需要
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("山寨权限"));
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                principal, credentials, authorities);
+
+        // 将认证信息存入到SecurityContext中
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        securityContext.setAuthentication(authentication);
+
+        // 放行
+        filterChain.doFilter(request, response);
+    }
+
+}
+```
+
+需要注意：由于Spring Security的`SecurityContext`默认是基于Session的，所以，当携带JWT成功访问过后，在`SecurityContext`中就已经有了认证信息，并且，在Session的有效期内，即使后续不携带JWT，Spring Security也能基于Session找到`SecurityContext`并读取到认证信息，这可能与设计初衷并不相符！
+
+可以将Spring Security使用（创建）Session的策略改为“完全不使用Session”，需要在Spring Security的配置类中添加配置：
+
+![image-20230524164412472](assets/image-20230524164412472.png)
+
+
+
+
+
+
+
+
+
+
+
