@@ -42,6 +42,7 @@
         <lombok.version>1.18.20</lombok.version>
         <knife4j-spring-boot.version>2.0.9</knife4j-spring-boot.version>
         <fastjson.version>1.2.75</fastjson.version>
+        <jjwt.version>0.9.1</jjwt.version>
     </properties>
 
     <!-- 依赖管理 -->
@@ -49,6 +50,12 @@
     <!-- 依赖管理主要是管理各依赖项的版本，各项目添加此处配置的依赖项时不必指定版本号 -->
     <dependencyManagement>
         <dependencies>
+            <!-- JJWT（Java JWT） -->
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
             <!-- fastjson：实现对象与JSON的相互转换 -->
             <dependency>
                 <groupId>com.alibaba</groupId>
