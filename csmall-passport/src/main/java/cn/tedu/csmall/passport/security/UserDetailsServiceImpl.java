@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -25,17 +26,21 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         log.debug("Spring Security框架自动调用了UserDetailsServiceImpl.loadUserByUsername()方法，用户名：{}", s);
-        // 根据用户名从数据库中查询匹配的用户信息
+        // 根据用户名从数据库中查询匹配的管理员信息
         AdminLoginInfoVO loginInfo = adminMapper.getLoginInfoByUsername(s);
+        log.debug("根据用户名【{}】从数据库中查询匹配的管理员信息，结果：{}", s, loginInfo);
         if (loginInfo == null) {
             log.debug("此用户名没有匹配的用户数据，将返回null");
             return null;
         }
 
         log.debug("用户名匹配成功！准备返回此用户名匹配的UserDetails类型的对象");
+        List<String> permissions = loginInfo.getPermissions();
         Collection<GrantedAuthority> authorities = new ArrayList<>();
-        GrantedAuthority authority = new SimpleGrantedAuthority("临时的山寨权限");
-        authorities.add(authority);
+        for (String permission : permissions) {
+            GrantedAuthority authority = new SimpleGrantedAuthority(permission);
+            authorities.add(authority);
+        }
 
         AdminDetails userDetails = new AdminDetails(
                 loginInfo.getId(), loginInfo.getUsername(), loginInfo.getPassword(),

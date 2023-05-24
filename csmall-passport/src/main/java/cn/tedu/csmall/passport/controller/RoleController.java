@@ -8,6 +8,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +35,8 @@ public class RoleController {
 
     // http://localhost:8080/role/list
     @GetMapping("/list")
+    @PreAuthorize("hasAuthority('/ams/admin/read')")
+    // @PostAuthorize()
     @ApiOperation("查询角色列表")
     @ApiOperationSupport(order = 420)
     public JsonResult list() {

@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.AuthenticationException;
@@ -29,6 +30,7 @@ import java.io.PrintWriter;
  */
 @Slf4j
 @Configuration
+@EnableGlobalMethodSecurity(prePostEnabled = true) // 开启全局的基于方法的安全检查，即：在方法上添加注解来检查权限
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Bean
