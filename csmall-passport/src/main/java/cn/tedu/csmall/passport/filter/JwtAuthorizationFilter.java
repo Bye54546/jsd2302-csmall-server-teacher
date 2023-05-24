@@ -4,6 +4,7 @@ import cn.tedu.csmall.passport.security.LoginPrincipal;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -28,6 +29,9 @@ import java.util.Collection;
 @Component
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
+    @Value("${csmall.jwt.secret-key}")
+    private String secretKey;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         log.debug("JwtAuthorizationFilter开始执行……");
@@ -42,10 +46,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             return;
         }
 
-        // TODO 当前类和AdminServiceImpl中都声明了同样的secretKey变量，是不合理的
         // TODO 解析JWT过程中可能出现异常，需要处理
         // 尝试解析JWT
-        String secretKey = "jhdSfkkjKJ3831HdsDkdfSA9jklJD749Fhsa34fdsKf08dfjFhkdfs";
         Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwt).getBody();
         Long id = claims.get("id", Long.class);
         String username = claims.get("username", String.class);

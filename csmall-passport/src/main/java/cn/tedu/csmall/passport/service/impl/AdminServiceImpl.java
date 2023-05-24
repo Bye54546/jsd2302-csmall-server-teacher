@@ -16,6 +16,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -32,6 +33,10 @@ import java.util.Map;
 @Service
 public class AdminServiceImpl implements IAdminService {
 
+    @Value("${csmall.jwt.secret-key}")
+    private String secretKey;
+    @Value("${csmall.jwt.duration-in-minute}")
+    private Long durationInMinute;
     @Autowired
     private AdminMapper adminMapper;
     @Autowired
@@ -60,7 +65,6 @@ public class AdminServiceImpl implements IAdminService {
         AdminDetails adminDetails = (AdminDetails) principal;
 
         // 生成JWT
-        String secretKey = "jhdSfkkjKJ3831HdsDkdfSA9jklJD749Fhsa34fdsKf08dfjFhkdfs";
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", adminDetails.getId());
         claims.put("username", adminDetails.getUsername());
@@ -70,7 +74,7 @@ public class AdminServiceImpl implements IAdminService {
                 .setHeaderParam("typ", "JWT")
                 // Payload
                 .setClaims(claims)
-                .setExpiration(new Date(System.currentTimeMillis() + 30L * 24 * 60 * 60 * 1000))
+                .setExpiration(new Date(System.currentTimeMillis() + durationInMinute * 1000 * 60))
                 // Verify Signature
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 // 生成
