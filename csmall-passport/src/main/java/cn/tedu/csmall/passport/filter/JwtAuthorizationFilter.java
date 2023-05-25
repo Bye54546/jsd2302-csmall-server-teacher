@@ -1,6 +1,7 @@
 package cn.tedu.csmall.passport.filter;
 
 import cn.tedu.csmall.passport.security.LoginPrincipal;
+import com.alibaba.fastjson.JSON;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;
@@ -51,13 +52,14 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwt).getBody();
         Long id = claims.get("id", Long.class);
         String username = claims.get("username", String.class);
+        String authoritiesJsonString = claims.get("authoritiesJsonString", String.class);
 
-        // TODO 需要使用真实的权限
         // 创建认证信息
         Object principal = new LoginPrincipal().setId(id).setUsername(username);
         Object credentials = null; // 本次不需要
-        Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("山寨权限"));
+        Collection<SimpleGrantedAuthority> authorities =
+                JSON.parseArray(authoritiesJsonString, SimpleGrantedAuthority.class);
+        // authorities.add(new SimpleGrantedAuthority("山寨权限"));
         Authentication authentication = new UsernamePasswordAuthenticationToken(
                 principal, credentials, authorities);
 

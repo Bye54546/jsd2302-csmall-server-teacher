@@ -10,6 +10,7 @@ import cn.tedu.csmall.passport.pojo.param.AdminLoginInfoParam;
 import cn.tedu.csmall.passport.security.AdminDetails;
 import cn.tedu.csmall.passport.service.IAdminService;
 import cn.tedu.csmall.passport.web.ServiceCode;
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -20,11 +21,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -63,11 +66,13 @@ public class AdminServiceImpl implements IAdminService {
         // 从认证结果中取出所需的数据
         Object principal = authenticateResult.getPrincipal();
         AdminDetails adminDetails = (AdminDetails) principal;
+        Collection<GrantedAuthority> authorities = adminDetails.getAuthorities();
 
         // 生成JWT
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", adminDetails.getId());
         claims.put("username", adminDetails.getUsername());
+        claims.put("authoritiesJsonString", JSON.toJSONString(authorities));
         String jwt = Jwts.builder()
                 // Header
                 .setHeaderParam("alg", "HS256")
