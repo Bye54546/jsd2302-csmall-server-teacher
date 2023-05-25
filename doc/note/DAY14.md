@@ -81,6 +81,24 @@ try {
 
 **SSO**（**S**ingle **S**ign **O**n）：单点登录，表示在集群或分布式系统中，客户端只需要在某1个服务器上完成登录的验证，后续，无论访问哪个服务器，都不需要再次重新登录！常见的实现手段主要有：共享Session，使用Token。
 
+目前，如果希望客户端在`csmall-passport`中登录后，在`csmall-product`中也能够被识别身份、权限，需要：
+
+- 复制依赖项：`spring-boot-starter-security`、`jjwt`、`fastjson`
+- 复制`LoginPrincipal`
+- 复制`ServiceCode`，覆盖此前的文件
+- 复制`application-dev.yml`中的自定义的配置
+- 复制`JwtAuthorizationFilter`
+- 复制`SecurityConfiguration`
+  - 删除`PasswordEncoder`的`@Bean`方法
+  - 删除`AuthenticationManager`的`@Bean`方法
+  - 删除“白名单”中管理员登录的URL地址
+
+
+
+
+
+
+
 
 
 

@@ -1,21 +1,17 @@
-package cn.tedu.csmall.passport.config;
+package cn.tedu.csmall.product.config;
 
-import cn.tedu.csmall.passport.filter.JwtAuthorizationFilter;
-import cn.tedu.csmall.passport.web.JsonResult;
-import cn.tedu.csmall.passport.web.ServiceCode;
+import cn.tedu.csmall.product.filter.JwtAuthorizationFilter;
+import cn.tedu.csmall.product.web.JsonResult;
+import cn.tedu.csmall.product.web.ServiceCode;
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -35,18 +31,6 @@ import java.io.PrintWriter;
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true) // 开启全局的基于方法的安全检查，即：在方法上添加注解来检查权限
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        // return NoOpPasswordEncoder.getInstance();
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
 
     @Autowired
     private JwtAuthorizationFilter jwtAuthorizationFilter;
@@ -93,8 +77,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 "/**/*.css",
                 "/**/*.js",
                 "/swagger-resources",
-                "/v2/api-docs",
-                "/admin/login"
+                "/v2/api-docs"
         };
 
         // 配置授权访问
