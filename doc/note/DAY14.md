@@ -144,6 +144,21 @@ Spring框架的核心有：Spring IOC、Spring AOP。
 
 对于自定义的类，建议优先使用组件扫描的做法；对于非定义的类，**只能**使用`@Bean`方法的做法！
 
+## Spring Bean的名称
+
+当使用组件扫描的方式来创建Spring Bean时，默认情况下，如果类名的第1个字母是大写且第2个字母是小写的，Spring Bean的名称就是将类名的首字母改为小写的名称，如果不满足此条件，则Spring Bean的名称就是类名，例如：`AdminController`类的Spring Bean的名称默认是`adminController`，`ABController`类的Spring Bean的名称默认是`ABController`。
+
+可以通过组件注解的参数来指定Spring Bean的名称，例如：
+
+```java
+@Controller("controller")
+public class AdminController {}
+```
+
+所有的组件注解都可以使用以上方式来指定Spring Bean的名称。
+
+当使用`@Bean`方法的方式来创建Spring Bean时，默认情况下，Spring Bean的名称就是方法的名称，也可以配置`@Bean`注解的`value`属性来指定名称。
+
 ## Spring Bean的作用域
 
 默认情况下，Spring Bean都是“单例”的，可以通过`@Scope("prototype")`将其配置为“非单例”的。
@@ -164,15 +179,40 @@ Spring框架的核心有：Spring IOC、Spring AOP。
 
 **错误的说法：**Spring就是单例模式的
 
+## Spring Bean的生命周期
 
+Spring框架允许你在组件类中自定义初始化方法和销毁方法，这2个方法应该是：
 
+- 公有的访问权限
+- 使用`void`作为返回值类型
+- 方法的名称是自定义的
+- 参数列表为空
 
+在初始化方法上添加`@PostConstruct`注解，则此方法会在构造方法之后自动被调用；在销毁方法上添加`@PreDestroy`注解，则此方法会在对象被销毁之前的一刻自动被调用。
 
+如果使用`@Bean`方法的方式来创建对象，则在`@Bean`注解中通过`initMethod`属性来配置初始化方法的名称，通过`destroyMethod`属性来配置销毁方法的名称。
 
+## Spring的自动装配
 
+Spring的自动装配表现为：当某个属性或被Spring自动调用的方法的参数需要值时，Spring框架可以自动的从容器中找到合适的值。
 
+典型表现为：
 
+```java
+@RestController
+public class AdminController {
+    @Autowired // 自动装配
+    private IAdminService adminService; // AdminServiceImpl类的对象
+}
+```
 
+关于合适的值：类型匹配的Spring Bean，或当存在多个类型匹配的Spring Bean时，也要考虑Spring Bean的名称。
+
+例如：需要装配`private IAdminService adminService;`属性，并且，`IAdminService`有2个实现类都是被Spring管理对象的，默认的Spring Bean名称可能是`adminServiceImpl1`和`adminServiceImpl2`，则名称也无法匹配，在加载Spring时，就会直接报`NoUniqueBeanDefinitionException`错误，此时，可以选择：
+
+- 修改属性名，使之与某个Spring Bean名称相同，例如`private IAdminService adminServiceImpl1;`
+- 修改某个Spring Bean名称，使之与属性名相同，例如`@Serivce("adminService")`
+- 在属性上补充`@Qualifier`注解，指定Spring Bean的名称，例如`@Qualifier("adminSesrviceImpl1")`
 
 
 
