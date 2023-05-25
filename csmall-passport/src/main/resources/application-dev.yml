@@ -13,5 +13,5 @@ logging:
 
 csmall:
   jwt:
-    secret-key: jhdSfkkjKJ3831HdsDkdfSA9jklJD749Fhsa34fdsKf08dfjFhkdfs
+    secret-key: jhdSfkkjKJ3831HdsDkdfSA9KSIjklJD749Fhsa34fMOdsKf08dfjFhkdfs
     duration-in-minute: 43200

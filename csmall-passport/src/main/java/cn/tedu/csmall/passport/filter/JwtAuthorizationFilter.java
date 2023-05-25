@@ -1,9 +1,10 @@
 package cn.tedu.csmall.passport.filter;
 
 import cn.tedu.csmall.passport.security.LoginPrincipal;
+import cn.tedu.csmall.passport.web.JsonResult;
+import cn.tedu.csmall.passport.web.ServiceCode;
 import com.alibaba.fastjson.JSON;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,6 +21,7 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -47,9 +49,54 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             return;
         }
 
-        // TODO 解析JWT过程中可能出现异常，需要处理
         // 尝试解析JWT
-        Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwt).getBody();
+        response.setContentType("application/json; charset=utf-8");
+        Claims claims = null;
+        try {
+            claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwt).getBody();
+        } catch (MalformedJwtException e) {
+            String message = "非法访问！";
+            log.warn("程序运行过程中出现了MalformedJwtException，将向客户端响应错误信息！");
+            log.warn("错误信息：{}", message);
+            JsonResult jsonResult = JsonResult.fail(ServiceCode.ERR_JWT_MALFORMED, message);
+            String jsonString = JSON.toJSONString(jsonResult);
+            PrintWriter printWriter = response.getWriter();
+            printWriter.println(jsonString);
+            printWriter.close();
+            return;
+        } catch (SignatureException e) {
+            String message = "非法访问！";
+            log.warn("程序运行过程中出现了SignatureException，将向客户端响应错误信息！");
+            log.warn("错误信息：{}", message);
+            JsonResult jsonResult = JsonResult.fail(ServiceCode.ERR_JWT_SIGNATURE, message);
+            String jsonString = JSON.toJSONString(jsonResult);
+            PrintWriter printWriter = response.getWriter();
+            printWriter.println(jsonString);
+            printWriter.close();
+            return;
+        } catch (ExpiredJwtException e) {
+            String message = "您的登录信息已经过期，请重新登录！";
+            log.warn("程序运行过程中出现了ExpiredJwtException，将向客户端响应错误信息！");
+            log.warn("错误信息：{}", message);
+            JsonResult jsonResult = JsonResult.fail(ServiceCode.ERR_JWT_EXPIRED, message);
+            String jsonString = JSON.toJSONString(jsonResult);
+            PrintWriter printWriter = response.getWriter();
+            printWriter.println(jsonString);
+            printWriter.close();
+            return;
+        } catch (Throwable e) {
+            String message = "服务器忙，请稍后再试！【在开发过程中，如果看到此提示，应该检查服务器端的控制台，分析异常，并在解析JWT的过滤器中补充处理对应异常的代码块】";
+            log.warn("程序运行过程中出现了Throwable，将向客户端响应错误信息！");
+            log.warn("异常：", e);
+            JsonResult jsonResult = JsonResult.fail(ServiceCode.ERR_UNKNOWN, message);
+            String jsonString = JSON.toJSONString(jsonResult);
+            PrintWriter printWriter = response.getWriter();
+            printWriter.println(jsonString);
+            printWriter.close();
+            return;
+        }
+
+        // 获取JWT中的数据
         Long id = claims.get("id", Long.class);
         String username = claims.get("username", String.class);
         String authoritiesJsonString = claims.get("authoritiesJsonString", String.class);
@@ -59,7 +106,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         Object credentials = null; // 本次不需要
         Collection<SimpleGrantedAuthority> authorities =
                 JSON.parseArray(authoritiesJsonString, SimpleGrantedAuthority.class);
-        // authorities.add(new SimpleGrantedAuthority("山寨权限"));
         Authentication authentication = new UsernamePasswordAuthenticationToken(
                 principal, credentials, authorities);
 
