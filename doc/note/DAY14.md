@@ -77,9 +77,21 @@ try {
 
 提示：对于复杂请求的预检，是浏览器的行为，并且，当某个请求通过预检后，浏览器会缓存此结果，后续再次发出此请求时，不会再次执行预检。
 
+# 单点登录
+
+**SSO**（**S**ingle **S**ign **O**n）：单点登录，表示在集群或分布式系统中，客户端只需要在某1个服务器上完成登录的验证，后续，无论访问哪个服务器，都不需要再次重新登录！常见的实现手段主要有：共享Session，使用Token。
 
 
 
+
+
+```
+jhdSfkkjKJ3831HdsDkdfSA9KSIjklJD749Fhsa34fMOdsKf08dfjFhkdfs
+```
+
+```
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiYXV0aG9yaXRpZXNKc29uU3RyaW5nIjoiW3tcImF1dGhvcml0eVwiOlwiL3Btcy9hbGJ1bS9hZGQtbmV3XCJ9LHtcImF1dGhvcml0eVwiOlwiL3Btcy9hbGJ1bS9kZWxldGVcIn0se1wiYXV0aG9yaXR5XCI6XCIvcG1zL2FsYnVtL3JlYWRcIn0se1wiYXV0aG9yaXR5XCI6XCIvcG1zL2FsYnVtL3VwZGF0ZVwifSx7XCJhdXRob3JpdHlcIjpcIi9wbXMvcGljdHVyZS9hZGQtbmV3XCJ9LHtcImF1dGhvcml0eVwiOlwiL3Btcy9waWN0dXJlL2RlbGV0ZVwifSx7XCJhdXRob3JpdHlcIjpcIi9wbXMvcGljdHVyZS9yZWFkXCJ9LHtcImF1dGhvcml0eVwiOlwiL3Btcy9waWN0dXJlL3VwZGF0ZVwifV0iLCJleHAiOjE2ODc1ODcwNTQsInVzZXJuYW1lIjoiZmFuY2h1YW5xaSJ9.AJN1gGhtdmMsnXhWlx0cXSf_VuVS3L4OUgDsbF54vOU
+```
 
 
 
