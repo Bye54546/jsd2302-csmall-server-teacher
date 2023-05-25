@@ -411,7 +411,7 @@ log.info("x = {}, y = {}, x + y = {}", x, y, x + y);
 
 - Controller层：
 
-  - 创建`controller.AttributeTemplateController`类，在类上添加`@RestController`注解、`@RequestMapping("/attribute-template")`注解在类中自动装配对应的Service接口类型的对象，在类中声明处理请求的方法，方法上需要添加`@PostMapping("/add-new")`注解，在方法体中调用Service实现功能，并且，在调用时使用`try...catch`捕获并处理异常
+  - 创建`cn.tedu.csmall.product.controller.AttributeTemplateController`类，在类上添加`@RestController`注解、`@RequestMapping("/attribute-template")`注解在类中自动装配对应的Service接口类型的对象，在类中声明处理请求的方法，方法上需要添加`@PostMapping("/add-new")`注解，在方法体中调用Service实现功能，并且，在调用时使用`try...catch`捕获并处理异常
   - 完成后，重启项目，通过API文档测试访问
   - 在控制器类上添加`@Slf4j`注解、`@Api`注解并配置，在处理请求的方法上添加`@ApiOperation`注解、`@ApiOperationSupport`注解并配置
   - 在`AttributeTemplateAddNewParam`的各属性上添加`@ApiModelProperty`注解并配置

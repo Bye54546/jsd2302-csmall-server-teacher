@@ -93,6 +93,40 @@ try {
   - 删除`AuthenticationManager`的`@Bean`方法
   - 删除“白名单”中管理员登录的URL地址
 
+完成后，在`csmall-product`项目中，也可以通过`@AuthenticationPrincipal`来注入当事人数据，也可以使用`@PreAuthorize`来配置访问权限。
+
+# Spring框架
+
+## 关于Spring框架
+
+Spring框架主要解决了创建对象、管理对象的相关问题。
+
+Spring框架的核心有：Spring IOC、Spring AOP。
+
+## Spring框架创建对象--组件扫描
+
+需要在配置类上添加`@ComponentScan`注解，以开启组件扫描，则Spring框架会自动扫描添加此注解的类所在的包及其子孙包，检查其中是否包含“组件类”，如果存在，则自动创建出这些“组件类”的对象！
+
+在Spring Boot项目中，默认就开启了组件扫描，因为Spring Boot项目中的启动类上添加了`@SpringBootApplication`注解，此注解包含了`@ComponentScan`。
+
+提示：可以在`@ComponentScan`注解上配置参数，以显式的指定扫描哪些包，例如：`@ComponentScan({"cn.tedu.csmall.product.controller", "cn.tedu.csmall.product.service"})`
+
+所有被添加了`@Component`注解的类，都是“组件类”，反之，则不是！
+
+在Spring框架中，还有一些基于`@Component`注解的组合注解，添加这些注解，也能将类标记为“组件类”，包括：
+
+- `@Repository`：添加在存储库类（用于访问数据的类）上
+- `@Service`：添加在业务类上
+- `@Controller`：添加在控制器类上
+- `@Configuration`
+
+以上注解，除了`@Configuration`以外，各组件注解的用法、功能是完全相同的，只是语义不同！
+
+在Spring MVC框架中，也有一些基于`@Component`的组件注解，包括：
+
+- `@RestController`
+- `@ControllerAdvice`
+- `@RestControllerAdvice`
 
 
 
@@ -102,6 +136,9 @@ try {
 
 
 
+
+
+---------------------------------------------------------------------------------
 
 ```
 jhdSfkkjKJ3831HdsDkdfSA9KSIjklJD749Fhsa34fMOdsKf08dfjFhkdfs

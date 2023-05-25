@@ -283,7 +283,7 @@ public class AlbumServiceTests {
 
 则将项目中原本依赖的`spring-boot-starter`改为`spring-boot-starter-web`。
 
-在项目的根包下创建`controller.AlbumController`，在类中添加方法处理“添加相册”的请求：
+在项目的根包下创建`cn.tedu.csmall.product.controller.AlbumController`，在类中添加方法处理“添加相册”的请求：
 
 ```java
 @RestController

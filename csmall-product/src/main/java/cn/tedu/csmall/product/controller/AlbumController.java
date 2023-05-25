@@ -5,6 +5,7 @@ import cn.tedu.csmall.product.pojo.param.AlbumUpdateInfoParam;
 import cn.tedu.csmall.product.pojo.vo.AlbumListItemVO;
 import cn.tedu.csmall.product.pojo.vo.AlbumStandardVO;
 import cn.tedu.csmall.product.pojo.vo.PageData;
+import cn.tedu.csmall.product.security.LoginPrincipal;
 import cn.tedu.csmall.product.service.IAlbumService;
 import cn.tedu.csmall.product.web.JsonResult;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
@@ -15,8 +16,10 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
 
@@ -99,8 +102,10 @@ public class AlbumController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "page", value = "页码", paramType = "query")
     })
-    public JsonResult list(@Range(min = 1, message = "查询相册列表失败，请提供正确的页码值！") Integer page) {
+    public JsonResult list(@Range(min = 1, message = "查询相册列表失败，请提供正确的页码值！") Integer page,
+                           @ApiIgnore @AuthenticationPrincipal LoginPrincipal loginPrincipal) {
         log.debug("开始处理【查询相册列表】的请求，页码：{}", page);
+        log.debug("当事人：{}", loginPrincipal);
         if (page == null || page < 1) {
             page = 1;
         }
