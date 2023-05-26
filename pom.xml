@@ -122,6 +122,12 @@
                 <artifactId>spring-boot-starter-security</artifactId>
                 <version>${spring-boot.version}</version>
             </dependency>
+            <!-- Spring Boot支持Spring AOP的依赖项，主要解决横切关注问题 -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-aop</artifactId>
+                <version>${spring-boot.version}</version>
+            </dependency>
             <!-- Spring Boot测试的依赖项 -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
