@@ -194,7 +194,7 @@ Spring框架允许你在组件类中自定义初始化方法和销毁方法，�
 
 ## Spring的自动装配
 
-Spring的自动装配表现为：当某个属性或被Spring自动调用的方法的参数需要值时，Spring框架可以自动的从容器中找到合适的值。
+Spring的自动装配表现为：当某个组件类的属性需要值时，或被Spring自动调用的方法的参数需要值时，Spring框架可以自动的从容器中找到合适的值。
 
 典型表现为：
 
@@ -213,6 +213,33 @@ public class AdminController {
 - 修改属性名，使之与某个Spring Bean名称相同，例如`private IAdminService adminServiceImpl1;`
 - 修改某个Spring Bean名称，使之与属性名相同，例如`@Serivce("adminService")`
 - 在属性上补充`@Qualifier`注解，指定Spring Bean的名称，例如`@Qualifier("adminSesrviceImpl1")`
+
+除了使用`@Autowired`以外，还可以使用`@Resource`注解添加在属性上，完成属性值的自动装配，例如：
+
+```java
+@RestController
+public class AdminController {
+    @Resource // @Autowired // 自动装配
+    private IAdminService adminService; // AdminServiceImpl类的对象
+}
+```
+
+关于`@Autowired`和`@Resource`的区别：
+
+- `@Autowired`是Spring框架的注解，而`@Resource`是`javax.annotation`包中的注解
+  - 如果你不使用Spring框架，改为使用其它可以实现自动装配的框架，`@Resource`仍是有效的
+    - 由于Spring框架的应用普级程度非常高，几乎没有Java WEB项目不使用Spring框架，所以，使用`@Autowired`几乎没有缺点
+
+- `@Resource`注解是优先根据名称来匹配的，如果无匹配，再根据类型来匹配；`@Autowired`注解是优先根据类型来查找匹配的对象，如果存在多个类型匹配的，再根据名称来匹配
+
+关于`@Autowired`的具体装配过程，首先，会查询匹配类型的Spring Bean的数量，然后：
+
+- 0个：取决于`@Autowired`注解的`required`属性的值
+  - `true`（默认）：无法装配，在加载`ApplicationContext`时会出现`NoSuchBeanDefinitionException`
+  - `false`：放弃装配，在加载`ApplicationContext`不会因为无法装配而报错，在后续使用时可能出现`NPE`
+    - 强烈不推荐
+- 1个：直接装配，且成功
+- 多个：尝试按照名称来装配，如果存在名称匹配的Spring Bean，则装配且成功，如果没有，则在加载`ApplicationContext`时会出现`NoUniqueBeanDefinitionException`
 
 
 

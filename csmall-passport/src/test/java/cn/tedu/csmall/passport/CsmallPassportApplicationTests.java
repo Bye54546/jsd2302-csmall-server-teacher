@@ -9,8 +9,14 @@ import javax.sql.DataSource;
 @SpringBootTest
 class CsmallPassportApplicationTests {
 
+    @Autowired(required = false)
+    IUserService userService;
+
     @Test
     void contextLoads() {
+        if (userService != null) {
+            userService.toString();
+        }
     }
 
     @Autowired
