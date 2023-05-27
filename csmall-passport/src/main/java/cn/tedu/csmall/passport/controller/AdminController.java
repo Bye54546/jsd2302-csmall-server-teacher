@@ -2,7 +2,6 @@ package cn.tedu.csmall.passport.controller;
 
 import cn.tedu.csmall.passport.pojo.param.AdminAddNewParam;
 import cn.tedu.csmall.passport.pojo.param.AdminLoginInfoParam;
-import cn.tedu.csmall.passport.security.AdminDetails;
 import cn.tedu.csmall.passport.security.LoginPrincipal;
 import cn.tedu.csmall.passport.service.IAdminService;
 import cn.tedu.csmall.passport.web.JsonResult;
@@ -13,15 +12,12 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
-import springfox.documentation.spring.web.json.Json;
 
 /**
  * 处理管理员相关请求的控制器
@@ -31,7 +27,7 @@ import springfox.documentation.spring.web.json.Json;
  */
 @Slf4j
 @RestController
-@RequestMapping("/admin")
+@RequestMapping(value = "/admin", produces = "application/json; charset=utf-8")
 @Validated
 @Api(tags = "01. 管理员管理模块")
 public class AdminController {

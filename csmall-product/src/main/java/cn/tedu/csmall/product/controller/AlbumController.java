@@ -53,15 +53,15 @@ public class AlbumController {
         return JsonResult.ok();
     }
 
-    // http://localhost:9180/album/delete
-    @PostMapping("/delete")
+    // http://localhost:9180/album/9527/delete
+    @PostMapping("/{id}/delete")
     @ApiOperation("根据ID删除相册")
     @ApiOperationSupport(order = 200)
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "相册ID", required = true, dataType = "long")
     })
     public JsonResult delete(@Range(min = 1, message = "根据ID删除相册失败，请提交合法的ID值！")
-                             @RequestParam Long id) {
+                             @PathVariable Long id) {
         log.debug("开始处理【根据ID删除相册】的请求，参数：{}", id);
         albumService.delete(id);
         return JsonResult.ok();
