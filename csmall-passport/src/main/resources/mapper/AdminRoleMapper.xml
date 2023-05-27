@@ -5,7 +5,7 @@
 <mapper namespace="cn.tedu.csmall.passport.mapper.AdminRoleMapper">
 
     <!-- int insertBatch(AdminRole[] adminRoleList); -->
-    <insert id="insertBatch">
+    <insert id="insertBatch" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO ams_admin_role
             (admin_id, role_id, gmt_create, gmt_modified)
         VALUES

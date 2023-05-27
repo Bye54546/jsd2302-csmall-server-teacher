@@ -162,6 +162,160 @@ public JsonResult deleteTest() {}
 - 对某类型的1个数据执行某个数据管理操作，格式为：`/数据类型的复数/{数据ID}/命令`
   - 例如：`/albums/{id:[0-9]+}/delete`
 
+## 关于`@RequestParam`注解
+
+`@RequestParam`注解是添加在方法的参数上的，它的作用主要有：
+
+- 配置请求参数的名称（用于请求参数的名称与方法参数不同时），例如：
+
+  ```java
+  // http://localhost:8080/login?username=root
+  public JsonResult login(@RequestParam("username") String xxx) {
+      // ...
+  }
+  ```
+
+- 配置必须提交某个请求参数，因为此注解`required`属性默认值为`true`
+
+  - 此功能可以通过Validation框架来实现
+
+- 配置某个请求参数的默认值，例如：
+
+  ```java
+  // http://localhost:8080/list
+  public JsonResult list(@RequestParam(defaultValue = "1") Integer page) {
+      // ...
+  }
+  ```
+
+## 其它
+
+例如全局异常处理器等
+
+# MyBatis框架
+
+## 关于MyBatis框架
+
+MyBatis框架的主要作用：实现并简化数据库编程。
+
+## MyBatis框架的依赖项
+
+MyBatis框架的依赖项是：`mybatis`，但，通常还应该再添加：`mybatis-spring`、`spring-jdbc`、`mysql`或其它数据库的依赖项、数据库连接池的依赖项（`commons-dbcp` / `commons-dbcp2` / Druid / Hikari等）、测试
+
+在Spring Boot项目中，只需要添加`mybatis-spring-boot-starter`即可包含`mybatis`、`mybatis-spring`、`spring-jdbc`、默认的数据库连接池。
+
+## 关于Mapper接口
+
+使用MyBatis时，需要使用Mapper接口来封装访问数据的抽象方法，这些接口可以自行放在任何位置，但需要通过注解来指定，使得MyBatis框架能找到这些接口！可以：
+
+- 【推荐】在配置类上使用`@MapperScan`注解，来配置Mapper接口所在的根包（其子孙级包中的Mapper接口也会被找到）
+  - 注意：配置的包下，不能有Mapper接口以外的其它接口
+- 【不推荐】在各Mapper接口上添加`@Mapper`注解
+
+所有的数据访问功能都应该在接口中定义抽象方法，关于抽象方法：
+
+- 返回值类型：如果需要执行的SQL语句是增、删、改类型的，应该使用`int`作为返回值类型，表示“受影响的行数”，其实也可以使用`void`，表示不关心受影响的行数，但不推荐；如果需要执行的SQL语句是查询类型的，只需要保证声明的返回值类型足以存放你需要的查询结果即可
+
+- 方法名称：自定义，不建议重载
+
+  ```
+  《阿里巴巴Java开发手册》中的参考：
+  1） 获取单个对象的方法用 get 做前缀。
+  2） 获取多个对象的方法用 list 做前缀。
+  3） 获取统计值的方法用 count 做前缀。
+  4） 插入的方法用 save/insert 做前缀。
+  5） 删除的方法用 remove/delete 做前缀。
+  6） 修改的方法用 update 做前缀。
+  ```
+
+- 参数列表：根据需要执行的SQL语句中的参数来设计，并且，如果参数数量较多，可以封装成自定义数据类型，并使用自定义数据类型作为方法的参数，另外，对于未封装的简单数据类型的参数（例如基本数据类型及对应的包装类、`String`类），只要参数的数量超过1个，强烈建议在各参数上使用`@Param`注解配置参数名称，例如：
+
+  ```java
+  void getLoginInfoByUsernameAndPassword(
+      @Param("username") String username, @Param("password") String password);
+  ```
+
+## 关于`@Param`注解
+
+通常，如果抽象方法中声明了简单类型的参数，在配置SQL语句时，可以使用`#{}`格式的占位符来表示参数的值，例如：
+
+```java
+AlbumStandardVO getStandardById(Long id);
+```
+
+```xml
+<select id="getStandardById" resultType="cn.tedu.csmall.product.pojo.vo.AlbumStandardVO">
+    SELECT id, name, description, sort
+    FROM pms_album
+    WHERE id=#{xxx}
+</select>
+```
+
+其实，以上配置SQL语句时，`#{}`中的名称是很随意的，并不一定需要是抽象方法中的参数的名称！之所以是这样，主要因为：
+
+- 在Java语言中，默认情况下，所有局部的量（方法内部的局部变量、方法的参数）的名称都会在编译时丢失
+- 此抽象方法只有1个参数，MyBatis会自动的去找那唯一的参数，所以，名称并不重要
+
+由于局部的量的名称会丢失，且方法只有1个参数时，MyBatis就会使用唯一的那个参数值，但是，如果抽象方法有2个或更多个参数，MyBatis就不知道把哪个参数值传到哪个`#{}`占位符对应的位置！为了解决此问题，MyBatis使用了`@Param`注解，通过此注解来配置参数的名称，并且，在配置SQL时，应该使用注解中配置名字，例如：
+
+```java
+AdminStandardVO getLoginInfoByUsernameAndPassword(
+    @Param("username") String var1, @Param("password") String var2);
+```
+
+```xml
+<select id="getLoginInfoByUsernameAndPassword" 
+        resultType="cn.tedu.csmall.product.pojo.vo.AdminStandardVO">
+    SELECT *
+    FROM ams_admin
+    WHERE username=#{username} AND password=#{password}
+</select>
+```
+
+另外，在整合了Spring Boot后，使用的`mybatis-spring-boot-starter`对编译期进行了干预，保留了抽象方法的参数名称，所以，在Spring Boot中，即使不使用`@Param`注解来配置参数名称，也能够正确的找到各参数！通常，为了避免出问题，仍建议使用`@Param`注解配置参数名称！
+
+## 关于使用注解来配置SQL语句
+
+在使用MyBatis时，可以在抽象方法上使用`@Insert` / `@Delete` / `@Update` / `@Select`注解来配置SQL语句，例如：
+
+```java
+public interface AlbumMapper {
+    
+    @Select("select count(*) from pms_album")
+    int count();
+    
+}
+```
+
+但是，并不推荐使用这种做法，主要原因有：
+
+- 不适合编写较长篇幅的SQL语句
+- 不适合需要添加其它配置的数据访问
+- 不适合与DBA协同工作
+
+## 关于使用XML来配置SQL语句
+
+在Spring Boot项目中，需要通过配置文件中的`mybatis.mapper-locations`属性来配置XML文件的位置，如果使用的是MyBatis-Plus，则需要通过`mybatis-plus.mapper-locations`属性来配置XML文件的位置。
+
+> 提示：如果使用的不是Spring Boot项目，则需要配置`SqlSessionFactoryBean`类型的对象来指定XML文件的位置。
+
+在XML文件内部的配置：
+
+- 此文件的根标签必须是`<mapper>`，且必须配置`namespace`属性，以指定对应的Mapper接口的全限定名
+- 在`<mapper>`标签的子级，使用`<insert>` / `<delete>` / `<update>` / `<select>`标签配置SQL语句，这些标签必须配置`id`属性，取值为抽象方法的名称，在这些标签内部，配置抽象方法对应的SQL语句
+- 如果对应的数据表中的ID是自动编号的，在配置`<insert>`标签时，强烈建议配置`useGeneratedKeys="true"`和`keyProperty="id"`这2个属性，以获取成功插入的数据的自动编号ID值
+- 在`<select>`标签上，必须配置`resultType`和`resultMap`这2个属性中的其中1个，使用`resultType`时，取值为抽象方法的返回值类型的全限定名，使用`resultMap`时，取值为对应的`<resultMap>`标签的`id`属性值
+
+
+
+```
+Connection conn = ...
+Statement statement = ...
+statement.executeUpdate(); // executeQuery()
+```
+
+
+
 
 
 
