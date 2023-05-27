@@ -305,22 +305,175 @@ public interface AlbumMapper {
 - 在`<mapper>`标签的子级，使用`<insert>` / `<delete>` / `<update>` / `<select>`标签配置SQL语句，这些标签必须配置`id`属性，取值为抽象方法的名称，在这些标签内部，配置抽象方法对应的SQL语句
 - 如果对应的数据表中的ID是自动编号的，在配置`<insert>`标签时，强烈建议配置`useGeneratedKeys="true"`和`keyProperty="id"`这2个属性，以获取成功插入的数据的自动编号ID值
 - 在`<select>`标签上，必须配置`resultType`和`resultMap`这2个属性中的其中1个，使用`resultType`时，取值为抽象方法的返回值类型的全限定名，使用`resultMap`时，取值为对应的`<resultMap>`标签的`id`属性值
+- 动态SQL之`<foreach>`标签：用于对参数进行遍历
+  - `collection`属性：指定被遍历的参数，当抽象方法的参数只有1个，且没有添加`@Param`注解时，如果参数是`List`集合，则此属性取值为`list`，如果参数是数组或可变参数，则此属性取值为`array`，如果抽象方法的参数有多个或配置了`@Param`注解，则此属性取值为`@Param`注解中配置的名称
+  - `item`属性：自定义此值，表示遍历过程中各元素的变量名
+  - `separator`属性：遍历过程中生成各值时，各值之间的分隔符号
 
+- 动态SQL之`<if>`标签：用于对参数进行判断，例如：
 
+  ```xml
+  <!-- int update(Album album); -->
+  <update id="update">
+      UPDATE 
+      	pms_album
+      <set>
+      	<if test="name != null">
+      		name=#{name},
+          </if>
+      	<if test="description != null">
+      		description=#{description},
+          </if>
+          <if test="sort != null">
+      		sort=#{sort},
+          </if>
+      </set>
+      WHERE
+      	id=#{id}
+  </update>
+  ```
 
+- 动态SQL之`<choose>`系列标签，用于实现类似Java语言中`if...else`的效果，例如：
+
+  ```xml
+  <choose>
+  	<when test="条件">
+      	满足条件时的代码片段
+      </when>
+      <otherwise>
+      	不满足条件时的代码片段
+      </otherwise>
+  </choose>
+  ```
+
+- `<sql>`标签与`<include>`标签，用于封装SQL语句片段（通常是字段列表）并引用封装的SQL语句片段，例如：
+
+  ```xml
+  <!-- List<RoleListItemVO> list(); -->
+  <select id="list" resultType="cn.tedu.csmall.passport.pojo.vo.RoleListItemVO">
+      SELECT
+          <include refid="ListItemQueryFields"/>
+      FROM
+          ams_role
+      ORDER BY
+          sort DESC, id
+  </select>
+  
+  <sql id="ListItemQueryFields">
+      id, name
+  </sql>
+  ```
+
+  提示：在IntelliJ IDEA中，在`<sql>`标签中直接写字段列表会提示错误，但这并不影响运行，如果不希望看到报错的红色波浪线，可以改为：
+
+  ```xml
+  <sql id="ListItemQueryFields">
+      <if test="true">
+          id, name
+      </if>
+  </sql>
+  ```
+
+- 关于`<resultMap>`标签：详见项目中的`AdminMapper.xml`代码
+
+## MyBatis的缓存机制
+
+MyBatis框架存在缓存机制，表现为：当执行查询后，可以将查询结果暂时保存到应用程序服务器中（即使返回了查询结果，也不会销毁这个数据），后续再次查询时，就可以将此前的查询结果直接返回，以此提高“查询”效率。
+
+MyBatis框架有2种缓存机制，分别称之为一级缓存和二级缓存。
+
+一级缓存也称之为“会话缓存”，它是基于`SqlSession`的，默认是开启的，且无法关闭，当使用同一个Mapper、执行同样的查询、传递的是同样的参数时，后续的查询将直接返回前序的查询结果。
+
+一级缓存的结果会因为手动清除（调用`SqlSession`对象的`clearCache()`方法）而消失，也会因为此Mapper执行了任何写操作（增、删、改）而自动清除，无论这个写操作是否改变了任何数据！
+
+关于一级缓存的示例：
+
+```java
+@Autowired
+SqlSessionFactory sqlSessionFactory;
+
+@Test
+void l1Cache() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    AlbumMapper albumMapper = sqlSession.getMapper(AlbumMapper.class);
+
+    System.out.println("准备执行第1次查询……");
+    Object queryResult1 = albumMapper.getStandardById(1L);
+    System.out.println("第1次查询结束！");
+    System.out.println(queryResult1);
+
+    System.out.println("准备执行第2次查询……");
+    Object queryResult2 = albumMapper.getStandardById(1L);
+    System.out.println("第2次查询结束！");
+    System.out.println(queryResult2);
+
+    // 清除此前的缓存结果
+    // sqlSession.clearCache();
+    albumMapper.deleteById(13000000L);
+
+    System.out.println("准备执行第3次查询……");
+    Object queryResult3 = albumMapper.getStandardById(1L);
+    System.out.println("第3次查询结束！");
+    System.out.println(queryResult3);
+
+    System.out.println("准备执行第4次查询……");
+    Object queryResult4 = albumMapper.getStandardById(2L);
+    System.out.println("第4次查询结束！");
+    System.out.println(queryResult4);
+
+    System.out.println("准备执行第5次查询……");
+    Object queryResult5 = albumMapper.getStandardById(1L);
+    System.out.println("第5次查询结束！");
+    System.out.println(queryResult5);
+}
 ```
-Connection conn = ...
-Statement statement = ...
-statement.executeUpdate(); // executeQuery()
+
+二级缓存也称之为“namespace缓存”，是基于namespace的（其实就是配置SQL的XML对应的Mapper），在Spring Boot中，默认全局开启，但各namespace默认并未开启，可以在XML文件中添加`<cache/>`标签以开启当前XML对应的Mapper的二级缓存，只要是同样的查询，且传入的参数相同，后续的查询就可以直接使用前序的查询结果。
+
+二级缓存也会因为调用了此XML中的任何写数据的操作而清除！
+
+注意：二级缓存还可以通过在`<select>`标签上配置`useCache`属性来开启或关闭，默认取值为`true`。
+
+注意：当使用二级缓存后，查询结果的类型必须实现`Serializable`接口，如果没有实现，在查询时会抛出`NotSerializableException`异常！
+
+二级缓存的示例代码：
+
+```java
+@Autowired
+AlbumMapper albumMapper;
+
+@Test
+void l2Cache() {
+    System.out.println("准备执行第1次查询……");
+    Object queryResult1 = albumMapper.getStandardById(1L);
+    System.out.println("第1次查询结束！");
+    System.out.println(queryResult1);
+
+    System.out.println("准备执行第2次查询……");
+    Object queryResult2 = albumMapper.getStandardById(1L);
+    System.out.println("第2次查询结束！");
+    System.out.println(queryResult2);
+
+    // albumMapper.deleteById(12L);
+
+    System.out.println("准备执行第3次查询……");
+    Object queryResult3 = albumMapper.getStandardById(1L);
+    System.out.println("第3次查询结束！");
+    System.out.println(queryResult3);
+
+    System.out.println("准备执行第4次查询……");
+    Object queryResult4 = albumMapper.getStandardById(2L);
+    System.out.println("第4次查询结束！");
+    System.out.println(queryResult4);
+
+    System.out.println("准备执行第5次查询……");
+    Object queryResult5 = albumMapper.getStandardById(1L);
+    System.out.println("第5次查询结束！");
+    System.out.println(queryResult5);
+}
 ```
 
-
-
-
-
-
-
-
+MyBatis在每次查询时，都会优先检查二级缓存，如果命中，将直接返回缓存结果，如果未命中，则会检查一级缓存，如果仍未命中，才会执行真正的查询。
 
 
 

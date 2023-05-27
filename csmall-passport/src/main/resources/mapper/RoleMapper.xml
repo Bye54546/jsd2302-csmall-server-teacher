@@ -6,7 +6,18 @@
 
     <!-- List<RoleListItemVO> list(); -->
     <select id="list" resultType="cn.tedu.csmall.passport.pojo.vo.RoleListItemVO">
-        SELECT id, name FROM ams_role ORDER BY sort DESC, id
+        SELECT
+            <include refid="ListItemQueryFields"/>
+        FROM
+            ams_role
+        ORDER BY
+            sort DESC, id
     </select>
+
+    <sql id="ListItemQueryFields">
+        <if test="true">
+            id, name
+        </if>
+    </sql>
 
 </mapper>

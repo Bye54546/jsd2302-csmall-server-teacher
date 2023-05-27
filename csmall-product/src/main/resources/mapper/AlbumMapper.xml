@@ -4,6 +4,8 @@
 
 <mapper namespace="cn.tedu.csmall.product.mapper.AlbumMapper">
 
+    <cache/>
+
     <!-- AlbumStandardVO getStandardById(Long id); -->
     <select id="getStandardById" resultType="cn.tedu.csmall.product.pojo.vo.AlbumStandardVO">
         SELECT id, name, description, sort
