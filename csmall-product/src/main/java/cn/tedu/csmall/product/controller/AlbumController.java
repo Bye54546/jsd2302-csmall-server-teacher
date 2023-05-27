@@ -31,7 +31,7 @@ import javax.validation.Valid;
  */
 @Slf4j
 @RestController
-@RequestMapping("/album")
+@RequestMapping("/albums")
 @Validated
 @Api(tags = "04. 相册管理模块")
 public class AlbumController {
@@ -43,7 +43,7 @@ public class AlbumController {
         log.debug("创建控制器类对象：AlbumController");
     }
 
-    // http://localhost:9180/album/add-new
+    // http://localhost:9180/albums/add-new
     @PostMapping("/add-new")
     @ApiOperation("添加相册")
     @ApiOperationSupport(order = 100)
@@ -53,8 +53,8 @@ public class AlbumController {
         return JsonResult.ok();
     }
 
-    // http://localhost:9180/album/9527/delete
-    @PostMapping("/{id}/delete")
+    // http://localhost:9180/albums/9527/delete
+    @PostMapping("/{id:[0-9]+}/delete")
     @ApiOperation("根据ID删除相册")
     @ApiOperationSupport(order = 200)
     @ApiImplicitParams({
@@ -67,22 +67,22 @@ public class AlbumController {
         return JsonResult.ok();
     }
 
-    // http://localhost:9180/album/update
-    @PostMapping("/update")
+    // http://localhost:9180/albums/9527/update
+    @PostMapping("/{id:[0-9]+}/update")
     @ApiOperation("修改相册详情")
     @ApiOperationSupport(order = 300)
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "相册ID", required = true, dataType = "long")
     })
-    public JsonResult updateInfoById(@RequestParam @Range(min = 1, message = "请提交有效的相册ID值！") Long id,
+    public JsonResult updateInfoById(@PathVariable @Range(min = 1, message = "请提交有效的相册ID值！") Long id,
                                      @Valid AlbumUpdateInfoParam albumUpdateInfoParam) {
         log.debug("开始处理【修改相册详情】的业务，参数：{}", albumUpdateInfoParam);
         albumService.updateInfoById(id, albumUpdateInfoParam);
         return JsonResult.ok();
     }
 
-    // http://localhost:9180/album/standard
-    @GetMapping("/standard")
+    // http://localhost:9180/albums/9527
+    @GetMapping("/{id:[0-9]+}")
     @ApiOperation("根据ID查询相册详情")
     @ApiOperationSupport(order = 410)
     @ApiImplicitParams({
@@ -95,8 +95,8 @@ public class AlbumController {
         return JsonResult.ok(result);
     }
 
-    // http://localhost:9180/album/list
-    @GetMapping("/list")
+    // http://localhost:9180/albums
+    @GetMapping("")
     @ApiOperation("查询相册列表")
     @ApiOperationSupport(order = 420)
     @ApiImplicitParams({

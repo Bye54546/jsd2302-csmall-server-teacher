@@ -13,10 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -28,7 +25,7 @@ import javax.validation.Valid;
  */
 @Slf4j
 @RestController
-@RequestMapping("/category")
+@RequestMapping("/categories")
 @Validated
 @Api(tags = "01. 类别管理模块")
 public class CategoryController {
@@ -40,7 +37,7 @@ public class CategoryController {
         log.debug("创建控制器类对象：CategoryController");
     }
 
-    // http://localhost:9180/category/add-new
+    // http://localhost:9180/categories/add-new
     @PostMapping("/add-new")
     @ApiOperation("添加类别")
     @ApiOperationSupport(order = 100)
@@ -50,27 +47,27 @@ public class CategoryController {
         return JsonResult.ok();
     }
 
-    // http://localhost:9180/category/delete
-    @PostMapping("/delete")
+    // http://localhost:9180/categories/9527/delete
+    @PostMapping("/{id:[0-9]+}/delete")
     @ApiOperation("根据ID删除类别")
     @ApiOperationSupport(order = 200)
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "类别ID", required = true, dataType = "long")
     })
-    public JsonResult delete(@Range(min = 1, message = "请提交有效的类别ID值！") Long id) {
+    public JsonResult delete(@PathVariable @Range(min = 1, message = "请提交有效的类别ID值！") Long id) {
         log.debug("开始处理【根据ID删除类别】的请求，参数：{}", id);
         categoryService.delete(id);
         return JsonResult.ok();
     }
 
-    // http://localhost:9180/category/update
-    @PostMapping("/update")
+    // http://localhost:9180/categories/9527/update
+    @PostMapping("/{id:[0-9]+}/update")
     @ApiOperation("修改类别详情")
     @ApiOperationSupport(order = 300)
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "类别ID", required = true, dataType = "long")
     })
-    public JsonResult updateInfoById(@RequestParam @Range(min = 1, message = "请提交有效的类别ID值！") Long id,
+    public JsonResult updateInfoById(@PathVariable @Range(min = 1, message = "请提交有效的类别ID值！") Long id,
                                      @Valid CategoryUpdateInfoParam categoryUpdateInfoParam) {
         log.debug("开始处理【修改类别详情】的业务，参数：{}", categoryUpdateInfoParam);
         categoryService.updateInfoById(id, categoryUpdateInfoParam);

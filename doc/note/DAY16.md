@@ -115,15 +115,52 @@ public JsonResult delete(@PathVariable Long id) {
 }
 ```
 
+如果占位符中的名字与参数的变量名不同，需要在`@PathVariable`注解上指定参数，例如：
 
+```java
+@PostMapping("/{id}/delete")
+public JsonResult delete(@PathVariable("id") Long albumId) {
+    //                                ↑↑↑↑↑↑ 指定注解参数，与占位符名称一致，则方法参数的变量名已经不重要了
+    // ...
+}
+```
 
+在配置占位符名称时，可以在自定义名称的右侧添加冒号，然后，在冒号右侧添加正则表达式，以限制URL传入的值的格式，例如：
 
+```java
+@PostMapping("/{id:[0-9]+}/delete")
+```
 
+经过以上配置，只有占位符位置是纯数字的请求才可以匹配上，如果占位符位置不是纯数字的请求（例如`/abc/delete`）则会响应`404`。
 
+注意：多不冲突的正则表式达的占位设计是允许共存的，例如：
 
+```java
+@PostMapping("/{id:[0-9]+}/delete")
+public JsonResult delete1() {}
+```
 
+```java
+@PostMapping("/{xx:[a-z]+}/delete")
+public JsonResult delete2() {}
+```
 
+另外，如果还有某个配置没有使用占位符的设计，也是允许与以上设计共存的，例如：
 
+```java
+@PostMapping("/test/delete")
+public JsonResult deleteTest() {}
+```
+
+关于RESTful风格的URL设计，如果你没有更好的选择，可以参考：
+
+- 查询数据列表，格式为：`/数据类型的复数`
+  - 例如：`/albums`
+- 获取某类型的1个数据，格式为：`/数据类型的复数/{数据ID}`
+  - 例如：`/albums/{id:[0-9]+}`
+
+- 对某类型的1个数据执行某个数据管理操作，格式为：`/数据类型的复数/{数据ID}/命令`
+  - 例如：`/albums/{id:[0-9]+}/delete`
 
 
 
