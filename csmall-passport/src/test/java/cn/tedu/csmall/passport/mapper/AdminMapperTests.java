@@ -30,9 +30,16 @@ public class AdminMapperTests {
 
     @Test
     void getLoginInfoByUsername() {
-        String username = "super_admin";
+        String username = "root";
         Object queryResult = mapper.getLoginInfoByUsername(username);
         System.out.println("根据【username=" + username + "】查询数据完成，结果：" + queryResult);
+    }
+
+    @Test
+    void getStandardById() {
+        Long id = 1L;
+        Object queryResult = mapper.getStandardById(id);
+        System.out.println("根据【ID=" + id + "】查询数据完成，结果：" + queryResult);
     }
 
 }

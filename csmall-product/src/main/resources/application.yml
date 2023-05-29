@@ -6,6 +6,8 @@ spring:
     druid:
       initial-size: 5
       max-active: 10
+  jackson:
+    default-property-inclusion: non_null
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml

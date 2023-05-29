@@ -20,6 +20,18 @@
             username=#{username}
     </select>
 
+    <!-- AdminStandardVO getStandardById(Long id); -->
+    <select id="getStandardById" resultType="cn.tedu.csmall.passport.pojo.vo.AdminStandardVO">
+        SELECT
+            id, username, password, nickname, avatar,
+            phone, email, description, enable, last_login_ip,
+            login_count, gmt_last_login
+        FROM
+            ams_admin
+        WHERE
+            id=#{id}
+    </select>
+
     <!-- resultMap标签：指导MyBatis封装查询结果 -->
     <!-- resultMap标签的id属性：自定义名称，也是select标签上使用resultMap属性的值 -->
     <!-- resultMap标签的type属性：封装查询结果的类型的全限定名 -->

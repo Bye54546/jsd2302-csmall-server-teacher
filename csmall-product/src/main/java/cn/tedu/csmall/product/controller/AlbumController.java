@@ -89,7 +89,7 @@ public class AlbumController {
             @ApiImplicitParam(name = "id", value = "相册ID", required = true, dataType = "long")
     })
     public JsonResult getStandardById(@Range(min = 1, message = "根据ID查询相册详情失败，请提交合法的ID值！")
-                                      @RequestParam Long id) {
+                                      @PathVariable Long id) {
         log.debug("开始处理【根据ID查询相册详情】的请求，参数：{}", id);
         AlbumStandardVO result = albumService.getStandardById(id);
         return JsonResult.ok(result);
