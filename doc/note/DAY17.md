@@ -10,30 +10,26 @@
 
 当使用`${}`格式的占位符时，会先将值代入到原SQL语句，然后执行编译过程，然后执行，由于在执行语义分析之前就已经将值代入，那么，如果字符串值没有添加一对单引号，就会被误以为是字段名或列名！所以，在使用`${}`格式的占位符表示字符串值时，需要使用一对单引号框住！同时，由于不是预编译的，所以，代入的值可能改变SQL语句原本的语义，则存在SQL注入风险！注意，使用`${}`格式的占位符可以表示SQL语句的任何片段，只需要保证将值代入后是合法的语句即可，则整体设计可以更加灵活，但需考虑语法格式的问题和SQL注入风险！
 
+# 关于文件上传的子模块项目
 
+Spring MVC框架提供了便捷的文件上传处理，在控制器处理请求的方法上添加`MultipartFile`类型，即可表示客户端提交上传的数据。
 
-```mysql
-select * from ams_admin where id=#{id};
-select * from ams_admin where username=#{usernane}
+> 提示：如果有必要的话，你也可以将参数声明为`MultipartFile[]`数组类型，以实现批量上传。
 
---                            id=1
---                            username='root'
---                            usenrame='root' and password='test001'
-select * from ams_admin where ${xxx}
+注意：上传的服务只需要提供上传功能和访问上传的文件的功能即可，不需要考虑其它的数据处理，例如不需要考虑如何写入到数据库中。
 
-select * from ams_admin where username='root' and password='test001';
+在上传时，你应该至少做到：
 
---                                                          xx' or 'a'='a
-select * from ams_admin where username='root' and password='xx' or 'a'='a';
-```
+- 检查客户端是否提交了上传的文件（例如是否选择了文件再点击提交表单）
+- 检查文件大小是否超标
+- 检查文件类型是否在允许的范围内
+- 尽可能把文件夹分得更加清楚
+- 避免文件名重复
+- 上传成功后，返回相关数据，至少需要返回访问此文件的URL
 
+在配置中，你应该至少配置：
 
-
-
-
-
-
-
-
-
-
+- 上传的根级文件夹，此路径不应该直接写死在Java类中
+- 允许上传的文件类型清单
+- 文件大小的上限值
+- 上传功能允许的最大文件大小（`spring.servlet.multipart.max-request-size`和`spring.servlet.multipart.max-file-size`）
