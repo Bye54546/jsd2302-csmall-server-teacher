@@ -1,6 +1,6 @@
 package cn.tedu.csmall.passport.service.impl;
 
-import cn.tedu.csmall.passport.ex.ServiceException;
+import cn.tedu.csmall.commons.ex.ServiceException;
 import cn.tedu.csmall.passport.mapper.AdminMapper;
 import cn.tedu.csmall.passport.mapper.AdminRoleMapper;
 import cn.tedu.csmall.passport.pojo.entity.Admin;
@@ -9,7 +9,7 @@ import cn.tedu.csmall.passport.pojo.param.AdminAddNewParam;
 import cn.tedu.csmall.passport.pojo.param.AdminLoginInfoParam;
 import cn.tedu.csmall.passport.security.AdminDetails;
 import cn.tedu.csmall.passport.service.IAdminService;
-import cn.tedu.csmall.passport.web.ServiceCode;
+import cn.tedu.csmall.commons.web.ServiceCode;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.jsonwebtoken.Jwts;
@@ -22,8 +22,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;

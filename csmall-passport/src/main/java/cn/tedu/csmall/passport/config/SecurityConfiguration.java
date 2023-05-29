@@ -2,7 +2,7 @@ package cn.tedu.csmall.passport.config;
 
 import cn.tedu.csmall.passport.filter.JwtAuthorizationFilter;
 import cn.tedu.csmall.passport.web.JsonResult;
-import cn.tedu.csmall.passport.web.ServiceCode;
+import cn.tedu.csmall.commons.web.ServiceCode;
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

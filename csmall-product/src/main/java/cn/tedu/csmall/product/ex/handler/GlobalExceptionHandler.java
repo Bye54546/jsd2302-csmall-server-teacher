@@ -1,8 +1,8 @@
 package cn.tedu.csmall.product.ex.handler;
 
+import cn.tedu.csmall.commons.ex.ServiceException;
+import cn.tedu.csmall.commons.web.ServiceCode;
 import cn.tedu.csmall.product.web.JsonResult;
-import cn.tedu.csmall.product.ex.ServiceException;
-import cn.tedu.csmall.product.web.ServiceCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;

@@ -20,6 +20,11 @@
 
     <!-- 当前项目使用的依赖项 -->
     <dependencies>
+        <!-- CS Mall Commons -->
+        <dependency>
+            <groupId>cn.tedu</groupId>
+            <artifactId>csmall-commons</artifactId>
+        </dependency>
         <!-- JJWT（Java JWT） -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>

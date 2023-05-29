@@ -1,6 +1,6 @@
-package cn.tedu.csmall.passport.ex;
+package cn.tedu.csmall.commons.ex;
 
-import cn.tedu.csmall.passport.web.ServiceCode;
+import cn.tedu.csmall.commons.web.ServiceCode;
 import lombok.Getter;
 
 /**

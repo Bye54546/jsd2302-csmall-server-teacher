@@ -27,6 +27,7 @@
     <modules>
         <module>csmall-product</module>
         <module>csmall-passport</module>
+        <module>csmall-commons</module>
     </modules>
 
     <!-- 属性配置 -->
@@ -43,6 +44,7 @@
         <knife4j-spring-boot.version>2.0.9</knife4j-spring-boot.version>
         <fastjson.version>1.2.75</fastjson.version>
         <jjwt.version>0.9.1</jjwt.version>
+        <csmall.version>0.0.1</csmall.version>
     </properties>
 
     <!-- 依赖管理 -->
@@ -50,6 +52,12 @@
     <!-- 依赖管理主要是管理各依赖项的版本，各项目添加此处配置的依赖项时不必指定版本号 -->
     <dependencyManagement>
         <dependencies>
+            <!-- CS Mall Commons -->
+            <dependency>
+                <groupId>cn.tedu</groupId>
+                <artifactId>csmall-commons</artifactId>
+                <version>${csmall.version}</version>
+            </dependency>
             <!-- JJWT（Java JWT） -->
             <dependency>
                 <groupId>io.jsonwebtoken</groupId>

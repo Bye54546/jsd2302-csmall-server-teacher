@@ -1,8 +1,8 @@
 package cn.tedu.csmall.passport.ex.handler;
 
-import cn.tedu.csmall.passport.ex.ServiceException;
+import cn.tedu.csmall.commons.ex.ServiceException;
 import cn.tedu.csmall.passport.web.JsonResult;
-import cn.tedu.csmall.passport.web.ServiceCode;
+import cn.tedu.csmall.commons.web.ServiceCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;

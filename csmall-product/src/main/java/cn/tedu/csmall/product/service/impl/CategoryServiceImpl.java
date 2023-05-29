@@ -1,12 +1,12 @@
 package cn.tedu.csmall.product.service.impl;
 
-import cn.tedu.csmall.product.ex.ServiceException;
+import cn.tedu.csmall.commons.ex.ServiceException;
+import cn.tedu.csmall.commons.web.ServiceCode;
 import cn.tedu.csmall.product.mapper.CategoryMapper;
 import cn.tedu.csmall.product.pojo.entity.Category;
 import cn.tedu.csmall.product.pojo.param.CategoryAddNewParam;
 import cn.tedu.csmall.product.pojo.param.CategoryUpdateInfoParam;
 import cn.tedu.csmall.product.service.ICategoryService;
-import cn.tedu.csmall.product.web.ServiceCode;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;

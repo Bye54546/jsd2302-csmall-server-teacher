@@ -1,8 +1,8 @@
 package cn.tedu.csmall.product.config;
 
+import cn.tedu.csmall.commons.web.ServiceCode;
 import cn.tedu.csmall.product.filter.JwtAuthorizationFilter;
 import cn.tedu.csmall.product.web.JsonResult;
-import cn.tedu.csmall.product.web.ServiceCode;
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

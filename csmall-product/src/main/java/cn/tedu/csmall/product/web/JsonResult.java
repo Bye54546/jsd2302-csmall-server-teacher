@@ -1,5 +1,6 @@
 package cn.tedu.csmall.product.web;
 
+import cn.tedu.csmall.commons.web.ServiceCode;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;

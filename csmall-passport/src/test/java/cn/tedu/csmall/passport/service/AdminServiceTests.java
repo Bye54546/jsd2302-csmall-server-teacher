@@ -1,6 +1,6 @@
 package cn.tedu.csmall.passport.service;
 
-import cn.tedu.csmall.passport.ex.ServiceException;
+import cn.tedu.csmall.commons.ex.ServiceException;
 import cn.tedu.csmall.passport.pojo.param.AdminAddNewParam;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

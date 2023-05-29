@@ -1,4 +1,4 @@
-package cn.tedu.csmall.product.web;
+package cn.tedu.csmall.commons.web;
 
 /**
  * 业务状态码枚举类型
