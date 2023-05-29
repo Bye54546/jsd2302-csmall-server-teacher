@@ -1,7 +1,7 @@
 package cn.tedu.csmall.passport.filter;
 
-import cn.tedu.csmall.passport.security.LoginPrincipal;
-import cn.tedu.csmall.passport.web.JsonResult;
+import cn.tedu.csmall.commons.security.LoginPrincipal;
+import cn.tedu.csmall.commons.web.JsonResult;
 import cn.tedu.csmall.commons.web.ServiceCode;
 import com.alibaba.fastjson.JSON;
 import io.jsonwebtoken.*;

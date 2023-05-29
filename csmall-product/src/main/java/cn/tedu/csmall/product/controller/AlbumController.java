@@ -1,13 +1,13 @@
 package cn.tedu.csmall.product.controller;
 
+import cn.tedu.csmall.commons.security.LoginPrincipal;
+import cn.tedu.csmall.commons.web.JsonResult;
 import cn.tedu.csmall.product.pojo.param.AlbumAddNewParam;
 import cn.tedu.csmall.product.pojo.param.AlbumUpdateInfoParam;
 import cn.tedu.csmall.product.pojo.vo.AlbumListItemVO;
 import cn.tedu.csmall.product.pojo.vo.AlbumStandardVO;
 import cn.tedu.csmall.product.pojo.vo.PageData;
-import cn.tedu.csmall.product.security.LoginPrincipal;
 import cn.tedu.csmall.product.service.IAlbumService;
-import cn.tedu.csmall.product.web.JsonResult;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;

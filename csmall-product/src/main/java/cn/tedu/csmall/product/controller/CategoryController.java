@@ -3,7 +3,7 @@ package cn.tedu.csmall.product.controller;
 import cn.tedu.csmall.product.pojo.param.CategoryAddNewParam;
 import cn.tedu.csmall.product.pojo.param.CategoryUpdateInfoParam;
 import cn.tedu.csmall.product.service.ICategoryService;
-import cn.tedu.csmall.product.web.JsonResult;
+import cn.tedu.csmall.commons.web.JsonResult;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;

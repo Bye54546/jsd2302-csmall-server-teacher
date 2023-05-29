@@ -1,4 +1,4 @@
-package cn.tedu.csmall.passport.security;
+package cn.tedu.csmall.commons.security;
 
 import lombok.Data;
 import lombok.experimental.Accessors;

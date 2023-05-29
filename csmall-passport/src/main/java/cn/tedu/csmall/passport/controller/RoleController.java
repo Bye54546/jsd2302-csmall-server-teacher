@@ -1,14 +1,13 @@
 package cn.tedu.csmall.passport.controller;
 
+import cn.tedu.csmall.commons.web.JsonResult;
 import cn.tedu.csmall.passport.pojo.vo.RoleListItemVO;
 import cn.tedu.csmall.passport.service.IRoleService;
-import cn.tedu.csmall.passport.web.JsonResult;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;

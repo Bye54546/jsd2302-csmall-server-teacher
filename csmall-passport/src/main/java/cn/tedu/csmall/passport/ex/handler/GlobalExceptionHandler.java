@@ -1,7 +1,7 @@
 package cn.tedu.csmall.passport.ex.handler;
 
 import cn.tedu.csmall.commons.ex.ServiceException;
-import cn.tedu.csmall.passport.web.JsonResult;
+import cn.tedu.csmall.commons.web.JsonResult;
 import cn.tedu.csmall.commons.web.ServiceCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.util.Set;
-
 
 /**
  * 全局异常处理器
